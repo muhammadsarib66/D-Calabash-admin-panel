@@ -1,0 +1,53 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+
+@layer base {
+    .scroll-smooth {
+      scroll-behavior: smooth;
+    }
+  }
+  
+  ::-webkit-scrollbar {
+    width: 20px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    background-color: transparent;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background-color: #d6dee1;
+    border-radius: 20px;
+    border: 6px solid transparent;
+    background-clip: content-box;
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: #a8bbbf;
+  }
+
+ 
+  .clientData{
+    position: relative;
+    cursor: pointer;
+    
+}
+.fullData{
+  position: absolute;
+  top: 20px;
+  left: 10px;
+  display: none;
+  z-index: 100001;
+  text-align: left !important;
+  /* transition: all ease-in-out 0.5s; */
+  
+}
+.clientData:hover .fullData {
+    display: block;
+    /* transition: all ease-in-out 0.5s;    */
+  }
+  
