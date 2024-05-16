@@ -1,4 +1,3 @@
-import React from 'react'
 import DBCard from './DBCard'
 import DBChart from './DBChart'
 

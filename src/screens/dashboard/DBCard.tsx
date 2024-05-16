@@ -1,4 +1,3 @@
-import React from 'react'
 import riders from "../../Images/bdIcons/Icon.svg";
 import order from "../../Images/bdIcons/Icon (1).svg";
 import sales from "../../Images/bdIcons/Icon (2).svg";
