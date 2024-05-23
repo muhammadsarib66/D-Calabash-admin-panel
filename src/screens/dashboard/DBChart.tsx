@@ -1,6 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import Chart from 'react-apexcharts'
 
-const chartData = {
+const chartData :any = {
           
   series: [{
     name: 'sales',
