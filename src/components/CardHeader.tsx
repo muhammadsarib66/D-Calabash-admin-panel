@@ -16,6 +16,7 @@ import {
 } from "@material-tailwind/react";
 
 const Header = ({
+  handleAddBtn,
   setStatusTab,
   statusTabs,
   heading,
@@ -25,12 +26,15 @@ const Header = ({
 }: any) => {
   const handleTabChange = (value: any) => setStatusTab(value);
 
+const handleCLick = () => {
+  handleAddBtn();
+}
   return (
     <CardHeader
-      placeholder=""
-      floated={false}
-      shadow={false}
-      className="  rounded-none"
+    floated={false}
+    shadow={false}
+    className="  rounded-none"
+    placeholder=""
       onPointerEnterCapture={() => {}}
       onPointerLeaveCapture={() => {}}
     >
@@ -62,6 +66,7 @@ const Header = ({
         <div>
           
           <Button
+          onClick={handleCLick}
             placeholder=""
             onPointerEnterCapture={() => {}}
             onPointerLeaveCapture={() => {}}

@@ -1,7 +1,17 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
+import { Button } from "@material-tailwind/react";
+import { Divider } from "@mui/material";
+import { useDispatch } from "react-redux";
+import { BlockCustomerApi } from "../feature/slicer/BlockCustomerSlicer";
+import { UnBlockCustomerApi } from "../feature/slicer/UnBlockCustomerSlicer";
+import { DelCustomerApi } from "../feature/slicer/DeleteCustomerSlicer";
+import { DisableProductApi } from "../feature/slicer/DisableProductSlicer";
+import { EnableProductApi } from "../feature/slicer/EnableProductSlicer";
+import { baseUrl } from "../feature/slicer/Slicer";
+
+// //////// admin ...........
 
 const style = {
   position: "absolute",
@@ -13,20 +23,56 @@ const style = {
   boxShadow: 24,
 };
 
-const InfoModal = ({ item, infoModal, closeModal, title }: any) => {
-  console.log(item);
+const InfoModal = ({ ActionModal, closeModal, title, item }: any) => {
+  const dispatch = useDispatch();
+console.log(item)
+console.log(item?.products[0]?.product?.imageUrl)
+  //////////////
+  const handleDeleteUser = () => {
+    const Obj = { customerId: item };
+    dispatch(DelCustomerApi(Obj));
+    closeModal();
+  };
+
+  // Block User
+  const handleBlockUser = () => {
+    const Obj = { customerId: item };
+    dispatch(BlockCustomerApi(Obj));
+    console.log(Obj);
+    closeModal();
+  };
+  // unbBlock User
+  const handleUnBlockUser = () => {
+    const Obj = { customerId: item };
+    dispatch(UnBlockCustomerApi(Obj));
+    console.log(Obj);
+    closeModal();
+  };
+  const handleEnablePrdct = () => {
+    const Obj = { productId: item };
+    dispatch(EnableProductApi(Obj));
+    console.log(Obj);
+    closeModal();
+  };
+  const handleDisablePrdct = () => {
+    const Obj = { productId: item };
+    dispatch(DisableProductApi(Obj));
+    console.log(Obj);
+    closeModal();
+  };
+
   const handleClose = () => {
     closeModal();
   };
   return (
     <Modal
-      open={infoModal}
+      open={ActionModal}
       onClose={handleClose}
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
     >
       <Box sx={style}>
-        {(title === "order-details" && (
+      {(title === "OrderInfo") && (
           <div className="h-[70vh] overflow-y-scroll ">
             <div className="flex flex-col gap-4 p-5">
               <div className="flex w-full justify-between">
@@ -59,7 +105,7 @@ const InfoModal = ({ item, infoModal, closeModal, title }: any) => {
                     {" "}
                     Customer Name :
                   </span>{" "}
-                  {item?.Client?.ClientName}
+                  {item?.address?.ClientName}
                 </p>
                 <p>
                   <span className="font-bold text-gray-800">
@@ -77,11 +123,11 @@ const InfoModal = ({ item, infoModal, closeModal, title }: any) => {
                 </p>
               </div>
               <div className="flex flex-col gap-3">
-                {item?.items?.map((product: any) => (
+                {item?.products?.map((product: any) => (
                   <div className="bg-blue-50  border p-2">
                     <p className="text-center text-xl font-semibold uppercase">
                       {" "}
-                      {product.itemName}
+                      {product?.product?.name}
                     </p>
                     <div className="flex justify-between">
                       <div>
@@ -90,7 +136,7 @@ const InfoModal = ({ item, infoModal, closeModal, title }: any) => {
                       </div>
                       <div className="">
                         <img
-                          src={product.image}
+                          src={baseUrl+product?.product?.imageUrl}
                           alt={product.itemName}
                           className="shadow-lg object-cover object-center rounded-full  w-20 h-20"
                         />
@@ -100,21 +146,162 @@ const InfoModal = ({ item, infoModal, closeModal, title }: any) => {
                 ))}
               </div>
             </div>
+          </div>) ||
+        (title === "blockcustomer" && (
+          <div className="p-6 flex flex-col gap-4 justify-between h-[30vh]">
+            <h1 className="font-semibold text-xl">
+              {" "}
+              Do you Want to Block the Customer?
+            </h1>
+            <div>
+              <Divider />
+              <div className="pt-6 flex gap-4 justify-end">
+                <Button
+                  placeholder=""
+                  onPointerEnterCapture={() => {}}
+                  onPointerLeaveCapture={() => {}}
+                  color="red"
+                  onClick={handleClose}
+                >
+                  No
+                </Button>
+                <Button
+                  placeholder=""
+                  onPointerEnterCapture={() => {}}
+                  onPointerLeaveCapture={() => {}}
+                  color="green"
+                  onClick={handleBlockUser}
+                >
+                  Yes
+                </Button>
+              </div>
+            </div>
           </div>
         )) ||
-          (title === "product-details" && (
-            <div>
-              <Typography id="modal-modal-title" variant="h6" component="h2">
-                Product Details
-              </Typography>
-              <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                <p>Product Name: {item.name}</p>
-                <p>Product Price: {item.price}</p>
-                <p>Product Description: {item.description}</p>
-              </Typography>
+          (title === "unblockcustomer" && (
+            <div className="p-6 flex flex-col gap-4 justify-between h-[30vh]">
+              <h1 className="font-semibold text-xl">
+                {" "}
+                Do you Want to Unblock the Customer?
+              </h1>
+              <div>
+                <Divider />
+                <div className="pt-6 flex gap-4 justify-end">
+                  <Button
+                    placeholder=""
+                    onPointerEnterCapture={() => {}}
+                    onPointerLeaveCapture={() => {}}
+                    color="red"
+                    onClick={handleClose}
+                  >
+                    No
+                  </Button>
+                  <Button
+                    placeholder=""
+                    onPointerEnterCapture={() => {}}
+                    onPointerLeaveCapture={() => {}}
+                    color="green"
+                    onClick={handleUnBlockUser}
+                  >
+                    Yes
+                  </Button>
+                </div>
+              </div>
             </div>
           )) ||
-          (title === "clients" && <div>hello clients</div>)}
+          (title === "delcustomer" && (
+            <div className="p-6 flex flex-col gap-4 justify-between h-[30vh]">
+              <h1 className="font-semibold text-xl">
+                {" "}
+                Do you Want to Delete the Customer?
+              </h1>
+              <div>
+                <Divider />
+                <div className="pt-6 flex gap-4 justify-end">
+                  <Button
+                    placeholder=""
+                    onPointerEnterCapture={() => {}}
+                    onPointerLeaveCapture={() => {}}
+                    color="red"
+                    onClick={handleClose}
+                  >
+                    No
+                  </Button>
+                  <Button
+                    placeholder=""
+                    onPointerEnterCapture={() => {}}
+                    onPointerLeaveCapture={() => {}}
+                    color="green"
+                    onClick={handleDeleteUser}
+                  >
+                    Yes
+                  </Button>
+                </div>
+              </div>
+            </div>
+          )) ||
+          (title === "enableproduct" && (
+            <div className="p-6 flex flex-col gap-4 justify-between h-[30vh]">
+              <h1 className="font-semibold text-xl">
+                {" "}
+                Do you Want to Enable the product?
+              </h1>
+              <div>
+                <Divider />
+                <div className="pt-6 flex gap-4 justify-end">
+                  <Button
+                    placeholder=""
+                    onPointerEnterCapture={() => {}}
+                    onPointerLeaveCapture={() => {}}
+                    color="red"
+                    onClick={handleClose}
+                  >
+                    No
+                  </Button>
+                  <Button
+                    placeholder=""
+                    onPointerEnterCapture={() => {}}
+                    onPointerLeaveCapture={() => {}}
+                    color="green"
+                    onClick={handleEnablePrdct}
+                  >
+                    Yes
+                  </Button>
+                </div>
+              </div>
+            </div>
+          )) ||
+          (title === "disableproduct" && (
+            <div className="p-6 flex flex-col gap-4 justify-between h-[30vh]">
+              <h1 className="font-semibold text-xl">
+                {" "}
+                Do you Want to Disable the product?
+              </h1>
+              <div>
+                <Divider />
+                <div className="pt-6 flex gap-4 justify-end">
+                  <Button
+                    placeholder=""
+                    onPointerEnterCapture={() => {}}
+                    onPointerLeaveCapture={() => {}}
+                    color="red"
+                    onClick={handleClose}
+                  >
+                    No
+                  </Button>
+                  <Button
+                    placeholder=""
+                    onPointerEnterCapture={() => {}}
+                    onPointerLeaveCapture={() => {}}
+                    color="green"
+                    onClick={handleDisablePrdct}
+                  >
+                    Yes
+                  </Button>
+                </div>
+              </div>
+            </div>
+          ))}
       </Box>
     </Modal>
   );

@@ -3,10 +3,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from "react";
 import InfoIcon from "@mui/icons-material/Info";
-import coffee from "../../Images/coffee.png";
-import tea from "../../Images/tea.png";
-import rice from "../../Images/rice.png";
-import pasta from "../../Images/pasta.png";
+
 import {
   Button,
   Card,
@@ -17,6 +14,9 @@ import {
 } from "@material-tailwind/react";
 import Header from "../../components/CardHeader";
 import InfoModal from "../../components/InfoModal";
+import { useSelector } from "react-redux";
+import Loader from "../../components/Loader";
+import moment from "moment";
 const OrderStatusTABS = [
   {
     label: "All",
@@ -24,87 +24,74 @@ const OrderStatusTABS = [
   },
   {
     label: "Delivered",
-    value: "delivered",
+    value: "Delivered",
   },
-  {
-    label: "Accepted",
-    value: "accepted",
-  },
+  
   {
     label: "Pending",
-    value: "pending",
+    value: "Pending",
+  },
+  {
+    label: "OutForDelivery",
+    value: "Out For Delivery",
   },
 ];
 
 const TableHeadings = [
-  "Order ID",
+  
   "Customer",
-  "Time",
-  "Total Item",
-  "Order Type",
+  "Order Time",
   "Amount",
   "Status",
-  "Info",
-  "Action",
+  "Order Detail",
+  'Action'
 ];
 
-const createFakeData = (index: any) => {
-  return {
-    Order_ID: "ORD" + (index + 1),
-    Customer: "Customer " + (index + 1),
-    Time: "2024-05-15 10:30 AM",
-    Total_Item: Math.floor(Math.random() * 5) + 1, // Random number between 1 and 5
-    Order_Type: index % 2 === 0 ? "Online" : "In-store", // Alternate between Online and In-store
-    Amount: "$" + (Math.floor(Math.random() * 100) + 50).toFixed(2), // Random amount between $50 and $150
-    Status: index % 2 === 0 ? "Delivered" : "Pending", // Alternate between Delivered and Pending
-    Info: "Lorem ipsum dolor sit amet",
-    Action: index % 2 === 0 ? "View" : "Edit", // Alternate between View and Edit
-    Client: {
-      ClientName: "Client " + (index + 1),
-      deliveryAddress: "Address " + (index + 1),
-      Phone: "01048511545" + (index + 1),
-      email: "client" + (index + 1) + "@example.com",
-    },
-    items: [
-      { itemName: "Coffee", price: "20", quantity: "1", image: coffee },
-      { itemName: "Tea", price: "30", quantity: "1", image: tea },
-      { itemName: "Pasta", price: "20", quantity: "1", image: pasta },
-      { itemName: "Rice", price: "30", quantity: "1", image: rice },
-    ],
-  };
-};
-
-const fakeData: any = [];
-for (let i = 0; i < 10; i++) {
-  fakeData.push(createFakeData(i));
-}
 
 const index = () => {
+  const {isLoading ,Orders} = useSelector((state: any) => state.GetOrderListSlicer);
   const [filterData, setFilterData] = useState<any>([]);
   const [infoModal, setInfoModal] = useState<any>(false);
-  const [itemInfo, setItemInfo] = useState<any>({});
   const [statusTab, setStatusTab] = useState<any>("all");
+  const [titleModal, setTitleModal] = useState<any>("");
+  const [item, setItem] = useState<any>("");
+
+
   const [search, setSearch] = useState<any>("");
 
   const closeModal = () => {
     setInfoModal(false);
   };
+
+  const HandleOrderInfo = (item:any) => {
+    setItem(item);
+    setInfoModal(true);
+    setTitleModal("OrderInfo");
+
+  }
+  // const HandleOrderStatus = (id:any) => {
+  //   setItem(id);
+  //   setInfoModal(true);
+  //   setTitleModal("OrderStatus");
+  // }
   useEffect(() => {
-    const filteredData = fakeData.filter((data: any) => {
-      if (statusTab === "all") {
-        return true;
-      } else {
-        return data.Status.toLowerCase() === statusTab;
-      }
-    });
-    setFilterData(filteredData);
     if (search.length > 0) {
-      const filteredData = fakeData.filter((data: any) => {
-        return data.Order_ID.toLowerCase().includes(search.toLowerCase());
+      const filteredData = Orders?.filter((data: any) => {
+        return data?.user?.fullname.toLowerCase().includes(search.toLowerCase());
+      });
+      setFilterData(filteredData);
+    } else {
+      // If search is cleared, reset filterData based on statusTab
+      const filteredData = Orders?.filter((data: any) => {
+        if (statusTab == "all") {
+          return true;
+        } else {
+          return data.status == statusTab;
+        }
       });
       setFilterData(filteredData);
     }
-  }, [statusTab, search]);
+  }, [search, Orders, statusTab]);
   return (
     <Card
       className=" w-full"
@@ -152,16 +139,13 @@ const index = () => {
             {filterData?.map(
               (
                 {
-                  Order_ID,
-                  Order_Type,
-                  Customer,
-                  Total_Item,
-                  Info,
-                  Amount,
-                  Client,
-                  items,
-                  Status,
-                  Time,
+                  user,
+                  totalAmount,
+                  createdAt,
+                  address,
+                  products,
+                  status,
+                  _id
                 }: any,
                 index: any
               ) => {
@@ -172,37 +156,30 @@ const index = () => {
 
                 return (
                   <>
-                    <tr key={Order_ID}>
-                      <td className={classes}>
-                        <Typography
-                          placeholder=""
-                          onPointerEnterCapture={() => {}}
-                          onPointerLeaveCapture={() => {}}
-                          variant="small"
-                          color="blue-gray"
-                          className="font-normal"
-                        >
-                          {Order_ID}
-                        </Typography>
-                      </td>
+                    <tr key={_id}>
+                      
                       <td className={`${classes} clientData`}>
-                        {Customer}
+                        {user?.fullname}
                         <div className="fullData bg-gray-50  text-gray-800 rounded-md shadow-md h-fit p-4  w-[300px] overflow-x-scroll ">
                           <p>
                             <span className="font-bold">Full Name : </span>
-                            {Client.ClientName}
+                            {user?.fullname}
                           </p>
                           <p>
                             <span className="font-bold">Phone : </span>
-                            {Client.phone}
+                            {'03103102166'}
                           </p>
                           <p>
                             <span className="font-bold">Email : </span>
-                            {Client.email}
+                            {user?.email}
+                          </p>
+                          <p>
+                            <span className="font-bold">City : </span>
+                            {address?.city}
                           </p>
                           <p>
                             <span className="font-bold">Delivery Addr : </span>
-                            {Client.deliveryAddress}
+                            {address?.addressLine}
                           </p>
                         </div>
                       </td>
@@ -215,19 +192,7 @@ const index = () => {
                           color="blue-gray"
                           className="font-normal"
                         >
-                          {Time}
-                        </Typography>
-                      </td>
-                      <td className={classes}>
-                        <Typography
-                          placeholder=""
-                          onPointerEnterCapture={() => {}}
-                          onPointerLeaveCapture={() => {}}
-                          variant="small"
-                          color="blue-gray"
-                          className="font-normal"
-                        >
-                          {Total_Item}
+                          {moment(createdAt).format('LL')}
                         </Typography>
                       </td>
 
@@ -240,48 +205,29 @@ const index = () => {
                           color="blue-gray"
                           className="font-normal"
                         >
-                          {Order_Type}
+                          {totalAmount}
                         </Typography>
                       </td>
-                      <td className={classes}>
-                        <Typography
-                          placeholder=""
-                          onPointerEnterCapture={() => {}}
-                          onPointerLeaveCapture={() => {}}
-                          variant="small"
-                          color="blue-gray"
-                          className="font-normal"
-                        >
-                          {Amount}
-                        </Typography>
-                      </td>
+                     
                       <td className={classes}>
                         <div className="w-max">
                           <Chip
                             variant="ghost"
                             size="sm"
-                            value={Status}
+                            value={status}
                             color={
-                              Status === "Delivered" || Status === "Accepted"
-                                ? "green"
-                                : "red"
+                              status === "Delivered" ? "green" :
+                              status === "Pending" ? "gray" :
+                              status === "Cancelled" ? "red" :
+                              status === "Out For Delivery" ? "yellow" :
+                              undefined
                             }
                           />
                         </div>
                       </td>
                       <td className={classes}>
                         <IconButton
-                          onClick={() => {
-                            setItemInfo({
-                              Info,
-                              items,
-                              Order_ID,
-                              Amount,
-                              Client,
-                              Status,
-                            });
-                            setInfoModal(true);
-                          }}
+                          onClick={() => HandleOrderInfo({ products ,address})}
                           variant="text"
                           placeholder=""
                           onPointerEnterCapture={() => {}}
@@ -293,23 +239,24 @@ const index = () => {
                       <td className={`${classes} flex gap-2`}>
                         <Button
                           placeholder=""
+                          // disabled={available == true ? true : false}
+
                           onPointerEnterCapture={() => {}}
                           onPointerLeaveCapture={() => {}}
                           size="sm"
-                          color="blue"
+                          color={
+                            (status === "Delivered" && "green") ||
+                            (status === "Pending" && "gray") ||
+                            (status === "Cancelled" && "red") ||
+                            (status === "Out For Delivery" && "yellow") ||
+                            undefined
+                          }
+                          // onClick={() => HandleOrderStatus(_id)}
+                         
                         >
-                          Accept
+                         {status}
                         </Button>
-                        <Button
-                          placeholder=""
-                          onPointerEnterCapture={() => {}}
-                          onPointerLeaveCapture={() => {}}
-                          size="sm"
-                          color="red"
-                        >
-                          Reject
-                        </Button>
-                      </td>
+                        </td>
                     </tr>
                   </>
                 );
@@ -319,13 +266,14 @@ const index = () => {
         </table>
         {infoModal && (
           <InfoModal
-            item={itemInfo}
-            title="order-details"
-            infoModal={infoModal}
-            closeModal={closeModal}
+          title={titleModal}
+          ActionModal={infoModal}
+          closeModal={closeModal}
+          item={item}
           />
         )}
       </CardBody>
+      {isLoading && <Loader />}
     </Card>
   );
 };

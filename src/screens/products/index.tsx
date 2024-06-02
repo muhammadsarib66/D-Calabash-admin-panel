@@ -2,100 +2,118 @@
 /* eslint-disable react-refresh/only-export-components */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from "react";
-import DeleteIcon from "@mui/icons-material/Delete";
 import {
+  Button,
   Card,
   CardBody,
   Chip,
   IconButton,
+  Tooltip,
   Typography,
 } from "@material-tailwind/react";
 import Header from "../../components/CardHeader";
-const RiderStatusTab = [
+import { useSelector } from "react-redux";
+import Loader from "../../components/Loader";
+import InfoModal from "../../components/InfoModal";
+// import DeleteIcon from "@mui/icons-material/Delete";
+// import NoAccountsIcon from "@mui/icons-material/NoAccounts";
+// import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import { baseUrl } from "../../feature/slicer/Slicer";
+import InfoIcon from '@mui/icons-material/Info';
+
+const OrderStatusTABS = [
   {
     label: "All",
     value: "all",
   },
   {
-    label: "Active",
-    value: "active",
+    label: "Available",
+    value: "true",
   },
   {
-    label: "Disable",
-    value: "disabled",
+    label: "Disabled",
+    value: "false",
   },
 ];
 
 const TableHeadings = [
-  "Product",
+  "Product ",
   "Product Name",
-  "Price  ",
-  "Category",
+  "Price",
   "Status",
+  "Category",
+  "Category Status",
+  "Product Info",
   "Action",
 ];
 
-const products = [
-  {
-    name: "Product 1",
-    picture: "https://source.unsplash.com/random/300x200/?product",
-    price: "$19.99",
-    status: Math.random() < 0.5 ? "Active" : "Disabled",
-    category: "Category A",
-  },
-  {
-    name: "Product 2",
-    picture: "https://source.unsplash.com/random/300x200/?product3",
-    price: "$24.99",
-    status: Math.random() < 0.5 ? "Active" : "Disabled",
-    category: "Category B",
-  },
-  {
-    name: "Product 3",
-    picture: "https://source.unsplash.com/random/300x200/?product2",
-    price: "$14.99",
-    status: Math.random() < 0.5 ? "Active" : "Disabled",
-    category: "Category C",
-  },
-  {
-    name: "Product 4",
-    picture: "https://source.unsplash.com/random/300x200/?product1",
-    price: "$29.99",
-    status: Math.random() < 0.5 ? "Active" : "Disabled",
-    category: "Category A",
-  },
-  {
-    name: "Product 5",
-    picture: "https://source.unsplash.com/random/300x200/?product",
-    price: "$39.99",
-    status: Math.random() < 0.5 ? "Active" : "Disabled",
-    category: "Category B",
-  },
-  // Add more products as needed
-];
-
 const index = () => {
+  const { isLoading, Products } = useSelector(
+    (state: any) => state.GetProductListSlicer
+  );
   const [filterData, setFilterData] = useState<any>([]);
   const [statusTab, setStatusTab] = useState<any>("all");
   const [search, setSearch] = useState<any>("");
+  const [infoModal, setInfoModal] = useState<any>(false);
+  const [titleModal, setTitleModal] = useState<any>("");
+  const [item, setItem] = useState<any>("");
+
+  const closeModal = () => {
+    setInfoModal(false);
+  };
+  const HandleEnablePrdct = (id: any) => {
+    setTitleModal("enableproduct");
+    setInfoModal(true);
+    setItem(id);
+  };
+  const HandleDisabkePrdct = (id: any) => {
+    
+    setTitleModal("disableproduct");
+    setInfoModal(true);
+    setItem(id);
+  };
+  const handleAddProduct = () => {
+    console.log('added')
+  }
+  const handleShowPrdctInfo = () =>{
+
+  }
+  // const HandleDeletrCustomer = (id: any) => {
+  //   setTitleModal("delcustomer");
+  //   setInfoModal(true);
+  //   setItem(id);
+  // };
 
   useEffect(() => {
-    const filteredData = products.filter((data: any) => {
+    const filteredData = Products?.filter((data: any) => {
       if (statusTab === "all") {
         return true;
       } else {
-        return data.status.toLowerCase() === statusTab;
+        return data.available.toString() === statusTab;
       }
     });
     setFilterData(filteredData);
+  }, [statusTab, Products]);
 
+  // Effect for filtering by search
+  useEffect(() => {
     if (search.length > 0) {
-      const filteredData = products.filter((data: any) => {
+      const filteredData = Products?.filter((data: any) => {
         return data.name.toLowerCase().includes(search.toLowerCase());
       });
       setFilterData(filteredData);
+    } else {
+      // If search is cleared, reset filterData based on statusTab
+      const filteredData = Products?.filter((data: any) => {
+        if (statusTab === "all") {
+          return true;
+        } else {
+          return data.available.toString() === statusTab;
+        }
+      });
+      setFilterData(filteredData);
     }
-  }, [statusTab, search]);
+  }, [search, Products, statusTab]);
   return (
     <Card
       className=" w-full"
@@ -106,21 +124,23 @@ const index = () => {
       <Header
         heading={"Products List"}
         headingDetail="See information about  Products"
-        statusTabs={RiderStatusTab}
+        statusTabs={OrderStatusTABS}
         setStatusTab={setStatusTab}
         setSearch={setSearch}
+        handleAddBtn={handleAddProduct}
         BtnTitle="Add Product"
       />
+
       <CardBody
         placeholder=""
         onPointerEnterCapture={() => {}}
         onPointerLeaveCapture={() => {}}
         className=" h-[70vh]  overflow-scroll px-0"
       >
-        <table className="mt-4 w-full min-w-max table-auto  text-left">
+        <table className="mt-4 w-full min-w-max table-auto text-center mx-auto  ">
           <thead>
-            <tr className="">
-              {TableHeadings?.map((head: any) => (
+            <tr className="text-center">
+              {TableHeadings?.map((head) => (
                 <th
                   key={head}
                   className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4"
@@ -141,7 +161,10 @@ const index = () => {
           </thead>
           <tbody className="">
             {filterData?.map(
-              ({ name, price, category, status, picture }: any, index: any) => {
+              (
+                { category, name, price, imageUrl, available, _id }: any,
+                index: any
+              ) => {
                 const isLast = index === filterData?.length - 1;
                 const classes = isLast
                   ? "p-4"
@@ -149,10 +172,10 @@ const index = () => {
 
                 return (
                   <>
-                    <tr key={index}>
+                    <tr className="text-center" key={_id}>
                       <td className="p-2">
                         <img
-                          src={picture}
+                          src={baseUrl + imageUrl}
                           alt="product"
                           className="active:scale-150 duration-300 transition ease-in-out w-16 h-16"
                         />
@@ -178,8 +201,20 @@ const index = () => {
                           color="blue-gray"
                           className="font-normal"
                         >
-                          {category}
+                          {price}$
                         </Typography>
+                      </td>
+
+                      <td className={classes}>
+                        <Chip
+                          variant="ghost"
+                          size="sm"
+                          className="w-fit px-4 mx-auto"
+                          value={
+                            available == true ? "Available" : "Not Available"
+                          }
+                          color={available == true ? "green" : "red"}
+                        />
                       </td>
                       <td className={classes}>
                         <Typography
@@ -190,31 +225,101 @@ const index = () => {
                           color="blue-gray"
                           className="font-normal"
                         >
-                          {price}
+                          {category?.title}
                         </Typography>
                       </td>
-
                       <td className={classes}>
-                        <div className="w-max">
-                          <Chip
-                            variant="ghost"
-                            size="sm"
-                            value={status}
-                            color={status === "Active" ? "green" : "red"}
-                          />
-                        </div>
+                        <Chip
+                          variant="ghost"
+                          size="sm"
+                          className="w-fit px-4 mx-auto"
+                          value={
+                            category?.isActive == true ? "Active" : "Disble"
+                          }
+                          color={available == true ? "green" : "red"}
+                        />
                       </td>
-
-                      <td className={classes}>
-                        <IconButton
-                          variant="text"
+                      <td>
+                      <Tooltip content="Product Detail">
+                            <IconButton
+                              // disabled={isActive == false ? true : false}
+                              onClick={() => handleShowPrdctInfo()}
+                              placeholder=""
+                              onPointerEnterCapture={() => {}}
+                              onPointerLeaveCapture={() => {}}
+                              variant="text"
+                            >
+                              <InfoIcon className=" text-gray-700" />
+                            </IconButton>
+                          </Tooltip>
+                        </td>
+                      <td className={`${classes} flex gap-2`}>
+                        <Button
                           placeholder=""
+                          disabled={available == true ? true : false}
+
                           onPointerEnterCapture={() => {}}
                           onPointerLeaveCapture={() => {}}
+                          size="sm"
+                          color="green"
+                          onClick={() => HandleEnablePrdct(_id)}
+                         
                         >
-                          <DeleteIcon className=" text-red-500 h-4 w-4" />
-                        </IconButton>
+                          Enable
+                        </Button>
+                        <Button
+                          placeholder=""
+                          disabled={!available == true ? true : false}
+                          onPointerEnterCapture={() => {}}
+                          onPointerLeaveCapture={() => {}}
+                          size="sm"
+                          color="red"
+                          onClick={() => HandleDisabkePrdct(_id)}
+
+                        >
+                          Disable
+                        </Button>
                       </td>
+                      {/* <td className={classes}>
+                        <div className=" ">
+                          <Tooltip content="Block User">
+                            <IconButton
+                              // disabled={isActive == false ? true : false}
+                              onClick={() => handleBlockCustomer(_id)}
+                              placeholder=""
+                              onPointerEnterCapture={() => {}}
+                              onPointerLeaveCapture={() => {}}
+                              variant="text"
+                            >
+                              <NoAccountsIcon className=" text-gray-700" />
+                            </IconButton>
+                          </Tooltip>
+                          <Tooltip content="Unblock User">
+                            <IconButton
+                              // disabled={isActive == true ? true : false}
+                              onClick={() => handleUnBlockCustomer(_id)}
+                              placeholder=""
+                              onPointerEnterCapture={() => {}}
+                              onPointerLeaveCapture={() => {}}
+                              variant="text"
+                            >
+                              <AccountCircleIcon className=" text-gray-700" />
+                            </IconButton>
+                          </Tooltip>
+
+                          <Tooltip content="Delete User">
+                            <IconButton
+                              onClick={() => HandleDeletrCustomer(_id)}
+                              placeholder=""
+                              onPointerEnterCapture={() => {}}
+                              onPointerLeaveCapture={() => {}}
+                              variant="text"
+                            >
+                              <DeleteIcon className=" text-red-500" />
+                            </IconButton>
+                          </Tooltip>
+                        </div>
+                      </td> */}
                     </tr>
                   </>
                 );
@@ -222,7 +327,16 @@ const index = () => {
             )}
           </tbody>
         </table>
+        {infoModal && (
+          <InfoModal
+            title={titleModal}
+            ActionModal={infoModal}
+            closeModal={closeModal}
+            item={item}
+          />
+        )}
       </CardBody>
+      {isLoading && <Loader />}
     </Card>
   );
 };

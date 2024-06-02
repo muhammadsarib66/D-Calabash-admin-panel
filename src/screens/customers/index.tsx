@@ -1,139 +1,115 @@
+
 /* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable react-refresh/only-export-components */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import SearchIcon from "@mui/icons-material/Search";
-import EditIcon from "@mui/icons-material/Edit";
+import { useEffect, useState } from "react";
 import {
   Card,
-  CardHeader,
-  Input,
-  Typography,
   CardBody,
   Chip,
-  Tabs,
-  TabsHeader,
-  Tab,
-  Avatar,
   IconButton,
+  Tooltip,
+  Typography,
 } from "@material-tailwind/react";
-import { useState } from "react";
+import Header from "../../components/CardHeader";
+import { useSelector } from "react-redux";
+import Loader from "../../components/Loader";
+import InfoModal from "../../components/InfoModal";
+import DeleteIcon from "@mui/icons-material/Delete";
+import NoAccountsIcon from "@mui/icons-material/NoAccounts";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 
-const TABS = [
+const OrderStatusTABS = [
   {
     label: "All",
     value: "all",
   },
   {
     label: "Active",
-    value: "active",
+    value: "true",
   },
   {
-    label: "Offline",
-    value: "offline",
+    label: "Blocked",
+    value: "false",
   },
 ];
 
-const TABLE_HEAD = ["Member", "Function", "Status", "Employed", "Action"];
-
-const TABLE_ROWS = [
-  {
-    img: "https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-3.jpg",
-    name: "John Michael",
-    email: "john@creative-tim.com",
-    job: "Manager",
-    org: "Organization",
-    online: true,
-    date: "23/04/18",
-  },
-  {
-    img: "https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-2.jpg",
-    name: "Alexa Liras",
-    email: "alexa@creative-tim.com",
-    job: "Programator",
-    org: "Developer",
-    online: false,
-    date: "23/04/18",
-  },
-  {
-    img: "https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-1.jpg",
-    name: "Laurent Perrier",
-    email: "laurent@creative-tim.com",
-    job: "Executive",
-    org: "Projects",
-    online: false,
-    date: "19/09/17",
-  },
-  {
-    img: "https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-4.jpg",
-    name: "Michael1 Levi",
-    email: "michael1@creative-tim.com",
-    job: "Programator",
-    org: "Developer",
-    online: true,
-    date: "24/12/08",
-  },
-  {
-    img: "https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-2.jpg",
-    name: "Alexa1 Liras",
-    email: "alexa1@creative-tim.com",
-    job: "Programator",
-    org: "Developer",
-    online: false,
-    date: "23/04/18",
-  },
-  {
-    img: "https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-1.jpg",
-    name: "Laurent1 Perrier",
-    email: "laurent1@creative-tim.com",
-    job: "Executive",
-    org: "Projects",
-    online: false,
-    date: "19/09/17",
-  },
-  {
-    img: "https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-4.jpg",
-    name: "Michael Levi",
-    email: "michael@creative-tim.com",
-    job: "Programator",
-    org: "Developer",
-    online: true,
-    date: "24/12/08",
-  },
-  {
-    img: "https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-5.jpg",
-    name: "Richard Gran",
-    email: "richard@creative-tim.com",
-    job: "Manager",
-    org: "Executive",
-    online: false,
-    date: "04/10/21",
-  },
+const TableHeadings = [
+  "Name",
+  "Email",
+  "Phone No",
+  "Status" ,
+  "Action"
 ];
+
+
+
+
 
 const index = () => {
-  const [tableData, setTableData] = useState<any>(TABLE_ROWS);
-  const [tabsData, setTabsData] = useState<any>("all");
+  const {isLoading ,Customers } = useSelector((state: any) => state.GetCustomerList);
+  const [filterData, setFilterData] = useState<any>([]);
+  const [statusTab, setStatusTab] = useState<any>("all");
+  const [search, setSearch] = useState<any>("");
+  const [infoModal, setInfoModal] = useState<any>(false);
+  const [titleModal , setTitleModal] = useState<any>("")
+  const [item , setItem] = useState<any>("")
+    
 
-  const handleTabChange = (value: any) => {
-    setTabsData(value);
-    console.log(tabsData);
-    if (value === "all") {
-      setTableData(TABLE_ROWS);
-    } else if (value === "active") {
-      setTableData(TABLE_ROWS.filter((row) => row.online));
-    } else if (value === "offline") {
-      setTableData(TABLE_ROWS.filter((row) => !row.online));
+ 
+  const closeModal = () => {
+    setInfoModal(false);
+  };
+  const handleBlockCustomer = (id:any) =>{
+    setTitleModal("blockcustomer")
+    setInfoModal(true)
+    setItem(id)
+  
+  }
+  const handleUnBlockCustomer = (id:any) =>{
+    setTitleModal("unblockcustomer")
+    setInfoModal(true)
+    setItem(id)
+
+  }
+  const HandleDeletrCustomer = (id:any) =>{
+    setTitleModal("delcustomer")
+    setInfoModal(true)
+    setItem(id)
+
+  
+  }
+
+  useEffect(() => {
+    const filteredData = Customers?.filter((data: any) => {
+      if (statusTab === "all") {
+        return true;
+      } else {
+        return data.isActive.toString() === statusTab;
+      }
+    });
+    setFilterData(filteredData);
+  }, [statusTab, Customers]);
+
+  // Effect for filtering by search
+  useEffect(() => {
+    if (search.length > 0) {
+      const filteredData = Customers?.filter((data: any) => {
+        return data.fullname.toLowerCase().includes(search.toLowerCase());
+      });
+      setFilterData(filteredData);
+    } else {
+      // If search is cleared, reset filterData based on statusTab
+      const filteredData = Customers?.filter((data: any) => {
+        if (statusTab === "all") {
+          return true;
+        } else {
+          return data.isActive.toString() === statusTab;
+        }
+      });
+      setFilterData(filteredData);
     }
-  };
-
-  const handleSearch = (value: any) => {
-    setTableData(
-      TABLE_ROWS.filter((row) =>
-        row.name.toLowerCase().includes(value.toLowerCase())
-      )
-    );
-  };
-
+  }, [search, Customers, statusTab]);
   return (
     <Card
       className=" w-full"
@@ -141,100 +117,24 @@ const index = () => {
       onPointerEnterCapture={() => {}}
       onPointerLeaveCapture={() => {}}
     >
-      <CardHeader
-        placeholder=""
-        floated={false}
-        shadow={false}
-        className="  rounded-none"
-        onPointerEnterCapture={() => {}}
-        onPointerLeaveCapture={() => {}}
-      >
-        <div className="mb-8 flex items-center justify-between gap-8">
-          <div>
-            <Typography
-              variant="h5"
-              color="blue-gray"
-              placeholder=""
-              onPointerEnterCapture={() => {}}
-              onPointerLeaveCapture={() => {}}
-            >
-              Customer list
-            </Typography>
-            <Typography
-              placeholder=""
-              onPointerEnterCapture={() => {}}
-              onPointerLeaveCapture={() => {}}
-              color="gray"
-              className="mt-1 font-normal"
-            >
-              See information about all customer
-            </Typography>
-          </div>
-          {/* <div className="flex shrink-0 flex-col gap-2 sm:flex-row">
-            <Button
-              placeholder=""
-              onPointerEnterCapture={() => {}}
-              onPointerLeaveCapture={() => {}}
-              variant="outlined"
-              size="sm"
-            >
-              view all
-            </Button>
-            <Button
-              placeholder=""
-              onPointerEnterCapture={() => {}}
-              onPointerLeaveCapture={() => {}}
-              className="flex items-center gap-3"
-              size="sm"
-            >
-              <PersonAddAltIcon strokeWidth={2} className="h-4 w-4" /> Add
-              member
-            </Button>
-          </div> */}
-        </div>
-        <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
-          <Tabs value="all" className="w-full md:w-max">
-            <TabsHeader
-              placeholder=""
-              onPointerEnterCapture={() => {}}
-              onPointerLeaveCapture={() => {}}
-            >
-              {TABS.map(({ label, value }) => (
-                <Tab
-                  placeholder=""
-                  onPointerEnterCapture={() => {}}
-                  onPointerLeaveCapture={() => {}}
-                  onClick={() => handleTabChange(value)}
-                  key={value}
-                  value={value}
-                >
-                  &nbsp;&nbsp;{label}&nbsp;&nbsp;
-                </Tab>
-              ))}
-            </TabsHeader>
-          </Tabs>
-          <div className="w-full md:w-72">
-            <Input
-              onChange={(e) => handleSearch(e.target.value)}
-              label="Search"
-              icon={<SearchIcon className="h-5 w-5" />}
-              onPointerEnterCapture={() => {}}
-              onPointerLeaveCapture={() => {}}
-              crossOrigin=""
-            />
-          </div>
-        </div>
-      </CardHeader>
+      <Header
+        heading={"Customer List"}
+        headingDetail="See information about  Customers"
+        statusTabs={OrderStatusTABS}
+        setStatusTab={setStatusTab}
+        setSearch={setSearch}
+      />
+
       <CardBody
         placeholder=""
         onPointerEnterCapture={() => {}}
         onPointerLeaveCapture={() => {}}
         className=" h-[70vh]  overflow-scroll px-0"
       >
-        <table className="mt-4 w-full min-w-max table-auto  text-left">
+        <table className="mt-4 w-full min-w-max table-auto text-center mx-auto  " > 
           <thead>
-            <tr>
-              {TABLE_HEAD.map((head) => (
+            <tr className="text-center">
+              {TableHeadings?.map((head) => (
                 <th
                   key={head}
                   className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4"
@@ -254,54 +154,20 @@ const index = () => {
             </tr>
           </thead>
           <tbody className="">
-            {tableData?.map(
+            {filterData?.map(
               (
-                { img, name, email, job, org, online, date }: any,
+                {  isActive, fullname,email, phone , _id }: any,
                 index: any
               ) => {
-                const isLast = index === TABLE_ROWS.length - 1;
+                const isLast = index === filterData?.length - 1;
                 const classes = isLast
                   ? "p-4"
                   : "p-4 border-b border-blue-gray-50";
 
                 return (
-                  <tr key={name}>
-                    <td className={classes}>
-                      <div className="flex items-center gap-3">
-                        <Avatar
-                          src={img}
-                          alt={name}
-                          size="sm"
-                          placeholder=""
-                          onPointerEnterCapture={() => {}}
-                          onPointerLeaveCapture={() => {}}
-                        />
-                        <div className="flex flex-col">
-                          <Typography
-                            placeholder=""
-                            onPointerEnterCapture={() => {}}
-                            onPointerLeaveCapture={() => {}}
-                            variant="small"
-                            color="blue-gray"
-                            className="font-normal"
-                          >
-                            {name}
-                          </Typography>
-                          <Typography
-                            placeholder=""
-                            onPointerEnterCapture={() => {}}
-                            onPointerLeaveCapture={() => {}}
-                            variant="small"
-                            color="blue-gray"
-                            className="font-normal opacity-70"
-                          >
-                            {email}
-                          </Typography>
-                        </div>
-                      </div>
-                    </td>
-                    <td className={classes}>
-                      <div className="flex flex-col">
+                  <>
+                    <tr className="text-center" key={_id}>
+                      <td className={classes}>
                         <Typography
                           placeholder=""
                           onPointerEnterCapture={() => {}}
@@ -310,58 +176,108 @@ const index = () => {
                           color="blue-gray"
                           className="font-normal"
                         >
-                          {job}
+                          {fullname}
                         </Typography>
+                      </td>
+                      <td className={classes}>
                         <Typography
                           placeholder=""
                           onPointerEnterCapture={() => {}}
                           onPointerLeaveCapture={() => {}}
                           variant="small"
                           color="blue-gray"
-                          className="font-normal opacity-70"
+                          className="font-normal"
                         >
-                          {org}
+                          {email}
                         </Typography>
-                      </div>
-                    </td>
-                    <td className={classes}>
-                      <div className="w-max">
-                        <Chip
-                          variant="ghost"
-                          size="sm"
-                          value={online ? "online" : "offline"}
-                          color={online ? "green" : "blue-gray"}
-                        />
-                      </div>
-                    </td>
-                    <td className={classes}>
-                      <Typography
-                        placeholder=""
-                        onPointerEnterCapture={() => {}}
-                        onPointerLeaveCapture={() => {}}
-                        variant="small"
-                        color="blue-gray"
-                        className="font-normal"
-                      >
-                        {date}
-                      </Typography>
-                    </td>
-                    <IconButton
-                      variant="text"
-                      placeholder=""
-                      onPointerEnterCapture={() => {}}
-                      onPointerLeaveCapture={() => {}}
-                    >
-                      <EditIcon className="h-4 w-4" />
-                    </IconButton>
-                  </tr>
+                      </td>
+                      <td className={classes}>
+                        <Typography
+                          placeholder=""
+                          onPointerEnterCapture={() => {}}
+                          onPointerLeaveCapture={() => {}}
+                          variant="small"
+                          color="blue-gray"
+                          className="font-normal"
+                        >
+                          {phone}
+                        </Typography>
+                      </td>
+                      <td className={classes}>
+                          <Chip
+                            variant="ghost"
+                            size="sm"
+                            className="w-fit px-4 mx-auto"
+                            value={isActive == true ? "Active" : "Inactive"}
+                            color={isActive == true ? "green" : "red"}
+                          />
+                          
+                      </td>
+                      <td className={classes}>
+                       <div className=" ">
+
+                        <Tooltip content="Block User">
+                          <IconButton
+                          disabled={isActive == false ? true : false}
+                          onClick={() => handleBlockCustomer(_id)}
+
+                            placeholder=""
+                            onPointerEnterCapture={() => {}}
+                            onPointerLeaveCapture={() => {}}
+                            variant="text"
+                          >
+                            <NoAccountsIcon className=" text-gray-700" />
+                          </IconButton>
+                        </Tooltip>
+                        <Tooltip content="Unblock User">
+                          <IconButton
+                          disabled={isActive == true ? true : false}
+                          onClick={() => handleUnBlockCustomer(_id)}
+
+                            placeholder=""
+                            onPointerEnterCapture={() => {}}
+                            onPointerLeaveCapture={() => {}}
+                            variant="text"
+                          >
+                            <AccountCircleIcon className=" text-gray-700" />
+                          </IconButton>
+                        </Tooltip>
+                       
+                        <Tooltip content="Delete User">
+                          <IconButton
+                            onClick={() => HandleDeletrCustomer(_id)}
+                            placeholder=""
+                            onPointerEnterCapture={() => {}}
+                            onPointerLeaveCapture={() => {}}
+                            variant="text"
+                          >
+                            <DeleteIcon className=" text-red-500" />
+                          </IconButton>
+                        </Tooltip>
+                       </div>
+
+                      </td>
+                      </tr>
+                  </>
                 );
               }
             )}
           </tbody>
         </table>
+        {infoModal && (
+          <InfoModal
+           
+            title={titleModal}
+            ActionModal={infoModal}
+            closeModal={closeModal}
+            item={item}
+          />
+        )}
       </CardBody>
+      {isLoading && <Loader />}
     </Card>
   );
 };
+
 export default index;
+

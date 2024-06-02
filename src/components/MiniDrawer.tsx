@@ -34,6 +34,7 @@ import Riders from "../screens/riders";
 import Product from "../screens/products";
 import { Link } from "react-router-dom";
 import { LoginOutlined } from "@mui/icons-material";
+import { ToastContainer } from "react-toastify";
 const drawerWidth = 240;
 const tabs = [
   {
@@ -299,6 +300,7 @@ export default function MiniDrawer() {
           <Route path="/products" element={<Product />} />
           <Route path="/riders" element={<Riders />} />
         </Routes>
+        <ToastContainer />
       </Box>
     </Box>
   );
