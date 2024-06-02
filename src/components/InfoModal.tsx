@@ -10,6 +10,7 @@ import { DelCustomerApi } from "../feature/slicer/DeleteCustomerSlicer";
 import { DisableProductApi } from "../feature/slicer/DisableProductSlicer";
 import { EnableProductApi } from "../feature/slicer/EnableProductSlicer";
 import { baseUrl } from "../feature/slicer/Slicer";
+import { OrderStatusApi } from "../feature/slicer/OrderStatusSlicer";
 
 // //////// admin ...........
 
@@ -25,8 +26,6 @@ const style = {
 
 const InfoModal = ({ ActionModal, closeModal, title, item }: any) => {
   const dispatch = useDispatch();
-console.log(item)
-console.log(item?.products[0]?.product?.imageUrl)
   //////////////
   const handleDeleteUser = () => {
     const Obj = { customerId: item };
@@ -64,6 +63,20 @@ console.log(item?.products[0]?.product?.imageUrl)
   const handleClose = () => {
     closeModal();
   };
+  ////////////// Order Status /////
+  const handleConfirmOrder = ()=>{
+    const Obj = {id: item?._id, status : 'Confirmed'}
+    dispatch(OrderStatusApi(Obj))
+    closeModal();
+
+  }
+  const handleShipOrder = ()=>{
+    const Obj = {id: item?._id, status : 'Shipped'}
+    dispatch(OrderStatusApi(Obj))
+    closeModal();
+
+  }
+
   return (
     <Modal
       open={ActionModal}
@@ -147,6 +160,37 @@ console.log(item?.products[0]?.product?.imageUrl)
               </div>
             </div>
           </div>) ||
+        (title === "OrderStatus" && (
+          <div className="p-6 flex flex-col gap-4 justify-between h-[30vh]">
+            <h1 className="font-semibold text-xl">
+              {" "}
+              Please Change The Delivery Status?
+            </h1>
+            <div>
+              <Divider />
+              <div className="pt-6 flex gap-4 justify-end">
+                <Button
+                  placeholder=""
+                  onPointerEnterCapture={() => {}}
+                  onPointerLeaveCapture={() => {}}
+                  color="blue"
+                  onClick={handleConfirmOrder}
+                >
+                  Confirm
+                </Button>
+                <Button
+                  placeholder=""
+                  onPointerEnterCapture={() => {}}
+                  onPointerLeaveCapture={() => {}}
+                  color="green"
+                  onClick={handleShipOrder}
+                >
+                  Shipped 
+                </Button>
+              </div>
+            </div>
+          </div>
+        )) ||
         (title === "blockcustomer" && (
           <div className="p-6 flex flex-col gap-4 justify-between h-[30vh]">
             <h1 className="font-semibold text-xl">

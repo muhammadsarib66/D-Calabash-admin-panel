@@ -6,6 +6,7 @@ import UnBlockCustomerSlicer from "./slicer/UnBlockCustomerSlicer";
 import GetProductListSlicer from "./slicer/GetProductListSlicer";
 import DisableProductSlicer from "./slicer/DisableProductSlicer";
 import GetOrderListSlicer from "./slicer/GetOrderListSlicer";
+import OrderStatusSlicer from "./slicer/OrderStatusSlicer";
 
 export const store = configureStore({
   reducer: {
@@ -15,6 +16,7 @@ export const store = configureStore({
     UnBlockCustomerSlicer,
     GetProductListSlicer,
     DisableProductSlicer,
-    GetOrderListSlicer
+    GetOrderListSlicer,
+    OrderStatusSlicer
   },
 });

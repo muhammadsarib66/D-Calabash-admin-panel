@@ -14,7 +14,7 @@ import {
 } from "@material-tailwind/react";
 import Header from "../../components/CardHeader";
 import InfoModal from "../../components/InfoModal";
-import { useSelector } from "react-redux";
+import {  useSelector } from "react-redux";
 import Loader from "../../components/Loader";
 import moment from "moment";
 const OrderStatusTABS = [
@@ -69,11 +69,12 @@ const index = () => {
     setTitleModal("OrderInfo");
 
   }
-  // const HandleOrderStatus = (id:any) => {
-  //   setItem(id);
-  //   setInfoModal(true);
-  //   setTitleModal("OrderStatus");
-  // }
+  const HandleOrderStatus = (id:any) => {
+   
+    setItem(id);
+    setInfoModal(true);
+    setTitleModal("OrderStatus");
+  }
   useEffect(() => {
     if (search.length > 0) {
       const filteredData = Orders?.filter((data: any) => {
@@ -219,7 +220,8 @@ const index = () => {
                               status === "Delivered" ? "green" :
                               status === "Pending" ? "gray" :
                               status === "Cancelled" ? "red" :
-                              status === "Out For Delivery" ? "yellow" :
+                              status === "Confirmed" ? "blue" :
+                              status === "Shipped" ? "green" :
                               undefined
                             }
                           />
@@ -248,10 +250,11 @@ const index = () => {
                             (status === "Delivered" && "green") ||
                             (status === "Pending" && "gray") ||
                             (status === "Cancelled" && "red") ||
-                            (status === "Out For Delivery" && "yellow") ||
+                            (status === "Confirmed" && "blue") ||
+                            (status === "Shipped" && "green") ||
                             undefined
                           }
-                          // onClick={() => HandleOrderStatus(_id)}
+                          onClick={() => HandleOrderStatus({_id,status})}
                          
                         >
                          {status}
