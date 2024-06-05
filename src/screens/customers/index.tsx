@@ -15,9 +15,9 @@ import Header from "../../components/CardHeader";
 import { useSelector } from "react-redux";
 import Loader from "../../components/Loader";
 import InfoModal from "../../components/InfoModal";
-import DeleteIcon from "@mui/icons-material/Delete";
 import NoAccountsIcon from "@mui/icons-material/NoAccounts";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 const OrderStatusTABS = [
   {

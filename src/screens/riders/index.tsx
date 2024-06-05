@@ -2,129 +2,96 @@
 /* eslint-disable react-refresh/only-export-components */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from "react";
-import DeleteIcon from "@mui/icons-material/Delete";
-import {
-  Card,
-  CardBody,
-  Chip,
-  IconButton,
-  Typography,
-} from "@material-tailwind/react";
+// import InfoIcon from "@mui/icons-material/Info";
+
+import { Card, CardBody, Chip, IconButton, Tooltip, Typography } from "@material-tailwind/react";
 import Header from "../../components/CardHeader";
-const RiderStatusTab = [
+import InfoModal from "../../components/InfoModal";
+import { useSelector } from "react-redux";
+import Loader from "../../components/Loader";
+import DeleteIcon from "@mui/icons-material/Delete";
+import NoAccountsIcon from "@mui/icons-material/NoAccounts";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+const OrderStatusTABS = [
   {
     label: "All",
     value: "all",
   },
   {
-    label: "Online",
-    value: "online",
+    label: "Active",
+    value: true,
   },
+
   {
-    label: "Offline",
-    value: "offline",
+    label: "Blocked",
+    value: false,
   },
+ 
 ];
 
-const TableHeadings = ["Rider Name", "Phone ", "Email", "Status", "Action"];
-
-const riders = [
-  {
-    name: "John Smith",
-    phone: "0101234567",
-    email: "john@example.com",
-    status: "online",
-    image: "rider1.jpg",
-  },
-  {
-    name: "Jane Doe",
-    phone: "0102345678",
-    email: "jane@example.com",
-    status: "offline",
-    image: "rider2.jpg",
-  },
-  {
-    name: "Michael Johnson",
-    phone: "0103456789",
-    email: "michael@example.com",
-    status: "online",
-    image: "rider3.jpg",
-  },
-  {
-    name: "Emily Brown",
-    phone: "0104567890",
-    email: "emily@example.com",
-    status: "offline",
-    image: "rider4.jpg",
-  },
-  {
-    name: "William Wilson",
-    phone: "0105678901",
-    email: "william@example.com",
-    status: "online",
-    image: "rider5.jpg",
-  },
-  {
-    name: "Olivia Taylor",
-    phone: "0106789012",
-    email: "olivia@example.com",
-    status: "offline",
-    image: "rider6.jpg",
-  },
-  {
-    name: "James Martinez",
-    phone: "0107890123",
-    email: "james@example.com",
-    status: "online",
-    image: "rider7.jpg",
-  },
-  {
-    name: "Sophia Anderson",
-    phone: "0108901234",
-    email: "sophia@example.com",
-    status: "offline",
-    image: "rider8.jpg",
-  },
-  {
-    name: "Alexander Thomas",
-    phone: "0109012345",
-    email: "alexander@example.com",
-    status: "online",
-    image: "rider9.jpg",
-  },
-  {
-    name: "Isabella Garcia",
-    phone: "0100123456",
-    email: "isabella@example.com",
-    status: "offline",
-    image: "rider10.jpg",
-  },
-];
-
+const TableHeadings = ["Rider Name", "Email", "Status", "Action"];
 
 const index = () => {
+  const { isLoading, Riders } = useSelector(
+    (state: any) => state.GetRidersSlicer
+  );
   const [filterData, setFilterData] = useState<any>([]);
-
+  const [infoModal, setInfoModal] = useState<any>(false);
   const [statusTab, setStatusTab] = useState<any>("all");
+  const [titleModal, setTitleModal] = useState<any>("");
+  const [item, setItem] = useState<any>("");
+
   const [search, setSearch] = useState<any>("");
 
-  useEffect(() => {
-    const filteredData = riders.filter((data: any) => {
-      if (statusTab === "all") {
-        return true;
-      } else {
-        return data.status.toLowerCase() === statusTab;
-      }
-    });
-    setFilterData(filteredData);
+  const closeModal = () => {
+    setInfoModal(false);
+  };
 
+  const handleAddRider = () => {
+    setTitleModal("addRider");
+    setInfoModal(true);
+   
+  }
+  const handleBlockRider = (id:any) =>{
+    setTitleModal("blockRider")
+    setInfoModal(true)
+    setItem(id)
+  
+  }
+  const handleUnBlockRider = (id:any) =>{
+    setTitleModal("unblockRider")
+    setInfoModal(true)
+    setItem(id)
+
+  }
+  const HandleDeletrRider = (id:any) =>{
+    setTitleModal("delRider")
+    setInfoModal(true)
+    setItem(id)
+
+  
+  }
+
+  useEffect(() => {
     if (search.length > 0) {
-      const filteredData = riders.filter((data: any) => {
-        return data.name.toLowerCase().includes(search.toLowerCase());
+      const filteredData = Riders?.filter((data: any) => {
+        return data?.fullname
+          .toLowerCase()
+          .includes(search.toLowerCase());
+      });
+      setFilterData(filteredData);
+    } else {
+      // If search is cleared, reset filterData based on statusTab
+      const filteredData = Riders?.filter((data: any) => {
+        if (statusTab == "all") {
+          return true;
+        } else {
+          return data.isActive == statusTab;
+        }
       });
       setFilterData(filteredData);
     }
-  }, [statusTab, search]);
+  }, [search, Riders, statusTab]);
   return (
     <Card
       className=" w-full"
@@ -134,10 +101,11 @@ const index = () => {
     >
       <Header
         heading={"Riders List"}
-        headingDetail="See information about  Riders"
-        statusTabs={RiderStatusTab}
+        headingDetail="See information about  Order"
+        statusTabs={OrderStatusTABS}
         setStatusTab={setStatusTab}
         setSearch={setSearch}
+        handleAddBtn={handleAddRider}
         BtnTitle="Add Rider"
       />
 
@@ -150,7 +118,7 @@ const index = () => {
         <table className="mt-4 w-full min-w-max table-auto  text-left">
           <thead>
             <tr className="">
-              {TableHeadings?.map((head: any) => (
+              {TableHeadings?.map((head) => (
                 <th
                   key={head}
                   className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4"
@@ -171,7 +139,7 @@ const index = () => {
           </thead>
           <tbody className="">
             {filterData?.map(
-              ({ name, phone, email, status }: any, index: any) => {
+              ({ email, fullname, isActive, _id }: any, index: any) => {
                 const isLast = index === filterData?.length - 1;
                 const classes = isLast
                   ? "p-4"
@@ -179,7 +147,7 @@ const index = () => {
 
                 return (
                   <>
-                    <tr key={index}>
+                    <tr key={_id}>
                       <td className={classes}>
                         <Typography
                           placeholder=""
@@ -189,22 +157,9 @@ const index = () => {
                           color="blue-gray"
                           className="font-normal"
                         >
-                          {name}
+                          {fullname}
                         </Typography>
                       </td>
-                      <td className={classes}>
-                        <Typography
-                          placeholder=""
-                          onPointerEnterCapture={() => {}}
-                          onPointerLeaveCapture={() => {}}
-                          variant="small"
-                          color="blue-gray"
-                          className="font-normal"
-                        >
-                          {phone}
-                        </Typography>
-                      </td>
-
                       <td className={classes}>
                         <Typography
                           placeholder=""
@@ -223,21 +178,50 @@ const index = () => {
                           <Chip
                             variant="ghost"
                             size="sm"
-                            value={status}
-                            color={status === "online" ? "green" : "red"}
+                            value={isActive ? "Active" : "Blocked"}
+                            color={isActive == true ? "green" : "red"}
                           />
                         </div>
                       </td>
-                     
                       <td className={classes}>
-                        <IconButton
-                          variant="text"
-                          placeholder=""
-                          onPointerEnterCapture={() => {}}
-                          onPointerLeaveCapture={() => {}}
-                        >
-                          <DeleteIcon className=" text-red-500 h-4 w-4" />
-                        </IconButton>
+                        <div className=" ">
+                          <Tooltip content="Block User">
+                            <IconButton
+                              disabled={isActive == false ? true : false}
+                              onClick={() => handleBlockRider(_id)}
+                              placeholder=""
+                              onPointerEnterCapture={() => {}}
+                              onPointerLeaveCapture={() => {}}
+                              variant="text"
+                            >
+                              <NoAccountsIcon className=" text-gray-700" />
+                            </IconButton>
+                          </Tooltip>
+                          <Tooltip content="Unblock User">
+                            <IconButton
+                              disabled={isActive == true ? true : false}
+                              onClick={() => handleUnBlockRider(_id)}
+                              placeholder=""
+                              onPointerEnterCapture={() => {}}
+                              onPointerLeaveCapture={() => {}}
+                              variant="text"
+                            >
+                              <AccountCircleIcon className=" text-gray-700" />
+                            </IconButton>
+                          </Tooltip>
+
+                          <Tooltip content="Delete User">
+                            <IconButton
+                              onClick={() => HandleDeletrRider(_id)}
+                              placeholder=""
+                              onPointerEnterCapture={() => {}}
+                              onPointerLeaveCapture={() => {}}
+                              variant="text"
+                            >
+                              <DeleteIcon className=" text-red-500" />
+                            </IconButton>
+                          </Tooltip>
+                        </div>
                       </td>
                     </tr>
                   </>
@@ -246,8 +230,16 @@ const index = () => {
             )}
           </tbody>
         </table>
-       
+        {infoModal && (
+          <InfoModal
+            title={titleModal}
+            ActionModal={infoModal}
+            closeModal={closeModal}
+            item={item}
+          />
+        )}
       </CardBody>
+      {isLoading && <Loader />}
     </Card>
   );
 };

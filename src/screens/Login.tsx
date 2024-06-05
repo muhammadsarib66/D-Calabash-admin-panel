@@ -5,10 +5,32 @@ import logo from "../Images/Logo.png";
 import { Typography, Input, Button } from "@material-tailwind/react";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import { ToastContainer, toast } from "react-toastify";
+import { useDispatch } from "react-redux";
+import { LoginApi } from "../feature/slicer/LoginSlicer";
 
-export function Login({setLogin}:any) {
+export function Login() {
+  const dispatch = useDispatch()
+  const [login , setLogin ] = useState<any>({
+    email : '',
+    password : "",
+  })
   const [passwordShown, setPasswordShown] = useState(false);
   const togglePasswordVisiblity = () => setPasswordShown((cur) => !cur);
+
+  const handleChange = (e:any)=>{
+    setLogin((prev: any)=>({...prev , [e.target.name]:e.target.value}))
+  }
+  const HandleLogin = ()=>{
+    if(login.email !== "" && login.password !== ""){
+      dispatch(LoginApi(login))
+      console.log(login)
+    }
+    else{
+      toast.error("Please fill all field")
+    }
+  }
+
 
   return (
     <section className="flex text-center h-screen items-center ">
@@ -52,6 +74,8 @@ export function Login({setLogin}:any) {
               </Typography>
             </label>
             <Input
+            onChange={handleChange}
+            value={login?.email}
               onPointerEnterCapture={() => {}}
               onPointerLeaveCapture={() => {}}
               crossOrigin="" // Add the missing crossOrigin property
@@ -80,10 +104,14 @@ export function Login({setLogin}:any) {
               </Typography>
             </label>
             <Input
+            onChange={handleChange}
+            name="password"
+            value={login?.password}
               crossOrigin="" // Add the missing crossOrigin property
               onPointerEnterCapture={() => {}}
               onPointerLeaveCapture={() => {}}
               size="lg"
+              id="password"
               placeholder="********"
               labelProps={{
                 className: "hidden",
@@ -102,7 +130,7 @@ export function Login({setLogin}:any) {
             />
           </div>
           <Button
-          onClick={()=>setLogin(true)}
+          onClick={HandleLogin}
             placeholder=""
             onPointerEnterCapture={() => {}}
             onPointerLeaveCapture={() => {}}
@@ -127,22 +155,7 @@ export function Login({setLogin}:any) {
               Forgot password
             </Typography>
           </div>
-          <Button
-            placeholder=""
-            onPointerEnterCapture={() => {}}
-            onPointerLeaveCapture={() => {}}
-            variant="outlined"
-            size="lg"
-            className="mt-6 flex h-12 items-center justify-center gap-2"
-            fullWidth
-          >
-            <img
-              src={`https://www.material-tailwind.com/logos/logo-google.png`}
-              alt="google"
-              className="h-6 w-6"
-            />{" "}
-            sign in with google
-          </Button>
+         
           <Typography
             placeholder=""
             onPointerEnterCapture={() => {}}
@@ -158,6 +171,7 @@ export function Login({setLogin}:any) {
           </Typography>
         </form>
       </div>
+      <ToastContainer />
     </section>
   );
 }

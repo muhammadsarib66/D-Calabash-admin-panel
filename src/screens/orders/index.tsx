@@ -10,6 +10,7 @@ import {
   CardBody,
   Chip,
   IconButton,
+  Tooltip,
   Typography,
 } from "@material-tailwind/react";
 import Header from "../../components/CardHeader";
@@ -17,6 +18,7 @@ import InfoModal from "../../components/InfoModal";
 import {  useSelector } from "react-redux";
 import Loader from "../../components/Loader";
 import moment from "moment";
+import DeleteIcon from "@mui/icons-material/Delete";
 const OrderStatusTABS = [
   {
     label: "All",
@@ -32,8 +34,8 @@ const OrderStatusTABS = [
     value: "Pending",
   },
   {
-    label: "OutForDelivery",
-    value: "Out For Delivery",
+    label: "Confirmed",
+    value: "Confirmed",
   },
 ];
 
@@ -44,6 +46,7 @@ const TableHeadings = [
   "Amount",
   "Status",
   "Order Detail",
+  'Delivery Status',
   'Action'
 ];
 
@@ -55,6 +58,7 @@ const index = () => {
   const [statusTab, setStatusTab] = useState<any>("all");
   const [titleModal, setTitleModal] = useState<any>("");
   const [item, setItem] = useState<any>("");
+
 
 
   const [search, setSearch] = useState<any>("");
@@ -69,12 +73,26 @@ const index = () => {
     setTitleModal("OrderInfo");
 
   }
+  const HandleDeletrOrder = (item:any) => {
+    setItem(item);
+    setInfoModal(true);
+    setTitleModal("deleteorder");
+
+  }
   const HandleOrderStatus = (id:any) => {
    
     setItem(id);
     setInfoModal(true);
     setTitleModal("OrderStatus");
-  }
+  };
+  const HandleOrderAsgn = (id:any) => {
+   
+    setItem(id);
+    setInfoModal(true);
+    setTitleModal("Orderassign");
+  };
+
+
   useEffect(() => {
     if (search.length > 0) {
       const filteredData = Orders?.filter((data: any) => {
@@ -229,7 +247,7 @@ const index = () => {
                       </td>
                       <td className={classes}>
                         <IconButton
-                          onClick={() => HandleOrderInfo({ products ,address})}
+                          onClick={() => HandleOrderInfo({ products ,address , user})}
                           variant="text"
                           placeholder=""
                           onPointerEnterCapture={() => {}}
@@ -238,8 +256,9 @@ const index = () => {
                           <InfoIcon className="h-4 w-4" />
                         </IconButton>
                       </td>
+                     
                       <td className={`${classes} flex gap-2`}>
-                        <Button
+                        {status !== "Confirmed" ? <Button
                           placeholder=""
                           // disabled={available == true ? true : false}
 
@@ -247,7 +266,7 @@ const index = () => {
                           onPointerLeaveCapture={() => {}}
                           size="sm"
                           color={
-                            (status === "Delivered" && "green") ||
+                            (status === "Delivered" && "orange") ||
                             (status === "Pending" && "gray") ||
                             (status === "Cancelled" && "red") ||
                             (status === "Confirmed" && "blue") ||
@@ -259,7 +278,42 @@ const index = () => {
                         >
                          {status}
                         </Button>
+                        :
+                        <Button
+                          placeholder=""
+                          // disabled={available == true ? true : false}
+
+                          onPointerEnterCapture={() => {}}
+                          onPointerLeaveCapture={() => {}}
+                          size="sm"
+                          color={
+                            (status === "Delivered" && "orange") ||
+                            (status === "Pending" && "gray") ||
+                            (status === "Cancelled" && "red") ||
+                            (status === "Confirmed" && "blue") ||
+                            (status === "Shipped" && "green") ||
+                            undefined
+                          }
+                          onClick={() => HandleOrderAsgn({_id})}
+                         
+                        >
+                         Assign to Rider
+                        </Button>
+                        }
                         </td>
+                        <td className={classes}>
+                      <Tooltip content="Delete Order">
+                          <IconButton
+                            onClick={() => HandleDeletrOrder(_id)}
+                            placeholder=""
+                            onPointerEnterCapture={() => {}}
+                            onPointerLeaveCapture={() => {}}
+                            variant="text"
+                          >
+                            <DeleteIcon className=" text-red-500" />
+                          </IconButton>
+                        </Tooltip>
+                      </td>
                     </tr>
                   </>
                 );

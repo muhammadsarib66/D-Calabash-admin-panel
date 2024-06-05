@@ -15,11 +15,10 @@ import Header from "../../components/CardHeader";
 import { useSelector } from "react-redux";
 import Loader from "../../components/Loader";
 import InfoModal from "../../components/InfoModal";
-// import DeleteIcon from "@mui/icons-material/Delete";
-// import NoAccountsIcon from "@mui/icons-material/NoAccounts";
-// import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { baseUrl } from "../../feature/slicer/Slicer";
 import InfoIcon from '@mui/icons-material/Info';
+import DeleteIcon from "@mui/icons-material/Delete";
+
 
 const OrderStatusTABS = [
   {
@@ -44,6 +43,7 @@ const TableHeadings = [
   "Category",
   "Category Status",
   "Product Info",
+  "Change Status",
   "Action",
 ];
 
@@ -72,18 +72,21 @@ const index = () => {
     setInfoModal(true);
     setItem(id);
   };
+  const HandleDeletePrdct = (id: any) => {
+    
+    setTitleModal("deleteproduct");
+    setInfoModal(true);
+    setItem(id);
+  };
   const handleAddProduct = () => {
+    setTitleModal("addproduct");
+    setInfoModal(true);
     console.log('added')
   }
   const handleShowPrdctInfo = () =>{
 
   }
-  // const HandleDeletrCustomer = (id: any) => {
-  //   setTitleModal("delcustomer");
-  //   setInfoModal(true);
-  //   setItem(id);
-  // };
-
+ 
   useEffect(() => {
     const filteredData = Products?.filter((data: any) => {
       if (statusTab === "all") {
@@ -236,7 +239,7 @@ const index = () => {
                           value={
                             category?.isActive == true ? "Active" : "Disble"
                           }
-                          color={available == true ? "green" : "red"}
+                          color={category?.isActive == true ? "green" : "red"}
                         />
                       </td>
                       <td>
@@ -280,46 +283,19 @@ const index = () => {
                           Disable
                         </Button>
                       </td>
-                      {/* <td className={classes}>
-                        <div className=" ">
-                          <Tooltip content="Block User">
-                            <IconButton
-                              // disabled={isActive == false ? true : false}
-                              onClick={() => handleBlockCustomer(_id)}
-                              placeholder=""
-                              onPointerEnterCapture={() => {}}
-                              onPointerLeaveCapture={() => {}}
-                              variant="text"
-                            >
-                              <NoAccountsIcon className=" text-gray-700" />
-                            </IconButton>
-                          </Tooltip>
-                          <Tooltip content="Unblock User">
-                            <IconButton
-                              // disabled={isActive == true ? true : false}
-                              onClick={() => handleUnBlockCustomer(_id)}
-                              placeholder=""
-                              onPointerEnterCapture={() => {}}
-                              onPointerLeaveCapture={() => {}}
-                              variant="text"
-                            >
-                              <AccountCircleIcon className=" text-gray-700" />
-                            </IconButton>
-                          </Tooltip>
-
-                          <Tooltip content="Delete User">
-                            <IconButton
-                              onClick={() => HandleDeletrCustomer(_id)}
-                              placeholder=""
-                              onPointerEnterCapture={() => {}}
-                              onPointerLeaveCapture={() => {}}
-                              variant="text"
-                            >
-                              <DeleteIcon className=" text-red-500" />
-                            </IconButton>
-                          </Tooltip>
-                        </div>
-                      </td> */}
+                      <td className={classes}>
+                      <Tooltip content="Delete Product">
+                          <IconButton
+                            onClick={() => HandleDeletePrdct(_id)}
+                            placeholder=""
+                            onPointerEnterCapture={() => {}}
+                            onPointerLeaveCapture={() => {}}
+                            variant="text"
+                          >
+                            <DeleteIcon className=" text-red-500" />
+                          </IconButton>
+                        </Tooltip>
+                      </td>
                     </tr>
                   </>
                 );

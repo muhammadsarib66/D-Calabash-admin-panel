@@ -25,6 +25,7 @@ import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
 import RestaurantIcon from "@mui/icons-material/Restaurant";
 import AddBoxIcon from "@mui/icons-material/AddBox";
 import DeliveryDiningIcon from "@mui/icons-material/DeliveryDining";
+import CategoryIcon from '@mui/icons-material/Category';
 import { useLocation } from "react-router";
 
 import Dashboard from "../screens/dashboard";
@@ -35,6 +36,7 @@ import Product from "../screens/products";
 import { Link } from "react-router-dom";
 import { LoginOutlined } from "@mui/icons-material";
 import { ToastContainer } from "react-toastify";
+import ProductCategory from "../screens/products/ProductCategory";
 const drawerWidth = 240;
 const tabs = [
   {
@@ -43,14 +45,14 @@ const tabs = [
     icon: <DashboardIcon />,
   },
   {
-    title: "Customers",
-    link: "/customers",
-    icon: <PeopleAltIcon />,
-  },
-  {
     title: "Orders",
     link: "/orders",
     icon: <RestaurantIcon />,
+  },
+  {
+    title: "Customers",
+    link: "/customers",
+    icon: <PeopleAltIcon />,
   },
   {
     title: "Products",
@@ -58,9 +60,15 @@ const tabs = [
     icon: <AddBoxIcon />,
   },
   {
+    title: "Product Categories",
+    link: "/productsCategories",
+    icon: <CategoryIcon />,
+  },
+  {
     title: "Rider",
     link: "/riders",
     icon: <DeliveryDiningIcon />,
+
   },
 ];
 
@@ -145,6 +153,7 @@ export default function MiniDrawer() {
   const handleDrawerClose = () => {
     setOpen(false);
   };
+  const User = JSON.parse(localStorage.getItem("AdminUser") || "{}");
 
   return (
     <Box sx={{ display: "flex" }}>
@@ -178,7 +187,7 @@ export default function MiniDrawer() {
                 sx={{ width: "50px", height: "50px", marginLeft: "10px" }}
               />
               <div>
-                <h5 className="font-semibold text-gray-800 "> Guest User</h5>
+                <h5 className="font-semibold text-gray-800 "> {User?.fullname}</h5>
                 <p className="text-xs"> admin</p>
               </div>
               <ExpandCircleDownIcon
@@ -254,6 +263,9 @@ export default function MiniDrawer() {
         <Divider />
         <List>
           <ListItem
+          onClick={()=>{localStorage.removeItem('admintoken')
+            window.location.reload()
+          }}
             disablePadding
             sx={{ display: "block", background: "inherit", color: "inherit" }}
           >
@@ -293,13 +305,16 @@ export default function MiniDrawer() {
         }}
       >
         {/* <DrawerHeader /> */}
-        <Routes>
-          <Route path="/" element={<Dashboard />} />
+          <Routes>
+
+          <Route path="*" element={<Dashboard />} />
           <Route path="/customers" element={<Customers />} />
           <Route path="/orders" element={<Orders />} />
           <Route path="/products" element={<Product />} />
+          <Route path="/productsCategories" element={<ProductCategory />} />
           <Route path="/riders" element={<Riders />} />
-        </Routes>
+          </Routes>
+
         <ToastContainer />
       </Box>
     </Box>
