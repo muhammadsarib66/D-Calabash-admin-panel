@@ -69,7 +69,7 @@ const index = () => {
     onPointerLeaveCapture={() => {}}
     className={`${orderStatus == "pendingOrders" ? "bg-black border-2  text-white" : 'bg-white-800 text-black  border-2 '} flex  items-center gap-3`}
 >
-    Pending Orders {DashboardData?.pendingOrders.length}
+    Pending Orders {DashboardData?.pendingOrders?.length}
 </Button>
           <Button
             onClick={handleActive}
@@ -80,7 +80,7 @@ const index = () => {
 
             size="sm"
           >
-            Active Orders {DashboardData?.activeOrders.length}
+            Active Orders {DashboardData?.activeOrders?.length}
           </Button>
         </div>
       </CardHeader>
