@@ -21,15 +21,6 @@ import moment from "moment";
 import DeleteIcon from "@mui/icons-material/Delete";
 const OrderStatusTABS = [
   {
-    label: "All",
-    value: "all",
-  },
-  {
-    label: "Delivered",
-    value: "Delivered",
-  },
-  
-  {
     label: "Pending",
     value: "Pending",
   },
@@ -37,6 +28,21 @@ const OrderStatusTABS = [
     label: "Confirmed",
     value: "Confirmed",
   },
+  {
+    label: "Shipped",
+    value: "Shipped",
+  },
+  {
+    label: "Delivered",
+    value: "Delivered",
+  },
+  {
+    label: "All",
+    value: "all",
+  },
+  
+  
+  
 ];
 
 const TableHeadings = [
@@ -55,7 +61,7 @@ const index = () => {
   const {isLoading ,Orders} = useSelector((state: any) => state.GetOrderListSlicer);
   const [filterData, setFilterData] = useState<any>([]);
   const [infoModal, setInfoModal] = useState<any>(false);
-  const [statusTab, setStatusTab] = useState<any>("all");
+  const [statusTab, setStatusTab] = useState<any>("Pending");
   const [titleModal, setTitleModal] = useState<any>("");
   const [item, setItem] = useState<any>("");
 
@@ -107,6 +113,7 @@ const index = () => {
         } else {
           return data.status == statusTab;
         }
+    
       });
       setFilterData(filteredData);
     }
@@ -124,6 +131,8 @@ const index = () => {
         statusTabs={OrderStatusTABS}
         setStatusTab={setStatusTab}
         setSearch={setSearch}
+        StatusTabVal="Pending"
+        
       />
 
       <CardBody
@@ -235,7 +244,7 @@ const index = () => {
                             size="sm"
                             value={status}
                             color={
-                              status === "Delivered" ? "green" :
+                              status === "Delivered" ? "orange" :
                               status === "Pending" ? "gray" :
                               status === "Cancelled" ? "red" :
                               status === "Confirmed" ? "blue" :
@@ -247,7 +256,7 @@ const index = () => {
                       </td>
                       <td className={classes}>
                         <IconButton
-                          onClick={() => HandleOrderInfo({ products ,address , user})}
+                          onClick={() => HandleOrderInfo({ products ,address , user, totalAmount,status})}
                           variant="text"
                           placeholder=""
                           onPointerEnterCapture={() => {}}
@@ -260,7 +269,7 @@ const index = () => {
                       <td className={`${classes} flex gap-2`}>
                         {status !== "Confirmed" ? <Button
                           placeholder=""
-                          // disabled={available == true ? true : false}
+                          disabled={status === "Delivered" || status === "Shipped" ? true : false}
 
                           onPointerEnterCapture={() => {}}
                           onPointerLeaveCapture={() => {}}

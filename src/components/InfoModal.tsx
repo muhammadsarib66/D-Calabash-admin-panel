@@ -85,10 +85,10 @@ const InfoModal = ({ ActionModal, closeModal, title, item }: any) => {
     setAddProduct({ ...addproduct, image: files[0] });
   };
   const handleDelete = (i: any) => {
-    setTags(tags.filter((tag: any, index: any) => index !== i));
+    setTags(tags.filter((_: any, index: any) => index !== i));
+    
   };
   const handleAddition = (tag: any) => {
-    console.log(tag);
     setTags([...tags, tag]);
   };
 
@@ -292,15 +292,15 @@ const InfoModal = ({ ActionModal, closeModal, title, item }: any) => {
                   </span>{" "}
                   {item?.user?.email}
                 </p>
-                <p>
+                {/* <p>
                   <span className="font-bold text-gray-800">
                     {" "}
                     Customer Phone:
                   </span>{" "}
                   {item?.Client?.Phone}
-                </p>
+                </p> */}
               </div>
-              <div className="bg-gray-100  border p-2">
+              {/* <div className="bg-gray-100  border p-2">
                 <p>
                   <span className="font-bold text-gray-800"> Address :</span>{" "}
                   {item?.address?.addressLine}
@@ -316,7 +316,7 @@ const InfoModal = ({ ActionModal, closeModal, title, item }: any) => {
                   <span className="font-bold text-gray-800"> City :</span>{" "}
                   {item?.address?.city}
                 </p>
-              </div>
+              </div> */}
               <div className="flex flex-col gap-3">
                 {item?.products?.map((product: any) => (
                   <div className="bg-blue-50  border p-2">
@@ -339,6 +339,7 @@ const InfoModal = ({ ActionModal, closeModal, title, item }: any) => {
                     </div>
                   </div>
                 ))}
+                <h2 className="text-center flex gap-2  justify-center font-semibold text-xl"> Total Amount <span className="text-green-500">{item?.totalAmount}</span></h2>
               </div>
             </div>
           </div>

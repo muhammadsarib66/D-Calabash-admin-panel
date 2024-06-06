@@ -174,7 +174,7 @@ const ProductCategory = () => {
                         />
                       </td>
                       <td className={classes}>
-                      <Tooltip content="Delete User">
+                      <Tooltip content="Delete Category">
                           <IconButton
                             onClick={() => HandleDeletrCategory(_id)}
                             placeholder=""

@@ -4,11 +4,14 @@ import axios from "axios";
 import { baseUrl, config } from "./Slicer";
 import { toast } from "react-toastify";
 
-export const GetOrderListApi: any = createAsyncThunk(
-  "dcalabash/OrderList",
+export const DashboardApi: any = createAsyncThunk(
+  "DashboardData",
   async (_, { rejectWithValue }) => {
     try {
-      const response = await axios.get(`${baseUrl}orders/orders-admin`, config);
+      const response = await axios.get(
+        `${baseUrl}dashboard`,
+        config
+      );
       console.log(response?.data?.data)
       return response?.data?.data;
     } catch (error: any) {
@@ -32,23 +35,23 @@ export const GetOrderListApi: any = createAsyncThunk(
 const initialState = {
   isLoading: false,
   isError: false,
-  Orders: [],
+  DashboardData: [],
 };
-const GetOrderListSlicer = createSlice({
-  name: "OrderList",
+const DashboardSlicer = createSlice({
+  name: "DashboardData",
   initialState,
   reducers: {},
 
   extraReducers: (builder) => {
-    builder.addCase(GetOrderListApi.pending, (state) => {
+    builder.addCase(DashboardApi.pending, (state) => {
       state.isLoading = true;
     });
-    builder.addCase(GetOrderListApi.fulfilled, (state, action) => {
+    builder.addCase(DashboardApi.fulfilled, (state, action) => {
       state.isLoading = false;
-      state.Orders = action.payload
+      state.DashboardData = action.payload;
       // console.log(localStorage.getItem("token"));
     });
-    builder.addCase(GetOrderListApi.rejected, (state) => {
+    builder.addCase(DashboardApi.rejected, (state) => {
       state.isLoading = false;
       state.isError = true;
     });
@@ -56,4 +59,4 @@ const GetOrderListSlicer = createSlice({
 });
 
 // export const {} = AddPortfolioSlicer.actions;
-export default GetOrderListSlicer.reducer;
+export default DashboardSlicer.reducer;

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
-import { baseUrl,  config,  token } from "./Slicer";
+import { baseUrl,  config } from "./Slicer";
 import { toast } from "react-toastify";
 import { GetOrderListApi } from "./GetOrderListSlicer";
 
@@ -12,7 +12,7 @@ export const AssingOrderApi: any = createAsyncThunk(
     return await axios
     .post(`${baseUrl}orders/assign-rider`, Obj,config)
     .then((resp) => {
-    console.log(resp);
+    // console.log(resp);
       toast.success(resp?.data?.message);
       dispatch(GetOrderListApi())
       return resp.data;

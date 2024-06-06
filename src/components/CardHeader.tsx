@@ -23,6 +23,7 @@ const Header = ({
   headingDetail,
   setSearch,
   BtnTitle,
+  StatusTabVal
 }: any) => {
   const handleTabChange = (value: any) => setStatusTab(value);
 
@@ -81,7 +82,7 @@ const handleCLick = () => {
           }
       </div>
       <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
-        <Tabs value="all" className="w-full md:w-max">
+        <Tabs value={StatusTabVal ?? "all"} className="w-full md:w-max">
           <TabsHeader
             placeholder=""
             onPointerEnterCapture={() => {}}

@@ -16,7 +16,6 @@ import { useSelector } from "react-redux";
 import Loader from "../../components/Loader";
 import InfoModal from "../../components/InfoModal";
 import { baseUrl } from "../../feature/slicer/Slicer";
-import InfoIcon from '@mui/icons-material/Info';
 import DeleteIcon from "@mui/icons-material/Delete";
 
 
@@ -42,7 +41,7 @@ const TableHeadings = [
   "Status",
   "Category",
   "Category Status",
-  "Product Info",
+  "Ingredients",
   "Change Status",
   "Action",
 ];
@@ -81,11 +80,8 @@ const index = () => {
   const handleAddProduct = () => {
     setTitleModal("addproduct");
     setInfoModal(true);
-    console.log('added')
   }
-  const handleShowPrdctInfo = () =>{
 
-  }
  
   useEffect(() => {
     const filteredData = Products?.filter((data: any) => {
@@ -165,7 +161,7 @@ const index = () => {
           <tbody className="">
             {filterData?.map(
               (
-                { category, name, price, imageUrl, available, _id }: any,
+                { category, name, price, imageUrl, ingredients,available, _id }: any,
                 index: any
               ) => {
                 const isLast = index === filterData?.length - 1;
@@ -242,7 +238,26 @@ const index = () => {
                           color={category?.isActive == true ? "green" : "red"}
                         />
                       </td>
-                      <td>
+                      <td className={classes}>
+                        <ul className=" flex flex-col gap-2">
+
+                      {ingredients?.map((ing: any) => (
+                        <li>
+
+                        <Chip
+                        
+                          variant="ghost"
+                          
+                          className="w-fit px-4 mx-auto"
+                          value={ing}
+                          color="blue"
+                        />
+                        </li>
+
+                      ))}
+                      </ul>
+                      </td>
+                      {/* <td>
                       <Tooltip content="Product Detail">
                             <IconButton
                               // disabled={isActive == false ? true : false}
@@ -255,21 +270,23 @@ const index = () => {
                               <InfoIcon className=" text-gray-700" />
                             </IconButton>
                           </Tooltip>
-                        </td>
+                        </td> */}
                       <td className={`${classes} flex gap-2`}>
+                      {!available == true ? 
                         <Button
-                          placeholder=""
-                          disabled={available == true ? true : false}
-
-                          onPointerEnterCapture={() => {}}
-                          onPointerLeaveCapture={() => {}}
-                          size="sm"
-                          color="green"
-                          onClick={() => HandleEnablePrdct(_id)}
-                         
+                        placeholder=""
+                        disabled={available == true ? true : false}
+                        
+                        onPointerEnterCapture={() => {}}
+                        onPointerLeaveCapture={() => {}}
+                        size="sm"
+                        color="green"
+                        onClick={() => HandleEnablePrdct(_id)}
+                        
                         >
                           Enable
                         </Button>
+                        :
                         <Button
                           placeholder=""
                           disabled={!available == true ? true : false}
@@ -282,6 +299,8 @@ const index = () => {
                         >
                           Disable
                         </Button>
+                      }
+
                       </td>
                       <td className={classes}>
                       <Tooltip content="Delete Product">

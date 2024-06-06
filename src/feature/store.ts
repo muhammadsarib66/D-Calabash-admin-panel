@@ -20,6 +20,7 @@ import DeleteOrderSlicer from "./slicer/DeleteOrderSlicer";
 import DeleteProductSlicer from "./slicer/DeleteProductSlicer";
 import AssingOrderRiderSlicer from "./slicer/AssingOrderRiderSlicer";
 import LoginSlicer from "./slicer/LoginSlicer";
+import DashboardSlicer from "./slicer/DashboardSlicer";
 
 export const store = configureStore({
   reducer: {
@@ -43,7 +44,8 @@ export const store = configureStore({
     DeleteOrderSlicer,
     DeleteProductSlicer,
     AssingOrderRiderSlicer,
-    LoginSlicer
+    LoginSlicer,
+    DashboardSlicer
 
   },
 });

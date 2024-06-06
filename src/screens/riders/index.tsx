@@ -2,9 +2,14 @@
 /* eslint-disable react-refresh/only-export-components */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from "react";
-// import InfoIcon from "@mui/icons-material/Info";
-
-import { Card, CardBody, Chip, IconButton, Tooltip, Typography } from "@material-tailwind/react";
+import {
+  Card,
+  CardBody,
+  Chip,
+  IconButton,
+  Tooltip,
+  Typography,
+} from "@material-tailwind/react";
 import Header from "../../components/CardHeader";
 import InfoModal from "../../components/InfoModal";
 import { useSelector } from "react-redux";
@@ -12,7 +17,7 @@ import Loader from "../../components/Loader";
 import DeleteIcon from "@mui/icons-material/Delete";
 import NoAccountsIcon from "@mui/icons-material/NoAccounts";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-const OrderStatusTABS = [
+const RiderStatusTABS = [
   {
     label: "All",
     value: "all",
@@ -26,7 +31,6 @@ const OrderStatusTABS = [
     label: "Blocked",
     value: false,
   },
- 
 ];
 
 const TableHeadings = ["Rider Name", "Email", "Status", "Action"];
@@ -50,34 +54,27 @@ const index = () => {
   const handleAddRider = () => {
     setTitleModal("addRider");
     setInfoModal(true);
-   
-  }
-  const handleBlockRider = (id:any) =>{
-    setTitleModal("blockRider")
-    setInfoModal(true)
-    setItem(id)
-  
-  }
-  const handleUnBlockRider = (id:any) =>{
-    setTitleModal("unblockRider")
-    setInfoModal(true)
-    setItem(id)
-
-  }
-  const HandleDeletrRider = (id:any) =>{
-    setTitleModal("delRider")
-    setInfoModal(true)
-    setItem(id)
-
-  
-  }
+  };
+  const handleBlockRider = (id: any) => {
+    setTitleModal("blockRider");
+    setInfoModal(true);
+    setItem(id);
+  };
+  const handleUnBlockRider = (id: any) => {
+    setTitleModal("unblockRider");
+    setInfoModal(true);
+    setItem(id);
+  };
+  const HandleDeletrRider = (id: any) => {
+    setTitleModal("delRider");
+    setInfoModal(true);
+    setItem(id);
+  };
 
   useEffect(() => {
     if (search.length > 0) {
       const filteredData = Riders?.filter((data: any) => {
-        return data?.fullname
-          .toLowerCase()
-          .includes(search.toLowerCase());
+        return data?.fullname.toLowerCase().includes(search.toLowerCase());
       });
       setFilterData(filteredData);
     } else {
@@ -101,8 +98,8 @@ const index = () => {
     >
       <Header
         heading={"Riders List"}
-        headingDetail="See information about  Order"
-        statusTabs={OrderStatusTABS}
+        headingDetail="See information about  Riders"
+        statusTabs={RiderStatusTABS}
         setStatusTab={setStatusTab}
         setSearch={setSearch}
         handleAddBtn={handleAddRider}
@@ -185,7 +182,7 @@ const index = () => {
                       </td>
                       <td className={classes}>
                         <div className=" ">
-                          <Tooltip content="Block User">
+                          <Tooltip content="Block Rider">
                             <IconButton
                               disabled={isActive == false ? true : false}
                               onClick={() => handleBlockRider(_id)}
@@ -197,7 +194,7 @@ const index = () => {
                               <NoAccountsIcon className=" text-gray-700" />
                             </IconButton>
                           </Tooltip>
-                          <Tooltip content="Unblock User">
+                          <Tooltip content="Unblock Rider">
                             <IconButton
                               disabled={isActive == true ? true : false}
                               onClick={() => handleUnBlockRider(_id)}
@@ -210,7 +207,7 @@ const index = () => {
                             </IconButton>
                           </Tooltip>
 
-                          <Tooltip content="Delete User">
+                          <Tooltip content="Delete Rider">
                             <IconButton
                               onClick={() => HandleDeletrRider(_id)}
                               placeholder=""

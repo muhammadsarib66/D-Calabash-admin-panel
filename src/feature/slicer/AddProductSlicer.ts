@@ -17,14 +17,14 @@ export const AddProductApi: any = createAsyncThunk(
   "dcalabash/AddProduct",
   async (Obj: any, {dispatch}) => {
     const {image , name, description, price, available, ingradients, category} = Obj;
-    
+    console.log(ingradients)
     const formData = new FormData();
     formData.append("image", image);
   formData.append("name", name);
   formData.append("description", description);
   formData.append("price", price);
   formData.append("available", available);
-   formData.append(`ingradients`, ingradients);
+   formData.append("ingredients", ingradients);
   formData.append("category", category);
  
     return await axios
