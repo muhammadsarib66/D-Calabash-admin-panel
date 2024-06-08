@@ -4,6 +4,7 @@ import axios from "axios";
 import { baseUrl,  config } from "./Slicer";
 import { toast } from "react-toastify";
 import { GetOrderListApi } from "./GetOrderListSlicer";
+import { DashboardApi } from "./DashboardSlicer";
 
 
 export const AssingOrderApi: any = createAsyncThunk(
@@ -14,6 +15,7 @@ export const AssingOrderApi: any = createAsyncThunk(
     .then((resp) => {
     // console.log(resp);
       toast.success(resp?.data?.message);
+      dispatch(DashboardApi())
       dispatch(GetOrderListApi())
       return resp.data;
     })

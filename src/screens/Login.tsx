@@ -24,10 +24,19 @@ export function Login() {
   const HandleLogin = ()=>{
     if(login.email !== "" && login.password !== ""){
       dispatch(LoginApi(login))
-      console.log(login)
+      setLogin({
+        email : "",
+        password : ""
+      
+      })
     }
     else{
       toast.error("Please fill all field")
+      setLogin({
+        email : "",
+        password : ""
+      
+      })
     }
   }
 
@@ -141,34 +150,8 @@ export function Login() {
           >
             sign in
           </Button>
-          <div className="!mt-4 flex justify-end">
-            <Typography
-              placeholder=""
-              onPointerEnterCapture={() => {}}
-              onPointerLeaveCapture={() => {}}
-              as="a"
-              href="#"
-              color="blue-gray"
-              variant="small"
-              className="font-medium"
-            >
-              Forgot password
-            </Typography>
-          </div>
          
-          <Typography
-            placeholder=""
-            onPointerEnterCapture={() => {}}
-            onPointerLeaveCapture={() => {}}
-            variant="small"
-            color="gray"
-            className="!mt-4 text-center font-normal"
-          >
-            Not registered?{" "}
-            <a href="#" className="font-medium text-gray-900">
-              Create account
-            </a>
-          </Typography>
+          
         </form>
       </div>
       <ToastContainer />

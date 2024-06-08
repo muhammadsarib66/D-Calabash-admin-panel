@@ -60,8 +60,8 @@ const TableHeadings = [
 const index = () => {
   const {isLoading ,Orders} = useSelector((state: any) => state.GetOrderListSlicer);
   const [filterData, setFilterData] = useState<any>([]);
-  const [infoModal, setInfoModal] = useState<any>(false);
   const [statusTab, setStatusTab] = useState<any>("Pending");
+  const [infoModal, setInfoModal] = useState<any>(false);
   const [titleModal, setTitleModal] = useState<any>("");
   const [item, setItem] = useState<any>("");
 
@@ -115,6 +115,7 @@ const index = () => {
         }
     
       });
+      filteredData.sort((a:any, b:any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
       setFilterData(filteredData);
     }
   }, [search, Orders, statusTab]);
@@ -220,7 +221,9 @@ const index = () => {
                           color="blue-gray"
                           className="font-normal"
                         >
-                          {moment(createdAt).format('LL')}
+                          {/* {moment(createdAt).format('LL')} */}
+                          {/* {createdAt.sort((a:any,b:any) => new Date(b.createdAt) - new Date(a.createdAt))} */}
+                          {moment(createdAt).format(' h:mm a, MMMM Do YYYY')}
                         </Typography>
                       </td>
 
@@ -291,7 +294,6 @@ const index = () => {
                         <Button
                           placeholder=""
                           // disabled={available == true ? true : false}
-
                           onPointerEnterCapture={() => {}}
                           onPointerLeaveCapture={() => {}}
                           size="sm"
@@ -304,7 +306,7 @@ const index = () => {
                             undefined
                           }
                           onClick={() => HandleOrderAsgn({_id})}
-                         
+                
                         >
                          Assign to Rider
                         </Button>

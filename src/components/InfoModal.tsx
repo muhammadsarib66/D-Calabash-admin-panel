@@ -171,6 +171,11 @@ const InfoModal = ({ ActionModal, closeModal, title, item }: any) => {
     dispatch(OrderStatusApi(Obj));
     closeModal();
   };
+  const handleConfirmRecentOrder = () => {
+    const Obj = { id: item?._id, status: "Confirmed" };
+    dispatch(OrderStatusApi(Obj));
+    closeModal();
+  };
   const handleShipOrder = () => {
     const Obj = { id: item?._id, status: "Shipped" };
     dispatch(OrderStatusApi(Obj));
@@ -181,6 +186,18 @@ const InfoModal = ({ ActionModal, closeModal, title, item }: any) => {
     setRiderId(id);
   };
   const HandleAsignOrder = () => {
+    const Obj = {
+      orderId: item,
+      riderId,
+    };
+    if (selectedRider) {
+      dispatch(AssingOrderApi(Obj));
+      closeModal();
+    } else {
+      toast.error("Please Select Rider");
+    }
+  };
+  const HandleRecentAsignOrder = () => {
     const Obj = {
       orderId: item,
       riderId,
@@ -375,6 +392,37 @@ const InfoModal = ({ ActionModal, closeModal, title, item }: any) => {
               </div>
             </div>
           )) ||
+          (title === "RecentOrderStatus" && (
+            <div className="p-6 flex flex-col gap-4 justify-between h-[30vh]">
+              <h1 className="font-semibold text-xl">
+                {" "}
+                Please Change The Delivery Status to?
+              </h1>
+              <div>
+                <Divider />
+                <div className="pt-6 flex gap-4 justify-end">
+                  <Button
+                    placeholder=""
+                    onPointerEnterCapture={() => {}}
+                    onPointerLeaveCapture={() => {}}
+                    color="blue"
+                    onClick={handleConfirmRecentOrder}
+                  >
+                    Confirm
+                  </Button>
+                  <Button
+                    placeholder=""
+                    onPointerEnterCapture={() => {}}
+                    onPointerLeaveCapture={() => {}}
+                    color="green"
+                    onClick={handleShipOrder}
+                  >
+                    Shipped
+                  </Button>
+                </div>
+              </div>
+            </div>
+          )) ||
           (title === "Orderassign" && (
             <div className=" min-h-fit  p-6">
               <div className="flex justify-between  w-full ">
@@ -403,8 +451,10 @@ const InfoModal = ({ ActionModal, closeModal, title, item }: any) => {
                           setSelectedRider(rid.fullname);
                         }}
                         value={rid.fullname}
+                        
                       >
-                        {rid.fullname}
+                          {rid?.fullname.length > 12 ? `${rid?.fullname.substring(0, 12)}..` : rid?.fullname}
+
                       </Option>
                     ))}
                   </Select>
@@ -417,6 +467,55 @@ const InfoModal = ({ ActionModal, closeModal, title, item }: any) => {
                   onPointerLeaveCapture={() => {}}
                   color="blue-gray"
                   onClick={HandleAsignOrder}
+                >
+                  Assign to Rider
+                </Button>
+              </div>
+            </div>
+          )) ||
+          (title === "RecentOrderassign" && (
+            <div className=" min-h-fit  p-6">
+              <div className="flex justify-between  w-full ">
+                <h1 className="text-gray-800 capitalize pb-6 text-xl font-semibold">
+                  Assign Order to Active Riders
+                </h1>
+                <i
+                  className="fas fa-times text-2xl cursor-pointer"
+                  onClick={handleClose}
+                ></i>
+              </div>
+              <div className=" flex flex-col gap-4 w-full">
+                <div className="relative z-50">
+                  <Select
+                    className="absolute top-0 z-40"
+                    placeholder={""}
+                    value={selectedRider}
+                    onPointerEnterCapture={() => {}}
+                    onPointerLeaveCapture={() => {}}
+                    label="Select Rider"
+                  >
+                    {Riders.map((rid: any) => (
+                      <Option
+                        onClick={() => {
+                          handleSelectRider(rid?._id);
+                          setSelectedRider(rid.fullname);
+                        }}
+                        value={rid.fullname}
+                      >
+                        {rid?.fullname.length > 12 ? `${rid?.fullname.substring(0, 12)}..` : rid?.fullname}
+
+                      </Option>
+                    ))}
+                  </Select>
+                </div>
+
+                <Button
+                  className="w-full"
+                  placeholder=""
+                  onPointerEnterCapture={() => {}}
+                  onPointerLeaveCapture={() => {}}
+                  color="blue-gray"
+                  onClick={HandleRecentAsignOrder}
                 >
                   Assign to Rider
                 </Button>

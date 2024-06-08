@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable react-refresh/only-export-components */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Button,
   Card,
@@ -13,12 +13,14 @@ import {
 import { useSelector } from "react-redux";
 import Loader from "../../components/Loader";
 import moment from "moment";
+import InfoModal from "../../components/InfoModal";
 
 const TableHeadings = [
   "Customer",
   "Order Time",
   "Amount",
   "Status",
+  "Order Status",
   "Order Type",
   "Delivery Detail",
 ];
@@ -27,18 +29,44 @@ const index = () => {
   const { isLoading, DashboardData } = useSelector(
     (state: any) => state.DashboardSlicer
   );
-  const [orderStatus, setOrderStatus] = useState("pendingOrders");
+  const [filterData, setFilterData] = useState<any>([]);
 
-  const filterData =
-    (orderStatus == "pendingOrders" && DashboardData?.pendingOrders) ||
-    (orderStatus == "activeOrders" && DashboardData?.activeOrders);
+  const [orderStatus, setOrderStatus] = useState<any>("pendingOrders");
+
+  const [infoModal, setInfoModal] = useState<any>(false);
+  const [titleModal, setTitleModal] = useState<any>("");
+  const [item, setItem] = useState<any>("");
+  
+  const closeModal = () => {
+    setInfoModal(false);
+  };
   const handlePending = () => {
     setOrderStatus("pendingOrders");
   };
   const handleActive = () => {
     setOrderStatus("activeOrders");
   };
+  const HandleOrderStatus = (id:any) => {
+   
+    setItem(id);
+    setInfoModal(true);
+    setTitleModal("RecentOrderStatus");
+  };
+  const HandleOrderAsgn = (id:any) => {
+   
+    setItem(id);
+    setInfoModal(true);
+    setTitleModal("RecentOrderassign");
+  };
 
+  useEffect(() => {
+    if (orderStatus === "pendingOrders" || orderStatus === "activeOrders") {
+      const filteredData = DashboardData?.[orderStatus] || [];
+      // Sort filteredData by createdAt field (assuming it's a date)
+      const sortedData = [...filteredData].sort((a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+      setFilterData(sortedData);
+    }
+  }, [orderStatus, DashboardData]);
   return (
     <Card
       className=" w-full"
@@ -92,12 +120,13 @@ const index = () => {
         className=" h-[40vh]  overflow-scroll px-0"
       >
         {filterData && filterData?.length > 0 ? (
-          <table className="mt-4 w-full min-w-max table-auto  text-left">
+         <>
+         <table className="mt-4 w-full min-w-max table-auto  text-left">
             <thead>
               <tr className="">
-                {TableHeadings?.map((head) => (
+                {TableHeadings?.map((head:any, index :any) => (
                   <th
-                    key={head}
+                    key={index}
                     className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4"
                   >
                     <Typography
@@ -149,7 +178,9 @@ const index = () => {
                             color="blue-gray"
                             className="font-normal"
                           >
-                            {moment(createdAt).format("LL")}
+                            {/* {moment(createdAt).format("LL")} */}
+                          {moment(createdAt).format(' h:mm a, MMMM Do YYYY')}
+
                           </Typography>
                         </td>
 
@@ -162,7 +193,7 @@ const index = () => {
                             color="blue-gray"
                             className="font-normal"
                           >
-                            {totalAmount}
+                            {totalAmount}$
                           </Typography>
                         </td>
 
@@ -187,6 +218,49 @@ const index = () => {
                               }
                             />
                           </div>
+                        </td>
+                        <td className={`${classes} flex gap-2`}>
+                        {status !== "Confirmed" ? <Button
+                          placeholder=""
+                          disabled={status === "Delivered" || status === "Shipped" ? true : false}
+
+                          onPointerEnterCapture={() => {}}
+                          onPointerLeaveCapture={() => {}}
+                          size="sm"
+                          color={
+                            (status === "Delivered" && "orange") ||
+                            (status === "Pending" && "gray") ||
+                            (status === "Cancelled" && "red") ||
+                            (status === "Confirmed" && "blue") ||
+                            (status === "Shipped" && "green") ||
+                            undefined
+                          }
+                          onClick={() => HandleOrderStatus({_id,status})}
+                         
+                        >
+                         {status}
+                        </Button>
+                        :
+                        <Button
+                          placeholder=""
+                          // disabled={available == true ? true : false}
+                          onPointerEnterCapture={() => {}}
+                          onPointerLeaveCapture={() => {}}
+                          size="sm"
+                          color={
+                            (status === "Delivered" && "orange") ||
+                            (status === "Pending" && "gray") ||
+                            (status === "Cancelled" && "red") ||
+                            (status === "Confirmed" && "blue") ||
+                            (status === "Shipped" && "green") ||
+                            undefined
+                          }
+                          onClick={() => HandleOrderAsgn({_id})}
+                
+                        >
+                         Assign to Rider
+                        </Button>
+                        }
                         </td>
                         <td className={classes}>
                           <Typography
@@ -219,11 +293,21 @@ const index = () => {
               )}
             </tbody>
           </table>
-        ) : (
+       {infoModal && (
+        <InfoModal
+        title={titleModal}
+        ActionModal={infoModal}
+        closeModal={closeModal}
+        item={item}
+        />
+      )}
+      </> 
+      ) : (
           <div className="flex justify-center min-w-full">
             <h1 className="text-center text-xl  ">No Any orders Found</h1>
           </div>
         )}
+
       </CardBody>
       {isLoading && <Loader />}
     </Card>

@@ -154,7 +154,8 @@ const index = () => {
                           color="blue-gray"
                           className="font-normal"
                         >
-                          {fullname}
+                          {/* {fullname} */}
+                          {fullname.length > 10 ? `${fullname.substring(0, 10)}..` : fullname}
                         </Typography>
                       </td>
                       <td className={classes}>
