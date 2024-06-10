@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useMemo } from "react";
 import MiniDrawer from "./components/MiniDrawer";
 import Login from "./screens/Login";
