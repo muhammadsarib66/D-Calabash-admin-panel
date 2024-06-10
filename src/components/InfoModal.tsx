@@ -31,7 +31,7 @@ import { DeleteCategoryApi } from "../feature/slicer/DeleteCategorySlicer";
 import { DeleteOrderApi } from "../feature/slicer/DeleteOrderSlicer";
 import { DeleteProductApi } from "../feature/slicer/DeleteProductSlicer";
 import { AssingOrderApi } from "../feature/slicer/AssingOrderRiderSlicer";
-
+import { AddAdminApi } from "../feature/slicer/AddAdminSlicer";
 // //////// admin ...........
 const KeyCodes = {
   comma: 188,
@@ -71,6 +71,12 @@ const InfoModal = ({ ActionModal, closeModal, title, item }: any) => {
     email: "",
     password: "",
   });
+  const [admin, setAdmin] = useState<any>({
+    fullname: "",
+    email: "",
+    password: "",
+    issubadmin: true,
+  });
   const [riderId, setRiderId] = useState("");
   const [selectedRider, setSelectedRider] = useState("");
 
@@ -86,7 +92,6 @@ const InfoModal = ({ ActionModal, closeModal, title, item }: any) => {
   };
   const handleDelete = (i: any) => {
     setTags(tags.filter((_: any, index: any) => index !== i));
-    
   };
   const handleAddition = (tag: any) => {
     setTags([...tags, tag]);
@@ -176,11 +181,11 @@ const InfoModal = ({ ActionModal, closeModal, title, item }: any) => {
     dispatch(OrderStatusApi(Obj));
     closeModal();
   };
-  const handleShipOrder = () => {
-    const Obj = { id: item?._id, status: "Shipped" };
-    dispatch(OrderStatusApi(Obj));
-    closeModal();
-  };
+  // const handleShipOrder = () => {
+  //   const Obj = { id: item?._id, status: "Shipped" };
+  //   dispatch(OrderStatusApi(Obj));
+  //   closeModal();
+  // };
   /// Asign Rider
   const handleSelectRider = (id: any) => {
     setRiderId(id);
@@ -275,6 +280,23 @@ const InfoModal = ({ ActionModal, closeModal, title, item }: any) => {
       toast.error("Please Fill All Fields");
     }
   };
+  const handleAddAdmin = () => {
+    if (admin.fullname && admin.email && admin.password) {
+      dispatch(AddAdminApi(admin));
+      handleClose();
+      setAdmin({
+        fullname: "",
+        email: "",
+        password: "",
+        issubadmin: true,
+      });
+    } else {
+      toast.error("Please fill all fields 😣");
+    }
+  };
+  const handleChangeAdmin = (e: any) => {
+    setAdmin({ ...admin, [e.target.name]: e.target.value });
+  };
   return (
     <Modal
       open={ActionModal}
@@ -356,7 +378,11 @@ const InfoModal = ({ ActionModal, closeModal, title, item }: any) => {
                     </div>
                   </div>
                 ))}
-                <h2 className="text-center flex gap-2  justify-center font-semibold text-xl"> Total Amount <span className="text-green-500">{item?.totalAmount}</span></h2>
+                <h2 className="text-center flex gap-2  justify-center font-semibold text-xl">
+                  {" "}
+                  Total Amount{" "}
+                  <span className="text-green-500">{item?.totalAmount}</span>
+                </h2>
               </div>
             </div>
           </div>
@@ -365,7 +391,7 @@ const InfoModal = ({ ActionModal, closeModal, title, item }: any) => {
             <div className="p-6 flex flex-col gap-4 justify-between h-[30vh]">
               <h1 className="font-semibold text-xl">
                 {" "}
-                Please Change The Delivery Status?
+                Confirm the order and Change the Delivery Status?
               </h1>
               <div>
                 <Divider />
@@ -374,19 +400,19 @@ const InfoModal = ({ ActionModal, closeModal, title, item }: any) => {
                     placeholder=""
                     onPointerEnterCapture={() => {}}
                     onPointerLeaveCapture={() => {}}
-                    color="blue"
-                    onClick={handleConfirmOrder}
+                    color="red"
+                    onClick={() => closeModal()}
                   >
-                    Confirm
+                    No
                   </Button>
                   <Button
                     placeholder=""
                     onPointerEnterCapture={() => {}}
                     onPointerLeaveCapture={() => {}}
-                    color="green"
-                    onClick={handleShipOrder}
+                    color="blue"
+                    onClick={handleConfirmOrder}
                   >
-                    Shipped
+                    yes
                   </Button>
                 </div>
               </div>
@@ -396,7 +422,7 @@ const InfoModal = ({ ActionModal, closeModal, title, item }: any) => {
             <div className="p-6 flex flex-col gap-4 justify-between h-[30vh]">
               <h1 className="font-semibold text-xl">
                 {" "}
-                Please Change The Delivery Status to?
+                Confirm the order and Change the Delivery Status?
               </h1>
               <div>
                 <Divider />
@@ -405,19 +431,19 @@ const InfoModal = ({ ActionModal, closeModal, title, item }: any) => {
                     placeholder=""
                     onPointerEnterCapture={() => {}}
                     onPointerLeaveCapture={() => {}}
-                    color="blue"
-                    onClick={handleConfirmRecentOrder}
+                    color="red"
+                    onClick={() => handleClose()}
                   >
-                    Confirm
+                    No
                   </Button>
                   <Button
                     placeholder=""
                     onPointerEnterCapture={() => {}}
                     onPointerLeaveCapture={() => {}}
-                    color="green"
-                    onClick={handleShipOrder}
+                    color="blue"
+                    onClick={handleConfirmRecentOrder}
                   >
-                    Shipped
+                    Yes
                   </Button>
                 </div>
               </div>
@@ -451,10 +477,10 @@ const InfoModal = ({ ActionModal, closeModal, title, item }: any) => {
                           setSelectedRider(rid.fullname);
                         }}
                         value={rid.fullname}
-                        
                       >
-                          {rid?.fullname.length > 12 ? `${rid?.fullname.substring(0, 12)}..` : rid?.fullname}
-
+                        {rid?.fullname.length > 12
+                          ? `${rid?.fullname.substring(0, 12)}..`
+                          : rid?.fullname}
                       </Option>
                     ))}
                   </Select>
@@ -502,8 +528,9 @@ const InfoModal = ({ ActionModal, closeModal, title, item }: any) => {
                         }}
                         value={rid.fullname}
                       >
-                        {rid?.fullname.length > 12 ? `${rid?.fullname.substring(0, 12)}..` : rid?.fullname}
-
+                        {rid?.fullname.length > 12
+                          ? `${rid?.fullname.substring(0, 12)}..`
+                          : rid?.fullname}
                       </Option>
                     ))}
                   </Select>
@@ -1063,6 +1090,64 @@ const InfoModal = ({ ActionModal, closeModal, title, item }: any) => {
                   onClick={handleAddRider}
                 >
                   Add Rider
+                </Button>
+              </div>
+            </div>
+          )) ||
+          (title === "addadmin" && (
+            <div className="p-6">
+              <div className="flex justify-between  w-full mb-10">
+                <h1 className="text-gray-800 capitalize pb-6 text-2xl font-semibold">
+                  Add Admin
+                </h1>
+                <i
+                  className="fas fa-times text-2xl cursor-pointer"
+                  onClick={handleClose}
+                ></i>
+              </div>
+              <div className=" flex flex-col gap-4 w-full">
+                <Input
+                  crossOrigin={""}
+                  placeholder=""
+                  name="fullname"
+                  value={admin.fullname}
+                  onChange={handleChangeAdmin}
+                  onPointerEnterCapture={() => {}}
+                  onPointerLeaveCapture={() => {}}
+                  label="Admin Full Name"
+                />
+                <Input
+                  type="email"
+                  crossOrigin={""}
+                  placeholder=""
+                  name="email"
+                  required
+                  value={admin.email}
+                  onChange={handleChangeAdmin}
+                  onPointerEnterCapture={() => {}}
+                  onPointerLeaveCapture={() => {}}
+                  label="Admin Email"
+                />
+                <Input
+                  type="text"
+                  crossOrigin={""}
+                  placeholder=""
+                  name="password"
+                  value={admin.password}
+                  onChange={handleChangeAdmin}
+                  onPointerEnterCapture={() => {}}
+                  onPointerLeaveCapture={() => {}}
+                  label="Admin Password"
+                />
+
+                <Button
+                  placeholder=""
+                  onPointerEnterCapture={() => {}}
+                  onPointerLeaveCapture={() => {}}
+                  color="blue-gray"
+                  onClick={handleAddAdmin}
+                >
+                  Add Admin
                 </Button>
               </div>
             </div>

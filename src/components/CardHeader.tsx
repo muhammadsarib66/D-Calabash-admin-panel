@@ -14,6 +14,7 @@ import {
   Tab,
   Button,
 } from "@material-tailwind/react";
+import { issubadmin } from "../feature/slicer/Slicer";
 
 const Header = ({
   handleAddBtn,
@@ -65,7 +66,7 @@ const handleCLick = () => {
         </div>
           {BtnTitle &&
         <div>
-          
+            {issubadmin == true ? "" :
           <Button
           onClick={handleCLick}
             placeholder=""
@@ -78,6 +79,7 @@ const handleCLick = () => {
           }
              {BtnTitle}
           </Button>
+          }
         </div>
           }
       </div>

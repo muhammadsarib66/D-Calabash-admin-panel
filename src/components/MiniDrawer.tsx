@@ -33,10 +33,14 @@ import Customers from "../screens/customers";
 import Orders from "../screens/orders";
 import Riders from "../screens/riders";
 import Product from "../screens/products";
+import SubAdmin from "../screens/admins"
 import { Link } from "react-router-dom";
 import { LoginOutlined } from "@mui/icons-material";
 import { ToastContainer } from "react-toastify";
 import ProductCategory from "../screens/products/ProductCategory";
+import SupervisorAccountIcon from '@mui/icons-material/SupervisorAccount';
+import { issubadmin } from "../feature/slicer/Slicer";
+
 const drawerWidth = 240;
 const tabs = [
   {
@@ -70,7 +74,20 @@ const tabs = [
     icon: <DeliveryDiningIcon />,
 
   },
+  {
+    title: "Sub Admins",
+    link: "/subadmin",
+    icon: <SupervisorAccountIcon />,
+
+  },
 ];
+
+const filteredTabs = issubadmin 
+  ? tabs.filter(item => item?.title !== "Sub Admins" )
+  : tabs;
+
+
+
 
 const openedMixin = (theme: Theme): CSSObject => ({
   width: drawerWidth,
@@ -219,7 +236,7 @@ export default function MiniDrawer() {
 
         <Divider />
         <List>
-          {tabs.map((item) => (
+          {filteredTabs.map((item) => (
             <ListItem
               key={item?.title}
               disablePadding
@@ -313,6 +330,10 @@ export default function MiniDrawer() {
           <Route path="/products" element={<Product />} />
           <Route path="/productsCategories" element={<ProductCategory />} />
           <Route path="/riders" element={<Riders />} />
+          {
+            issubadmin == true ? null : <Route path="/subadmin" element={<SubAdmin />} />
+          }
+          {/* <Route path="/subadmin" element={<SubAdmin />} /> */}
           </Routes>
 
         <ToastContainer />

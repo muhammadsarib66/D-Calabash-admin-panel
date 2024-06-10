@@ -9,31 +9,24 @@ import { GetOrderListApi } from "./feature/slicer/GetOrderListSlicer";
 import { GetCategoriesListApi } from "./feature/slicer/GetCategoriesSlicer";
 import { GetRidersListApi } from "./feature/slicer/GetRidersSlicer";
 import { DashboardApi } from "./feature/slicer/DashboardSlicer";
+import { GetAdminListApi } from "./feature/slicer/GetAdminListingSlicer";
 
 function App() {
   const dispatch = useDispatch();
-const token = localStorage.getItem('admintoken')
+  const token = localStorage.getItem("admintoken");
   useEffect(() => {
-  
-    if(token) {
-
+    if (token) {
       dispatch(GetCustomerApi());
       dispatch(GetProductListApi());
       dispatch(GetOrderListApi());
       dispatch(GetCategoriesListApi());
       dispatch(GetRidersListApi());
       dispatch(DashboardApi());
+      dispatch(GetAdminListApi());
     }
-    
   }, [dispatch, token]);
-  // return (
-  //   <>
-  //   <MiniDrawer />
-  //   </>
-  // )
   return (
     <>
-  
       {token && <MiniDrawer />}
       {!token && <Login />}
     </>

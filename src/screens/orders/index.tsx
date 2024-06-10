@@ -19,6 +19,7 @@ import {  useSelector } from "react-redux";
 import Loader from "../../components/Loader";
 import moment from "moment";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { issubadmin } from "../../feature/slicer/Slicer";
 const OrderStatusTABS = [
   {
     label: "Pending",
@@ -55,6 +56,10 @@ const TableHeadings = [
   'Delivery Status',
   'Action'
 ];
+
+const filteredHeadings = issubadmin 
+  ? TableHeadings.filter(heading => heading !== "Action" )
+  : TableHeadings;
 
 
 const index = () => {
@@ -145,7 +150,7 @@ const index = () => {
         <table className="mt-4 w-full min-w-max table-auto  text-left">
           <thead>
             <tr className="">
-              {TableHeadings?.map((head) => (
+              {filteredHeadings?.map((head) => (
                 <th
                   key={head}
                   className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4"
@@ -312,6 +317,7 @@ const index = () => {
                         </Button>
                         }
                         </td>
+                        { issubadmin == true ? null : 
                         <td className={classes}>
                       <Tooltip content="Delete Order">
                           <IconButton
@@ -325,6 +331,7 @@ const index = () => {
                           </IconButton>
                         </Tooltip>
                       </td>
+                      }
                     </tr>
                   </>
                 );

@@ -18,6 +18,7 @@ import InfoModal from "../../components/InfoModal";
 import NoAccountsIcon from "@mui/icons-material/NoAccounts";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { issubadmin } from "../../feature/slicer/Slicer";
 
 const OrderStatusTABS = [
   {
@@ -42,7 +43,9 @@ const TableHeadings = [
   "Action"
 ];
 
-
+const filteredHeadings = issubadmin 
+  ? TableHeadings.filter(heading => heading !== "Action" )
+  : TableHeadings;
 
 
 
@@ -134,7 +137,7 @@ const index = () => {
         <table className="mt-4 w-full min-w-max table-auto text-center mx-auto  " > 
           <thead>
             <tr className="text-center">
-              {TableHeadings?.map((head) => (
+              {filteredHeadings?.map((head) => (
                 <th
                   key={head}
                   className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4"
@@ -147,7 +150,8 @@ const index = () => {
                     color="blue-gray"
                     className="font-normal leading-none opacity-70"
                   >
-                    {head}
+                    {issubadmin == true ? head == "Action" ? "" : head : head}
+                    {/* {head} */}
                   </Typography>
                 </th>
               ))}
@@ -213,6 +217,7 @@ const index = () => {
                           />
                           
                       </td>
+                      { !issubadmin == true ? 
                       <td className={classes}>
                        <div className=" ">
 
@@ -257,6 +262,7 @@ const index = () => {
                        </div>
 
                       </td>
+                      : ""}
                       </tr>
                   </>
                 );

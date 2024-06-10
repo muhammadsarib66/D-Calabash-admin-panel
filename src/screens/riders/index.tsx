@@ -17,6 +17,7 @@ import Loader from "../../components/Loader";
 import DeleteIcon from "@mui/icons-material/Delete";
 import NoAccountsIcon from "@mui/icons-material/NoAccounts";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import { issubadmin } from "../../feature/slicer/Slicer";
 const RiderStatusTABS = [
   {
     label: "All",
@@ -34,6 +35,10 @@ const RiderStatusTABS = [
 ];
 
 const TableHeadings = ["Rider Name", "Email", "Status", "Action"];
+
+const filteredHeadings = issubadmin 
+  ? TableHeadings.filter(heading => heading !== "Action")
+  : TableHeadings;
 
 const index = () => {
   const { isLoading, Riders } = useSelector(
@@ -115,7 +120,9 @@ const index = () => {
         <table className="mt-4 w-full min-w-max table-auto  text-left">
           <thead>
             <tr className="">
-              {TableHeadings?.map((head) => (
+              {filteredHeadings?.map((head) => (
+                                      
+
                 <th
                   key={head}
                   className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4"
@@ -181,6 +188,8 @@ const index = () => {
                           />
                         </div>
                       </td>
+                      {
+                        issubadmin == true ? "" : 
                       <td className={classes}>
                         <div className=" ">
                           <Tooltip content="Block Rider">
@@ -221,6 +230,7 @@ const index = () => {
                           </Tooltip>
                         </div>
                       </td>
+                      }
                     </tr>
                   </>
                 );

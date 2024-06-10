@@ -15,7 +15,7 @@ import Header from "../../components/CardHeader";
 import { useSelector } from "react-redux";
 import Loader from "../../components/Loader";
 import InfoModal from "../../components/InfoModal";
-import { baseUrl } from "../../feature/slicer/Slicer";
+import { baseUrl, issubadmin } from "../../feature/slicer/Slicer";
 import DeleteIcon from "@mui/icons-material/Delete";
 
 
@@ -45,6 +45,9 @@ const TableHeadings = [
   "Change Status",
   "Action",
 ];
+const filteredHeadings = issubadmin 
+  ? TableHeadings.filter(heading => heading !== "Action" && heading !== "Change Status")
+  : TableHeadings;
 
 const index = () => {
   const { isLoading, Products } = useSelector(
@@ -78,6 +81,7 @@ const index = () => {
     setItem(id);
   };
   const handleAddProduct = () => {
+
     setTitleModal("addproduct");
     setInfoModal(true);
   }
@@ -139,7 +143,7 @@ const index = () => {
         <table className="mt-4 w-full min-w-max table-auto text-center mx-auto  ">
           <thead>
             <tr className="text-center">
-              {TableHeadings?.map((head) => (
+              {filteredHeadings?.map((head) => (
                 <th
                   key={head}
                   className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4"
@@ -152,6 +156,7 @@ const index = () => {
                     color="blue-gray"
                     className="font-normal leading-none opacity-70"
                   >
+
                     {head}
                   </Typography>
                 </th>
@@ -257,20 +262,9 @@ const index = () => {
                       ))}
                       </ul>
                       </td>
-                      {/* <td>
-                      <Tooltip content="Product Detail">
-                            <IconButton
-                              // disabled={isActive == false ? true : false}
-                              onClick={() => handleShowPrdctInfo()}
-                              placeholder=""
-                              onPointerEnterCapture={() => {}}
-                              onPointerLeaveCapture={() => {}}
-                              variant="text"
-                            >
-                              <InfoIcon className=" text-gray-700" />
-                            </IconButton>
-                          </Tooltip>
-                        </td> */}
+                 {!issubadmin  ? 
+                     (
+                      <>
                       <td className={`${classes} flex gap-2`}>
                       {!available == true ? 
                         <Button
@@ -315,6 +309,10 @@ const index = () => {
                           </IconButton>
                         </Tooltip>
                       </td>
+                      </>
+
+                      )
+                       : ""}
                     </tr>
                   </>
                 );

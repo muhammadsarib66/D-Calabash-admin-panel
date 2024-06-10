@@ -11,15 +11,11 @@ import {
   Typography,
 } from "@material-tailwind/react";
 import Header from "../../components/CardHeader";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Loader from "../../components/Loader";
 import InfoModal from "../../components/InfoModal";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { issubadmin } from "../../feature/slicer/Slicer";
-
-// import DeleteIcon from "@mui/icons-material/Delete";
-// import NoAccountsIcon from "@mui/icons-material/NoAccounts";
-// import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import { DeleteAdminApi } from "../../feature/slicer/DeleteAdminSlicer";
 
 const OrderStatusTABS = [
   {
@@ -27,72 +23,57 @@ const OrderStatusTABS = [
     value: "all",
   },
   {
-    label: "Available",
-    value: true,
-  },
-  {
-    label: "Disabled",
+    label: "Super_Admin",
     value: false,
   },
+  {
+    label: "Sub_Admin",
+    value: true,
+  },
 ];
 
-const TableHeadings = [
-  "Category Title ",
-  "Status",
-  "Action"
- 
-];
+const TableHeadings = ["Name", "Email", "Status", "Action"];
 
-const filteredHeadings = issubadmin 
-  ? TableHeadings.filter(heading => heading !== "Action")
-  : TableHeadings;
-const ProductCategory = () => {
-  const { isLoading, Categories } = useSelector(
-    (state: any) => state.GetCategoriesSlicer
+const index = () => {
+  const dispatch = useDispatch();
+  const { isLoading, admins } = useSelector(
+    (state: any) => state.GetAdminListingSlicer
   );
   const [filterData, setFilterData] = useState<any>([]);
   const [statusTab, setStatusTab] = useState<any>("all");
   const [search, setSearch] = useState<any>("");
   const [infoModal, setInfoModal] = useState<any>(false);
   const [titleModal, setTitleModal] = useState<any>("");
-  const [item , setItem] = useState<any>("")
 
   const closeModal = () => {
     setInfoModal(false);
   };
- 
-  const handleAddCat = () => {
-    setTitleModal("add category")
-    setInfoModal(true)
-  }
-  const HandleDeletrCategory = (id:any) => {
-    setItem(id)
-    setTitleModal("deletecategory")
-    setInfoModal(true)
-  }
- 
- 
 
-  
-  
+  const handleAddAdmin = () => {
+    setTitleModal("addadmin");
+    setInfoModal(true);
+  };
+  const HandleDeletrAdmin = (id: any) => {
+    dispatch(DeleteAdminApi({ adminId: id }));
+  };
   useEffect(() => {
     if (search.length > 0) {
-      const filteredData = Categories?.filter((data: any) => {
-        return data.title.toLowerCase().includes(search.toLowerCase());
+      const filteredData = admins?.filter((data: any) => {
+        return data?.fullname?.toLowerCase().includes(search?.toLowerCase());
       });
       setFilterData(filteredData);
     } else {
       // If search is cleared, reset filterData based on statusTab
-      const filteredData = Categories?.filter((data: any) => {
+      const filteredData = admins?.filter((data: any) => {
         if (statusTab == "all") {
           return true;
         } else {
-          return data.isActive == statusTab;
+          return data?.issubadmin == statusTab;
         }
       });
       setFilterData(filteredData);
     }
-  }, [search, Categories, statusTab]);
+  }, [search, admins, statusTab]);
   return (
     <Card
       className=" w-full"
@@ -100,14 +81,15 @@ const ProductCategory = () => {
       onPointerEnterCapture={() => {}}
       onPointerLeaveCapture={() => {}}
     >
+      {isLoading && <Loader />}
       <Header
-        heading={"Product Categories List"}
-        headingDetail="See information about  Products Categories"
+        heading={"Admin List"}
+        headingDetail="See information about Admin"
         statusTabs={OrderStatusTABS}
         setStatusTab={setStatusTab}
         setSearch={setSearch}
-        handleAddBtn={handleAddCat}
-        BtnTitle="Add Category"
+        BtnTitle="Add Admin"
+        handleAddBtn={handleAddAdmin}
       />
 
       <CardBody
@@ -119,7 +101,7 @@ const ProductCategory = () => {
         <table className="mt-4 w-full min-w-max table-auto text-center mx-auto  ">
           <thead>
             <tr className="text-center">
-              {filteredHeadings?.map((head) => (
+              {TableHeadings?.map((head) => (
                 <th
                   key={head}
                   className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4"
@@ -132,9 +114,7 @@ const ProductCategory = () => {
                     color="blue-gray"
                     className="font-normal leading-none opacity-70"
                   >
-                                      {issubadmin == true ? (head == "Action" )  ? null : head : head}
-
-                    {/* {head} */}
+                    {head}
                   </Typography>
                 </th>
               ))}
@@ -142,10 +122,7 @@ const ProductCategory = () => {
           </thead>
           <tbody className="">
             {filterData?.map(
-              (
-                { title, isActive , _id }: any,
-                index: any
-              ) => {
+              ({ issubadmin, fullname, email, _id }: any, index: any) => {
                 const isLast = index === filterData?.length - 1;
                 const classes = isLast
                   ? "p-4"
@@ -163,10 +140,21 @@ const ProductCategory = () => {
                           color="blue-gray"
                           className="font-normal"
                         >
-                          {title}
+                          {fullname}
                         </Typography>
                       </td>
-                    
+                      <td className={classes}>
+                        <Typography
+                          placeholder=""
+                          onPointerEnterCapture={() => {}}
+                          onPointerLeaveCapture={() => {}}
+                          variant="small"
+                          color="blue-gray"
+                          className="font-normal"
+                        >
+                          {email}
+                        </Typography>
+                      </td>
 
                       <td className={classes}>
                         <Chip
@@ -174,16 +162,15 @@ const ProductCategory = () => {
                           size="sm"
                           className="w-fit px-4 mx-auto"
                           value={
-                            isActive == true ? "Available" : "Not Available"
+                            issubadmin == true ? "sub admin" : "super admin"
                           }
-                          color={isActive == true ? "green" : "red"}
+                          color={issubadmin == true ? "blue" : "green"}
                         />
                       </td>
-                      {issubadmin == true ? "" : 
                       <td className={classes}>
-                      <Tooltip content="Delete Category">
+                        <Tooltip content="Delete User">
                           <IconButton
-                            onClick={() => HandleDeletrCategory(_id)}
+                            onClick={() => HandleDeletrAdmin(_id)}
                             placeholder=""
                             onPointerEnterCapture={() => {}}
                             onPointerLeaveCapture={() => {}}
@@ -193,7 +180,6 @@ const ProductCategory = () => {
                           </IconButton>
                         </Tooltip>
                       </td>
-                      }
                     </tr>
                   </>
                 );
@@ -206,14 +192,11 @@ const ProductCategory = () => {
             title={titleModal}
             ActionModal={infoModal}
             closeModal={closeModal}
-            item={item}
-           
           />
         )}
       </CardBody>
-      {isLoading && <Loader />}
     </Card>
   );
 };
 
-export default ProductCategory;
+export default index;
