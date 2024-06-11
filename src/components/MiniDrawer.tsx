@@ -280,8 +280,11 @@ export default function MiniDrawer() {
         <Divider />
         <List>
           <ListItem
-          onClick={()=>{localStorage.removeItem('admintoken')
-            window.location.reload()
+          onClick={()=>{localStorage.removeItem('admintoken');
+          localStorage.removeItem('AdminUser');
+            window.location.reload();
+            window.location.href = '/';
+
           }}
             disablePadding
             sx={{ display: "block", background: "inherit", color: "inherit" }}

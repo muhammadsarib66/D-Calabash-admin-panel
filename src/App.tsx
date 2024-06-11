@@ -12,7 +12,7 @@ import { GetRidersListApi } from "./feature/slicer/GetRidersSlicer";
 import { DashboardApi } from "./feature/slicer/DashboardSlicer";
 import { GetAdminListApi } from "./feature/slicer/GetAdminListingSlicer";
 import { io } from "socket.io-client";
-import { baseUrl } from "./feature/slicer/Slicer";
+import { Userid, baseUrl } from "./feature/slicer/Slicer";
 import { toast } from "react-toastify";
 
 function App() {
@@ -20,8 +20,9 @@ function App() {
 const socket = useMemo(() => io(baseUrl), []);
   const dispatch = useDispatch();
   const token = localStorage.getItem("admintoken");
-  const {_id}  = JSON.parse(localStorage.getItem('AdminUser') as string);
-  console.log(_id)
+
+
+  console.log(Userid)
   
   useEffect(() => {
     if (token) {
@@ -33,7 +34,7 @@ const socket = useMemo(() => io(baseUrl), []);
       dispatch(DashboardApi());
       dispatch(GetAdminListApi());
     }
-    socket.emit('join-admin',_id);
+    socket.emit('join-admin',Userid);
     socket.on("newOrder", (data) => {
       toast.success("New Order Recieved"); 
       console.log(data, "socketData recieved");
