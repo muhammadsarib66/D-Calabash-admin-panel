@@ -71,6 +71,8 @@ const index = () => {
           return data?.issubadmin == statusTab;
         }
       });
+    filteredData.sort((a:any, b:any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+
       setFilterData(filteredData);
     }
   }, [search, admins, statusTab]);

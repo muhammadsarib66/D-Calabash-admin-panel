@@ -12,7 +12,7 @@ export const GetProductListApi: any = createAsyncThunk(
         `${baseUrl}products/products-listing`,
         config
       );
-      console.log(response?.data?.data)
+      // console.log(response?.data?.data)
       return response?.data?.data;
     } catch (error: any) {
       if (error.response) {

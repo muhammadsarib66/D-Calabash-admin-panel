@@ -12,7 +12,7 @@ export const DeleteAdminApi: any = createAsyncThunk(
     return await axios
     .post(`${baseUrl}admin/delete-admin`, Obj,config)
     .then((resp) => {
-    console.log(resp);
+    // console.log(resp);
       toast.success(resp?.data?.message);
       dispatch(GetAdminListApi())
       return resp.data;

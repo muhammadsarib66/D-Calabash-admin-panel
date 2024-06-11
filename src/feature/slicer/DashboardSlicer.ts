@@ -31,16 +31,26 @@ export const DashboardApi: any = createAsyncThunk(
     }
   }
 );
+interface initialStateI  {
+  isLoading: boolean,
+  isError: boolean,
+  DashboardData : any
 
-const initialState = {
+}
+
+const initialState : initialStateI = {
   isLoading: false,
   isError: false,
-  DashboardData: [],
+  DashboardData : [],
 };
 const DashboardSlicer = createSlice({
   name: "DashboardData",
   initialState,
-  reducers: {},
+  reducers: {
+    RecentOrderComing: (state, action) => {
+      state.DashboardData =   state?.DashboardData?.PendingOrders.push(action.payload);
+    }
+  },
 
   extraReducers: (builder) => {
     builder.addCase(DashboardApi.pending, (state) => {
@@ -58,5 +68,5 @@ const DashboardSlicer = createSlice({
   },
 });
 
-// export const {} = AddPortfolioSlicer.actions;
+export const {RecentOrderComing} = DashboardSlicer.actions;
 export default DashboardSlicer.reducer;

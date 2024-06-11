@@ -62,6 +62,7 @@ const InfoModal = ({ ActionModal, closeModal, title, item }: any) => {
     image: "",
   });
   const [selectedCategory, setSelectedCategory] = useState<any>("");
+  const [productCat, setProductCat] = useState<any>("");
   const [selectedProfileImg, setSelectedProductImg] = useState("");
 
   const fileInputRefProfile = useRef<HTMLInputElement>(null);
@@ -101,8 +102,9 @@ const InfoModal = ({ ActionModal, closeModal, title, item }: any) => {
     setAddProduct({ ...addproduct, [e.target.name]: e.target.value });
   };
 
-  const handleSelectCategory = (e: any) => {
+  const handleSelectCategory = (e: any, title :any) => {
     setSelectedCategory(e);
+    setProductCat(title)
   };
   const handleAddProduct = () => {
     const ingradients = tags.map((tag: any) => tag.text);
@@ -124,7 +126,14 @@ const InfoModal = ({ ActionModal, closeModal, title, item }: any) => {
       addproduct.image
     ) {
       dispatch(AddProductApi(Obj));
-      // handleClose()
+      handleClose()
+      setAddProduct({
+        pname: "",
+    pprice: "",
+    pdescription: "",
+    available: "true",
+    image: "",
+      })
     } else {
       toast.error("Please Fill All Fields");
     }
@@ -917,14 +926,14 @@ const InfoModal = ({ ActionModal, closeModal, title, item }: any) => {
                 {Categories && (
                   <Select
                     placeholder={""}
-                    value={selectedCategory}
+                    value={productCat}
                     onPointerEnterCapture={() => {}}
                     onPointerLeaveCapture={() => {}}
                     label="Select Category"
                   >
                     {Categories.map((cat: any) => (
                       <Option
-                        onClick={() => handleSelectCategory(cat?._id)}
+                        onClick={() => handleSelectCategory(cat?._id,cat.title)}
                         value={cat._id}
                       >
                         {cat.title}

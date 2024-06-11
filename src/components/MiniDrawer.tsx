@@ -17,9 +17,8 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import { Route, Routes } from "react-router";
 import logo from "../Images/Logo.png";
-import user from "../Images/user.png";
+import user from "../Images/USER1.png";
 import { Avatar } from "@mui/material";
-import ExpandCircleDownIcon from "@mui/icons-material/ExpandCircleDown";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
 import RestaurantIcon from "@mui/icons-material/Restaurant";
@@ -195,6 +194,7 @@ export default function MiniDrawer() {
           </IconButton>
           <div className="flex justify-between w-full pr-4">
             <div>
+
               <img src={logo} alt="logo" style={{ width: "100px" }} />
             </div>
             <div className="flex items-center gap-3">
@@ -203,13 +203,22 @@ export default function MiniDrawer() {
                 alt="user"
                 sx={{ width: "50px", height: "50px", marginLeft: "10px" }}
               />
+          
               <div>
                 <h5 className="font-semibold text-gray-800 "> {User?.fullname}</h5>
                 <p className="text-xs"> admin</p>
               </div>
-              <ExpandCircleDownIcon
+              <i 
+                onClick={()=>{
+                  localStorage.removeItem('admintoken');
+                  localStorage.removeItem('AdminUser');
+                    window.location.reload();
+                    window.location.href = '/';
+                }}
+              className=" cursor-pointer fa-solid fa-right-from-bracket"></i>
+              {/* <ExpandCircleDownIcon
                 sx={{ background: "white", cursor: "pointer" }}
-              />
+              /> */}
             </div>
           </div>
         </Toolbar>
@@ -280,7 +289,8 @@ export default function MiniDrawer() {
         <Divider />
         <List>
           <ListItem
-          onClick={()=>{localStorage.removeItem('admintoken');
+          onClick={()=>{
+            localStorage.removeItem('admintoken');
           localStorage.removeItem('AdminUser');
             window.location.reload();
             window.location.href = '/';

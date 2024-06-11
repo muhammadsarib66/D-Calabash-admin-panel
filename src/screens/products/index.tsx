@@ -53,6 +53,7 @@ const index = () => {
   const { isLoading, Products } = useSelector(
     (state: any) => state.GetProductListSlicer
   );
+  console.log(Products)
   const [filterData, setFilterData] = useState<any>([]);
   const [statusTab, setStatusTab] = useState<any>("all");
   const [search, setSearch] = useState<any>("");
@@ -94,7 +95,10 @@ const index = () => {
       } else {
         return data.available.toString() === statusTab;
       }
+
+
     });
+    // filteredData.sort((a:any, b:any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
     setFilterData(filteredData);
   }, [statusTab, Products]);
 
@@ -114,6 +118,8 @@ const index = () => {
           return data.available.toString() === statusTab;
         }
       });
+    filteredData.sort((a:any, b:any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+
       setFilterData(filteredData);
     }
   }, [search, Products, statusTab]);

@@ -7,9 +7,12 @@ import riders from "../../Images/bdIcons/BikeIcon.svg";
 import categorary from "../../Images/bdIcons/CategoriesIcon.svg";
 import addressIc from "../../Images/bdIcons/AddressesIcon.svg";
 import { useSelector } from "react-redux";
+import BeepSOund from '../../Images/Neworder.mp3'
 
 const DBCard = () => {
   const { DashboardData } = useSelector((state: any) => state.DashboardSlicer);
+const audio = new Audio(BeepSOund)
+
   const DbCardsData = [
     {
       title: "Pending Orders",
@@ -58,8 +61,8 @@ const DBCard = () => {
       icon: categorary,
     },
     {
-      title: "total Addresses",
-      record: DashboardData?.addresses,
+      title: "total Sales",
+      record: DashboardData?.addresses+"$",
       icon: addressIc,
     },
   ];
@@ -68,6 +71,7 @@ const DBCard = () => {
       {DbCardsData.map((data, index) => (
         <div
           key={index}
+        
           className="bg-white shadow-md  group hover:bg-blue-200 hover:scale-110 hover:shadow-2xl duration-300 transition ease-in-out p-4 rounded-lg"
         >
           <div className="flex items-center justify-between ">

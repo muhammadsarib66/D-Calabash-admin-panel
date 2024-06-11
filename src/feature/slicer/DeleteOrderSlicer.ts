@@ -4,6 +4,7 @@ import axios from "axios";
 import { baseUrl, config } from "./Slicer";
 import { toast } from "react-toastify";
 import { GetOrderListApi } from "./GetOrderListSlicer";
+import { DashboardApi } from "./DashboardSlicer";
 
 export const DeleteOrderApi: any = createAsyncThunk(
   "dcalabash/DeleteOrder",
@@ -11,9 +12,10 @@ export const DeleteOrderApi: any = createAsyncThunk(
     return await axios
     .post(`${baseUrl}orders/delete-order`, Obj,config)
     .then((resp) => {
-    console.log(resp);
+    // console.log(resp);
       toast.success(resp?.data?.message);
       dispatch(GetOrderListApi())
+      dispatch(DashboardApi())
       return resp.data;
     })
     .catch((err) => {
