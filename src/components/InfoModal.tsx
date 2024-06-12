@@ -3,6 +3,7 @@ import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import {
   Button,
+  Chip,
   Input,
   Option,
   Select,
@@ -500,16 +501,32 @@ const InfoModal = ({ ActionModal, closeModal, title, item }: any) => {
                   >
                     {Riders.map((rid: any) => (
                       <Option
-                        onClick={() => {
+                      className="flex justify-between items-center"
+                      onClick={() => {
+                        if (rid?.isWorking) {
                           handleSelectRider(rid?._id);
-                          setSelectedRider(rid.fullname);
-                        }}
-                        value={rid.fullname}
-                      >
-                        {rid?.fullname.length > 12
-                          ? `${rid?.fullname.substring(0, 12)}..`
-                          : rid?.fullname}
-                      </Option>
+                          setSelectedRider(rid?.fullname);
+                        }
+                      }}
+                      value={rid?.fullname}
+                      disabled={!rid?.isWorking}
+                    >
+                      {rid.fullname.length > 12
+                        ? `${rid.fullname.substring(0, 12)}..`
+                        : rid.fullname}
+                      <span>
+                        <Chip
+                          className="w-fit"
+                          variant="ghost"
+                          color={rid?.isWorking ? "green" : "red"}
+                          size="sm"
+                          value={rid?.isWorking ? "Available" : "Unavailable"}
+                          icon={
+                            <span className={`mx-auto mt-1 block h-2 w-2 rounded-full  ${rid?.isWorking ? "bg-green-900" : "bg-red-900"} content-['']`} />
+                          }
+                        />
+                      </span>
+                    </Option>
                     ))}
                   </Select>
                 </div>
@@ -549,17 +566,33 @@ const InfoModal = ({ ActionModal, closeModal, title, item }: any) => {
                     label="Select Rider"
                   >
                     {Riders.map((rid: any) => (
-                      <Option
-                        onClick={() => {
-                          handleSelectRider(rid?._id);
-                          setSelectedRider(rid.fullname);
-                        }}
-                        value={rid.fullname}
-                      >
-                        {rid?.fullname.length > 12
-                          ? `${rid?.fullname.substring(0, 12)}..`
-                          : rid?.fullname}
-                      </Option>
+                       <Option
+                       className="flex justify-between items-center"
+                       onClick={() => {
+                         if (rid?.isWorking) {
+                           handleSelectRider(rid?._id);
+                           setSelectedRider(rid?.fullname);
+                         }
+                       }}
+                       value={rid?.fullname}
+                       disabled={!rid?.isWorking}
+                     >
+                       {rid.fullname.length > 12
+                         ? `${rid.fullname.substring(0, 12)}..`
+                         : rid.fullname}
+                       <span>
+                         <Chip
+                           className="w-fit"
+                           variant="ghost"
+                           color={rid?.isWorking ? "green" : "red"}
+                           size="sm"
+                           value={rid?.isWorking ? "Available" : "Unavailable"}
+                           icon={
+                             <span className={`mx-auto mt-1 block h-2 w-2 rounded-full  ${rid?.isWorking ? "bg-green-900" : "bg-red-900"} content-['']`} />
+                           }
+                         />
+                       </span>
+                     </Option>
                     ))}
                   </Select>
                 </div>

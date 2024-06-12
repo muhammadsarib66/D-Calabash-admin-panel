@@ -4,7 +4,7 @@ import { useEffect, useMemo } from "react";
 import MiniDrawer from "./components/MiniDrawer";
 import Login from "./screens/Login";
 import { GetCustomerApi } from "./feature/slicer/GetCustomerListSlicer";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import "react-toastify/dist/ReactToastify.css";
 import { GetProductListApi } from "./feature/slicer/GetProductListSlicer";
 import { GetOrderListApi } from "./feature/slicer/GetOrderListSlicer";
@@ -20,8 +20,6 @@ import BeepSOund from './Images/Neworder.mp3'
 
 
 function App() {
-  const {DashboardData} = useSelector((state: any) => state.DashboardSlicer);
-console.log(DashboardData)
   const audio = new Audio(BeepSOund)
 const socket = useMemo(() => io(baseUrl), []);
   const dispatch = useDispatch();

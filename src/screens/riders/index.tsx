@@ -34,7 +34,7 @@ const RiderStatusTABS = [
   },
 ];
 
-const TableHeadings = ["Rider Name", "Email", "Status", "Action"];
+const TableHeadings = ["Rider Name", "Email", "Status", "Working Mode", "Action"];
 
 const filteredHeadings = issubadmin 
   ? TableHeadings.filter(heading => heading !== "Action")
@@ -44,6 +44,7 @@ const index = () => {
   const { isLoading, Riders } = useSelector(
     (state: any) => state.GetRidersSlicer
   );
+  console.log(Riders)
   const [filterData, setFilterData] = useState<any>([]);
   const [infoModal, setInfoModal] = useState<any>(false);
   const [statusTab, setStatusTab] = useState<any>("all");
@@ -145,7 +146,7 @@ const index = () => {
           </thead>
           <tbody className="">
             {filterData?.map(
-              ({ email, fullname, isActive, _id }: any, index: any) => {
+              ({ email, fullname, isActive, isWorking, _id }: any, index: any) => {
                 const isLast = index === filterData?.length - 1;
                 const classes = isLast
                   ? "p-4"
@@ -189,6 +190,18 @@ const index = () => {
                             color={isActive == true ? "green" : "red"}
                           />
                         </div>
+                      </td>
+                      <td className={classes}>
+                        <Chip
+                          className="w-fit"
+                          variant="ghost"
+                          color={isWorking ? "green" : "red"}
+                          size="sm"
+                          value={isWorking ? "Online" : "Offline"}
+                          icon={
+                            <span className={`mx-auto mt-1 block h-2 w-2 rounded-full  ${isWorking ? "bg-green-900" : "bg-red-900"} content-['']`} />
+                          }
+                        />
                       </td>
                       {
                         issubadmin == true ? "" : 
