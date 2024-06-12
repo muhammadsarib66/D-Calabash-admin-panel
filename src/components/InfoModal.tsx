@@ -61,6 +61,7 @@ const InfoModal = ({ ActionModal, closeModal, title, item }: any) => {
     available: "true",
     image: "",
   });
+  const [orderMessage,setOrderMessage] = useState<any>("")
   const [selectedCategory, setSelectedCategory] = useState<any>("");
   const [productCat, setProductCat] = useState<any>("");
   const [selectedProfileImg, setSelectedProductImg] = useState("");
@@ -181,12 +182,13 @@ const InfoModal = ({ ActionModal, closeModal, title, item }: any) => {
   };
   ////////////// Order Status /////
   const handleConfirmOrder = () => {
-    const Obj = { id: item?._id, status: "Confirmed" };
+    const Obj = { id: item?._id, status: "Confirmed" , msg:orderMessage };
+
     dispatch(OrderStatusApi(Obj));
     closeModal();
   };
   const handleConfirmRecentOrder = () => {
-    const Obj = { id: item?._id, status: "Confirmed" };
+    const Obj = { id: item?._id, status: "Confirmed" , msg:orderMessage };
     dispatch(OrderStatusApi(Obj));
     closeModal();
   };
@@ -397,12 +399,20 @@ const InfoModal = ({ ActionModal, closeModal, title, item }: any) => {
           </div>
         )) ||
           (title === "OrderStatus" && (
-            <div className="p-6 flex flex-col gap-4 justify-between h-[30vh]">
+            <div className="p-6 flex flex-col gap-4 justify-between  h-fit">
               <h1 className="font-semibold text-xl">
                 {" "}
                 Confirm the order and Change the Delivery Status?
               </h1>
               <div>
+              <Textarea
+                  name="message"
+                  value={orderMessage}
+                  onChange={(e)=>{setOrderMessage(e.target.value)}}
+                  onPointerEnterCapture={() => {}}
+                  onPointerLeaveCapture={() => {}}
+                  label="This message will only shows in notification"
+                />
                 <Divider />
                 <div className="pt-6 flex gap-4 justify-end">
                   <Button
@@ -428,12 +438,21 @@ const InfoModal = ({ ActionModal, closeModal, title, item }: any) => {
             </div>
           )) ||
           (title === "RecentOrderStatus" && (
-            <div className="p-6 flex flex-col gap-4 justify-between h-[30vh]">
+            <div className="p-6 flex flex-col gap-4 justify-between h-fit">
               <h1 className="font-semibold text-xl">
                 {" "}
                 Confirm the order and Change the Delivery Status?
               </h1>
               <div>
+              <Textarea
+                  name="message"
+                  value={orderMessage}
+                  onChange={(e)=>{setOrderMessage(e.target.value)}}
+                  onPointerEnterCapture={() => {}}
+                  onPointerLeaveCapture={() => {}}
+                  label="This message will only shows in notification"
+
+                />
                 <Divider />
                 <div className="pt-6 flex gap-4 justify-end">
                   <Button

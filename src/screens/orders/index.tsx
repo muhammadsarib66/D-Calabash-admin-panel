@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable react-refresh/only-export-components */
 /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -15,11 +16,12 @@ import {
 } from "@material-tailwind/react";
 import Header from "../../components/CardHeader";
 import InfoModal from "../../components/InfoModal";
-import {  useSelector } from "react-redux";
+import {  useDispatch, useSelector } from "react-redux";
 import Loader from "../../components/Loader";
 import moment from "moment";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { issubadmin } from "../../feature/slicer/Slicer";
+import { GetOrderListApi } from "../../feature/slicer/GetOrderListSlicer";
 const OrderStatusTABS = [
   {
     label: "Pending",
@@ -64,6 +66,7 @@ const filteredHeadings = issubadmin
 
 const index = () => {
   const {isLoading ,Orders} = useSelector((state: any) => state.GetOrderListSlicer);
+  const dispatch = useDispatch()
   const [filterData, setFilterData] = useState<any>([]);
   const [statusTab, setStatusTab] = useState<any>("Pending");
   const [infoModal, setInfoModal] = useState<any>(false);
@@ -124,6 +127,9 @@ const index = () => {
       setFilterData(filteredData);
     }
   }, [search, Orders, statusTab]);
+  useEffect(()=>{
+    dispatch(GetOrderListApi()) 
+  },[])
   return (
     <Card
       className=" w-full"

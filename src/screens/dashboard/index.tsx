@@ -1,7 +1,16 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable react-hooks/rules-of-hooks */
+import { useEffect } from 'react'
 import DBCard from './DBCard'
 import DBChart from './DBChart'
+import { useDispatch } from 'react-redux'
+import { DashboardApi } from '../../feature/slicer/DashboardSlicer'
 
 const index = () => {
+  const dispatch = useDispatch()
+  useEffect(()=>{
+    dispatch(DashboardApi()) 
+  },[])
   return (
     <section className=' p-8 flex flex-col gap-4 '>
       

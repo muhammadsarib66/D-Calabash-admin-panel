@@ -23,7 +23,6 @@ function App() {
   const {DashboardData} = useSelector((state: any) => state.DashboardSlicer);
 console.log(DashboardData)
   const audio = new Audio(BeepSOund)
-  // const MybaseUrl = "http://192.168.100.13:3000/"
 const socket = useMemo(() => io(baseUrl), []);
   const dispatch = useDispatch();
   const token = localStorage.getItem("admintoken");
@@ -39,91 +38,31 @@ const socket = useMemo(() => io(baseUrl), []);
       dispatch(GetOrderListApi());
       dispatch(DashboardApi());
       dispatch(GetAdminListApi());
-    
-      // socket.emit('join-admin',Userid);
-      // socket.on("newOrder", (data) => {
-      //   console.log(data, "socketData recieved");
-      //   dispatch(RecentOrderComing(data))
-      //   audio.play()
-      //   setTimeout(() => {
-      //   toast.success("New Order Recieved"); 
-      // }, 1000)
-      
-        
-      // });
-
-    }
-
-
-   
-  }, [token , Userid]);
+    } 
+  }, [token]);
+  
 
   useEffect(()=>{
  socket.emit('join-admin',Userid);
-  socket.on("newOrder", (data) => {
-    
-    audio.play()
-    dispatch(GetOrderListApi());
-      dispatch(DashboardApi());
-    dispatch(RecentOrderComing(data))
-    setTimeout(() => {
-    toast.success("New Order Recieved"); 
-  }, 1000)
-  
-    console.log(data, "socketData recieved");
-    
-  });
+
   },[])
 
-// useEffect(() => {
-//   // Emit join event for admin
-//   socket.emit('join-admin', Userid);
-
-//   const handleNewOrder = (data:any) => {
-//     const audio = new Audio('path_to_your_audio_file.mp3');
-//     audio.play().then(() => {
-//       setTimeout(() => {
-//     dispatch(RecentOrderComing(data))
-
-//         toast.success("New Order Received");
-//       }, 1000); 
-//     }).catch(error => {
-//       console.error('Error playing audio:', error);
-//       setTimeout(() => {
-//         toast.success("New Order Received");
-//       }, 1000);
-//     });
-//     console.log(data, "socketData received");
-//   };
-
-//   socket.on("newOrder", handleNewOrder);
-
-//   // Clean up the effect
-//   return () => {
-//     socket.off("newOrder", handleNewOrder);
-//   };
-// }, [Userid]);
-
-  socket.emit('join-admin',Userid);
+  useEffect(()=>{
   socket.on("newOrder", (data) => {
     audio.play()
-    setTimeout(() => {
-    toast.success("New Order Recieved"); 
-  }, 1000)
-  
+    dispatch(RecentOrderComing(data))
+    // alert("New Order Recieved")
+    toast.success("New Order Recieved 🍔😃"); 
+        // dispatch(RecentOrderComing(data?.order));
+    dispatch(DashboardApi()) 
+    dispatch(GetOrderListApi());
     console.log(data, "socketData recieved");
-    
-  });
 
-  
-  socket.on("disconnect", () => {
   });
+  },[])
+ 
   return (
     <>  
-    {/* <div className="ml-10 pt-20">
-
-  <Button onClick={()=>audio.play()}>Join</Button>
-    </div> */}
       {token && <MiniDrawer />}
       {!token && <Login />}
     </>

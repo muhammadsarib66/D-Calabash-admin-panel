@@ -7,12 +7,9 @@ import riders from "../../Images/bdIcons/BikeIcon.svg";
 import categorary from "../../Images/bdIcons/CategoriesIcon.svg";
 import addressIc from "../../Images/bdIcons/AddressesIcon.svg";
 import { useSelector } from "react-redux";
-import BeepSOund from '../../Images/Neworder.mp3'
 
 const DBCard = () => {
   const { DashboardData } = useSelector((state: any) => state.DashboardSlicer);
-const audio = new Audio(BeepSOund)
-
   const DbCardsData = [
     {
       title: "Pending Orders",
@@ -61,8 +58,8 @@ const audio = new Audio(BeepSOund)
       icon: categorary,
     },
     {
-      title: "total Sales",
-      record: DashboardData?.addresses+"$",
+      title: "today's total Sales",
+      record: DashboardData?.totalSales+"$",
       icon: addressIc,
     },
   ];

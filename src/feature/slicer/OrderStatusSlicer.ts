@@ -9,10 +9,10 @@ import { DashboardApi } from "./DashboardSlicer";
 export const OrderStatusApi: any = createAsyncThunk(
   "dcalabash/OrderStatus",
   async (Obj: any, {dispatch}) => {
-    const {id , status} = Obj
+    const {id , status, msg} = Obj
     console.log(status)
     return await axios
-    .put(`${baseUrl}orders/${id}/status`,{status:status},config)
+    .put(`${baseUrl}orders/${id}/status`,{status:status,msg},config)
     .then((resp) => {
     console.log(resp);
       toast.success(resp?.data?.message);

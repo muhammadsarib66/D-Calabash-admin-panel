@@ -9,7 +9,7 @@ export const GetAdminListApi: any = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const response = await axios.get(`${baseUrl}admin/admins`, config);
-      console.log(response?.data?.data);
+      // console.log(response?.data?.data);
       return response?.data?.data;
     } catch (error: any) {
       if (error.response) {

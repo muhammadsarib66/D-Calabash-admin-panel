@@ -41,14 +41,15 @@ interface initialStateI  {
 const initialState : initialStateI = {
   isLoading: false,
   isError: false,
-  DashboardData : [],
+  DashboardData : {}
 };
 const DashboardSlicer = createSlice({
   name: "DashboardData",
   initialState,
   reducers: {
     RecentOrderComing: (state, action) => {
-      state.DashboardData =   state?.DashboardData?.PendingOrders.push(action.payload);
+      console.log(action.payload)
+      // state.DashboardData =   state?.DashboardData?.PendingOrders.push(action.payload);
     }
   },
 
