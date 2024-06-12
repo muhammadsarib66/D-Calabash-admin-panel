@@ -12,7 +12,7 @@ export const DashboardApi: any = createAsyncThunk(
         `${baseUrl}dashboard`,
         config
       );
-      console.log(response?.data?.data)
+      // console.log(response?.data?.data)
       return response?.data?.data;
     } catch (error: any) {
       if (error.response) {
@@ -47,10 +47,7 @@ const DashboardSlicer = createSlice({
   name: "DashboardData",
   initialState,
   reducers: {
-    RecentOrderComing: (state, action) => {
-      console.log(action.payload)
-      // state.DashboardData =   state?.DashboardData?.PendingOrders.push(action.payload);
-    }
+  
   },
 
   extraReducers: (builder) => {
@@ -69,5 +66,5 @@ const DashboardSlicer = createSlice({
   },
 });
 
-export const {RecentOrderComing} = DashboardSlicer.actions;
+// export const {RecentOrderComing} = DashboardSlicer.actions;
 export default DashboardSlicer.reducer;

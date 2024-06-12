@@ -10,7 +10,7 @@ import { GetProductListApi } from "./feature/slicer/GetProductListSlicer";
 import { GetOrderListApi } from "./feature/slicer/GetOrderListSlicer";
 import { GetCategoriesListApi } from "./feature/slicer/GetCategoriesSlicer";
 import { GetRidersListApi } from "./feature/slicer/GetRidersSlicer";
-import { DashboardApi, RecentOrderComing } from "./feature/slicer/DashboardSlicer";
+import { DashboardApi } from "./feature/slicer/DashboardSlicer";
 import { GetAdminListApi } from "./feature/slicer/GetAdminListingSlicer";
 import { io } from "socket.io-client";
 import { Userid, baseUrl } from "./feature/slicer/Slicer";
@@ -48,13 +48,11 @@ const socket = useMemo(() => io(baseUrl), []);
   useEffect(()=>{
   socket.on("newOrder", (data) => {
     audio.play()
-    dispatch(RecentOrderComing(data))
+    // dispatch(RecentOrderComing(data))
     // alert("New Order Recieved")
     toast.success("New Order Recieved 🍔😃"); 
-        // dispatch(RecentOrderComing(data?.order));
     dispatch(DashboardApi()) 
     dispatch(GetOrderListApi());
-    console.log(data, "socketData recieved");
 
   });
   },[])
