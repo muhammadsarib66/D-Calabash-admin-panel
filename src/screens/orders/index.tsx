@@ -66,6 +66,7 @@ const filteredHeadings = issubadmin
 
 const index = () => {
   const {isLoading ,Orders} = useSelector((state: any) => state.GetOrderListSlicer);
+  // console.log(Orders)
   const dispatch = useDispatch()
   const [filterData, setFilterData] = useState<any>([]);
   const [statusTab, setStatusTab] = useState<any>("Pending");
@@ -93,9 +94,9 @@ const index = () => {
     setTitleModal("deleteorder");
 
   }
-  const HandleOrderStatus = (id:any) => {
+  const HandleOrderStatus = (item :any) => {
    
-    setItem(id);
+    setItem(item);
     setInfoModal(true);
     setTitleModal("OrderStatus");
   };
@@ -185,6 +186,7 @@ const index = () => {
                   address,
                   products,
                   status,
+                  deliveryMode,
                   _id
                 }: any,
                 index: any
@@ -296,7 +298,7 @@ const index = () => {
                             (status === "Shipped" && "green") ||
                             undefined
                           }
-                          onClick={() => HandleOrderStatus({_id,status})}
+                          onClick={() => HandleOrderStatus({_id,deliveryMode})}
                          
                         >
                          {status}

@@ -46,15 +46,15 @@ const index = () => {
   const handleActive = () => {
     setOrderStatus("activeOrders");
   };
-  const HandleOrderStatus = (id:any) => {
-   
-    setItem(id);
+  const HandleOrderStatus = (item : any) => {
+   console.log(item?.deliveryMode)
+    setItem(item);
     setInfoModal(true);
     setTitleModal("RecentOrderStatus");
   };
-  const HandleOrderAsgn = (id:any) => {
+  const HandleOrderAsgn = (item:any) => {
    
-    setItem(id);
+    setItem(item);
     setInfoModal(true);
     setTitleModal("RecentOrderassign");
   };
@@ -155,6 +155,7 @@ const index = () => {
                     deliveryMode,
                     _id,
                     payment_type,
+                    
                   }: any,
                   index: any
                 ) => {
@@ -235,7 +236,7 @@ const index = () => {
                             (status === "Shipped" && "green") ||
                             undefined
                           }
-                          onClick={() => HandleOrderStatus({_id,status})}
+                          onClick={() => HandleOrderStatus({_id,deliveryMode})}
                          
                         >
                          {status}
@@ -255,10 +256,10 @@ const index = () => {
                             (status === "Shipped" && "green") ||
                             undefined
                           }
-                          onClick={() => HandleOrderAsgn({_id})}
+                          onClick={() => HandleOrderAsgn({_id,deliveryMode})}
                 
                         >
-                         Assign to Rider
+                         { deliveryMode == 'Pickup' ? " Deliver Order": "Assign to Rider"}
                         </Button>
                         }
                         </td>

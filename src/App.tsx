@@ -46,15 +46,28 @@ const socket = useMemo(() => io(baseUrl), []);
   },[])
 
   useEffect(()=>{
-  socket.on("newOrder", (data) => {
+  socket.on("newOrder", () => {
     audio.play()
-    // dispatch(RecentOrderComing(data))
-    // alert("New Order Recieved")
     toast.success("New Order Recieved 🍔😃"); 
     dispatch(DashboardApi()) 
     dispatch(GetOrderListApi());
 
   });
+  },[])
+  useEffect(()=>{
+    socket.on("order-updated", (data) => {
+      toast.success(data.message); 
+      dispatch(DashboardApi()) 
+      dispatch(GetOrderListApi());
+  
+    });
+    },[])
+
+  useEffect(()=>{
+    socket.on("rider-updates",(data) => {
+      toast.success(`Rider ${data?.fullname} is now ${data?.isWorking ? 'Online' : 'Offline'}`)
+      dispatch(GetRidersListApi());
+    })
   },[])
  
   return (

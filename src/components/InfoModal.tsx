@@ -183,16 +183,37 @@ const InfoModal = ({ ActionModal, closeModal, title, item }: any) => {
   };
   ////////////// Order Status /////
   const handleConfirmOrder = () => {
-    const Obj = { id: item?._id, status: "Confirmed" , msg:orderMessage };
+    if(item?.deliveryMode == 'Pickup'){
+      const Obj = { id: item?._id, status: "Confirmed"  };
+      dispatch(OrderStatusApi(Obj));
+      closeModal();
+     }
+      else{
 
-    dispatch(OrderStatusApi(Obj));
-    closeModal();
+        const Obj = { id: item?._id, status: "Confirmed" , msg:orderMessage };
+        dispatch(OrderStatusApi(Obj));
+        closeModal();
+      }
   };
   const handleConfirmRecentOrder = () => {
-    const Obj = { id: item?._id, status: "Confirmed" , msg:orderMessage };
+    console.log(item) 
+    if(item?.deliveryMode == 'Pickup'){
+      const Obj = { id: item?._id, status: "Confirmed"  };
+      dispatch(OrderStatusApi(Obj));
+      closeModal();
+     }
+      else{
+
+        const Obj = { id: item?._id, status: "Confirmed" , msg:orderMessage };
+        dispatch(OrderStatusApi(Obj));
+        closeModal();
+      }
+  };
+  const HandleRecentAsignPickupOrder = ()=>{
+    const Obj = { id: item?._id, status: "Delivered"  };
     dispatch(OrderStatusApi(Obj));
     closeModal();
-  };
+  }
   // const handleShipOrder = () => {
   //   const Obj = { id: item?._id, status: "Shipped" };
   //   dispatch(OrderStatusApi(Obj));
@@ -406,6 +427,7 @@ const InfoModal = ({ ActionModal, closeModal, title, item }: any) => {
                 Confirm the order and Change the Delivery Status?
               </h1>
               <div>
+             
               <Textarea
                   name="message"
                   value={orderMessage}
@@ -413,7 +435,9 @@ const InfoModal = ({ ActionModal, closeModal, title, item }: any) => {
                   onPointerEnterCapture={() => {}}
                   onPointerLeaveCapture={() => {}}
                   label="This message will only shows in notification"
+
                 />
+
                 <Divider />
                 <div className="pt-6 flex gap-4 justify-end">
                   <Button
@@ -445,6 +469,7 @@ const InfoModal = ({ ActionModal, closeModal, title, item }: any) => {
                 Confirm the order and Change the Delivery Status?
               </h1>
               <div>
+             
               <Textarea
                   name="message"
                   value={orderMessage}
@@ -454,6 +479,7 @@ const InfoModal = ({ ActionModal, closeModal, title, item }: any) => {
                   label="This message will only shows in notification"
 
                 />
+                
                 <Divider />
                 <div className="pt-6 flex gap-4 justify-end">
                   <Button
@@ -548,7 +574,7 @@ const InfoModal = ({ ActionModal, closeModal, title, item }: any) => {
             <div className=" min-h-fit  p-6">
               <div className="flex justify-between  w-full ">
                 <h1 className="text-gray-800 capitalize pb-6 text-xl font-semibold">
-                  Assign Order to Active Riders
+                {item?.deliveryMode == 'Pickup' ? "Deliver the Order " :" Assign Order to Active Riders" } 
                 </h1>
                 <i
                   className="fas fa-times text-2xl cursor-pointer"
@@ -556,6 +582,20 @@ const InfoModal = ({ ActionModal, closeModal, title, item }: any) => {
                 ></i>
               </div>
               <div className=" flex flex-col gap-4 w-full">
+              {/* {item?.deliveryMode == 'Pickup' && <p className="text-center text-xl font-semibold">This is a Pickup Order</p>} */}
+             {item?.deliveryMode == 'Pickup' &&  
+             <Button
+             className="w-full"
+             placeholder=""
+             onPointerEnterCapture={() => {}}
+             onPointerLeaveCapture={() => {}}
+             color="blue"
+             onClick={HandleRecentAsignPickupOrder}
+           >
+             Deliver
+           </Button>}
+           { item?.deliveryMode != 'Pickup' &&
+              <>
                 <div className="relative z-50">
                   <Select
                     className="absolute top-0 z-40"
@@ -596,7 +636,7 @@ const InfoModal = ({ ActionModal, closeModal, title, item }: any) => {
                     ))}
                   </Select>
                 </div>
-
+              
                 <Button
                   className="w-full"
                   placeholder=""
@@ -607,6 +647,8 @@ const InfoModal = ({ ActionModal, closeModal, title, item }: any) => {
                 >
                   Assign to Rider
                 </Button>
+              </>
+            }
               </div>
             </div>
           )) ||

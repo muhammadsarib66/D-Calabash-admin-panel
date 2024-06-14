@@ -11,7 +11,7 @@ export const AssingOrderApi: any = createAsyncThunk(
   "dcalabash/assignorder",
   async (Obj: any, {dispatch}) => {
     return await axios
-    .post(`${baseUrl}orders/assign-rider`, Obj,config)
+    .post(`${baseUrl}assign-rider`, Obj,config)
     .then((resp) => {
     // console.log(resp);
       toast.success(resp?.data?.message);
