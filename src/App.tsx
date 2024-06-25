@@ -16,6 +16,7 @@ import { io } from "socket.io-client";
 import { Userid, baseUrl } from "./feature/slicer/Slicer";
 import { toast } from "react-toastify";
 import BeepSOund from './Images/Neworder.mp3'
+import { GetResConfApi } from "./feature/slicer/GetResConfSlicer";
 
 
 
@@ -36,6 +37,7 @@ const socket = useMemo(() => io(baseUrl), []);
       dispatch(GetOrderListApi());
       dispatch(DashboardApi());
       dispatch(GetAdminListApi());
+      dispatch(GetResConfApi())
     } 
   }, [token]);
   
@@ -70,6 +72,11 @@ const socket = useMemo(() => io(baseUrl), []);
     })
   },[])
  
+  useEffect(()=>{
+    socket.on("message",(data)=>{
+      console.log(data)
+    })
+  },[])
   return (
     <>  
       {token && <MiniDrawer />}

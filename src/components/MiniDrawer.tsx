@@ -38,7 +38,10 @@ import { LoginOutlined } from "@mui/icons-material";
 import { ToastContainer } from "react-toastify";
 import ProductCategory from "../screens/products/ProductCategory";
 import SupervisorAccountIcon from '@mui/icons-material/SupervisorAccount';
+import SettingsIcon from '@mui/icons-material/Settings';
+
 import { issubadmin } from "../feature/slicer/Slicer";
+import ResConfig from "../screens/restuarent-config/ResConfig";
 
 const drawerWidth = 240;
 const tabs = [
@@ -79,8 +82,13 @@ const tabs = [
     icon: <SupervisorAccountIcon />,
 
   },
-];
+  {
+    title: "Restuarent Config",
+    link: "/config",
+    icon: <SettingsIcon />,
 
+  },
+];
 const filteredTabs = issubadmin 
   ? tabs.filter(item => item?.title !== "Sub Admins" )
   : tabs;
@@ -343,6 +351,7 @@ export default function MiniDrawer() {
           <Route path="/products" element={<Product />} />
           <Route path="/productsCategories" element={<ProductCategory />} />
           <Route path="/riders" element={<Riders />} />
+          <Route path='/config' element={<ResConfig />} />
           {
             issubadmin == true ? null : <Route path="/subadmin" element={<SubAdmin />} />
           }

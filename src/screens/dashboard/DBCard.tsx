@@ -59,7 +59,7 @@ const DBCard = () => {
     },
     {
       title: "today's total Sales",
-      record: DashboardData?.totalSales+"$",
+      record: DashboardData?.totalSales?.toFixed(2)+"$",
       icon: addressIc,
     },
   ];

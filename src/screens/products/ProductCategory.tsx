@@ -17,10 +17,6 @@ import InfoModal from "../../components/InfoModal";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { issubadmin } from "../../feature/slicer/Slicer";
 
-// import DeleteIcon from "@mui/icons-material/Delete";
-// import NoAccountsIcon from "@mui/icons-material/NoAccounts";
-// import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-
 const OrderStatusTABS = [
   {
     label: "All",
@@ -36,15 +32,10 @@ const OrderStatusTABS = [
   },
 ];
 
-const TableHeadings = [
-  "Category Title ",
-  "Status",
-  "Action"
- 
-];
+const TableHeadings = ["Category Title ", "Status", "Action"];
 
-const filteredHeadings = issubadmin 
-  ? TableHeadings.filter(heading => heading !== "Action")
+const filteredHeadings = issubadmin
+  ? TableHeadings.filter((heading) => heading !== "Action")
   : TableHeadings;
 const ProductCategory = () => {
   const { isLoading, Categories } = useSelector(
@@ -55,26 +46,21 @@ const ProductCategory = () => {
   const [search, setSearch] = useState<any>("");
   const [infoModal, setInfoModal] = useState<any>(false);
   const [titleModal, setTitleModal] = useState<any>("");
-  const [item , setItem] = useState<any>("")
+  const [item, setItem] = useState<any>("");
 
   const closeModal = () => {
     setInfoModal(false);
   };
- 
-  const handleAddCat = () => {
-    setTitleModal("add category")
-    setInfoModal(true)
-  }
-  const HandleDeletrCategory = (id:any) => {
-    setItem(id)
-    setTitleModal("deletecategory")
-    setInfoModal(true)
-  }
- 
- 
 
-  
-  
+  const handleAddCat = () => {
+    setTitleModal("add category");
+    setInfoModal(true);
+  };
+  const HandleDeletrCategory = (id: any) => {
+    setItem(id);
+    setTitleModal("deletecategory");
+    setInfoModal(true);
+  };
   useEffect(() => {
     if (search.length > 0) {
       const filteredData = Categories?.filter((data: any) => {
@@ -90,7 +76,10 @@ const ProductCategory = () => {
           return data.isActive == statusTab;
         }
       });
-    filteredData.sort((a:any, b:any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+      filteredData.sort(
+        (a: any, b: any) =>
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+      );
 
       setFilterData(filteredData);
     }
@@ -134,56 +123,53 @@ const ProductCategory = () => {
                     color="blue-gray"
                     className="font-normal leading-none opacity-70"
                   >
-                                      {issubadmin == true ? (head == "Action" )  ? null : head : head}
-
-                    {/* {head} */}
+                    {issubadmin == true
+                      ? head == "Action"
+                        ? null
+                        : head
+                      : head}
                   </Typography>
                 </th>
               ))}
             </tr>
           </thead>
           <tbody className="">
-            {filterData?.map(
-              (
-                { title, isActive , _id }: any,
-                index: any
-              ) => {
-                const isLast = index === filterData?.length - 1;
-                const classes = isLast
-                  ? "p-4"
-                  : "p-4 border-b border-blue-gray-50";
+            {filterData?.map(({ title, isActive, _id }: any, index: any) => {
+              const isLast = index === filterData?.length - 1;
+              const classes = isLast
+                ? "p-4"
+                : "p-4 border-b border-blue-gray-50";
 
-                return (
-                  <>
-                    <tr className="text-center" key={_id}>
-                      <td className={classes}>
-                        <Typography
-                          placeholder=""
-                          onPointerEnterCapture={() => {}}
-                          onPointerLeaveCapture={() => {}}
-                          variant="small"
-                          color="blue-gray"
-                          className="font-normal"
-                        >
-                          {title}
-                        </Typography>
-                      </td>
-                    
+              return (
+                <>
+                  <tr className="text-center" key={_id}>
+                    <td className={classes}>
+                      <Typography
+                        placeholder=""
+                        onPointerEnterCapture={() => {}}
+                        onPointerLeaveCapture={() => {}}
+                        variant="small"
+                        color="blue-gray"
+                        className="font-normal"
+                      >
+                        {title}
+                      </Typography>
+                    </td>
 
+                    <td className={classes}>
+                      <Chip
+                        variant="ghost"
+                        size="sm"
+                        className="w-fit px-4 mx-auto"
+                        value={isActive == true ? "Available" : "Not Available"}
+                        color={isActive == true ? "green" : "red"}
+                      />
+                    </td>
+                    {issubadmin == true ? (
+                      ""
+                    ) : (
                       <td className={classes}>
-                        <Chip
-                          variant="ghost"
-                          size="sm"
-                          className="w-fit px-4 mx-auto"
-                          value={
-                            isActive == true ? "Available" : "Not Available"
-                          }
-                          color={isActive == true ? "green" : "red"}
-                        />
-                      </td>
-                      {issubadmin == true ? "" : 
-                      <td className={classes}>
-                      <Tooltip content="Delete Category">
+                        <Tooltip content="Delete Category">
                           <IconButton
                             onClick={() => HandleDeletrCategory(_id)}
                             placeholder=""
@@ -195,12 +181,11 @@ const ProductCategory = () => {
                           </IconButton>
                         </Tooltip>
                       </td>
-                      }
-                    </tr>
-                  </>
-                );
-              }
-            )}
+                    )}
+                  </tr>
+                </>
+              );
+            })}
           </tbody>
         </table>
         {infoModal && (
@@ -209,7 +194,6 @@ const ProductCategory = () => {
             ActionModal={infoModal}
             closeModal={closeModal}
             item={item}
-           
           />
         )}
       </CardBody>

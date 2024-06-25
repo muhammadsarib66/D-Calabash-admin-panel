@@ -17,7 +17,7 @@ import Loader from "../../components/Loader";
 import InfoModal from "../../components/InfoModal";
 import { baseUrl, issubadmin } from "../../feature/slicer/Slicer";
 import DeleteIcon from "@mui/icons-material/Delete";
-
+import ProductInfoModal from "../../components/ProductInfoModal";
 
 const OrderStatusTABS = [
   {
@@ -42,27 +42,37 @@ const TableHeadings = [
   "Category",
   "Category Status",
   "Ingredients",
+  "Add Choice",
   "Change Status",
   "Action",
 ];
-const filteredHeadings = issubadmin 
-  ? TableHeadings.filter(heading => heading !== "Action" && heading !== "Change Status")
+const filteredHeadings = issubadmin
+  ? TableHeadings.filter(
+      (heading) => heading !== "Action" && heading !== "Change Status"
+    )
   : TableHeadings;
 
 const index = () => {
   const { isLoading, Products } = useSelector(
     (state: any) => state.GetProductListSlicer
   );
-  console.log(Products)
   const [filterData, setFilterData] = useState<any>([]);
   const [statusTab, setStatusTab] = useState<any>("all");
   const [search, setSearch] = useState<any>("");
   const [infoModal, setInfoModal] = useState<any>(false);
   const [titleModal, setTitleModal] = useState<any>("");
   const [item, setItem] = useState<any>("");
+  const [isProductDetailOpen, setIsProductOpen] = useState<any>(false);
 
   const closeModal = () => {
     setInfoModal(false);
+  };
+  const productInfoModal = (item: any) => {
+    setItem(item);
+    setIsProductOpen(true);
+  };
+  const CloseproductInfoModal = () => {
+    setIsProductOpen(false);
   };
   const HandleEnablePrdct = (id: any) => {
     setTitleModal("enableproduct");
@@ -70,24 +80,20 @@ const index = () => {
     setItem(id);
   };
   const HandleDisabkePrdct = (id: any) => {
-    
     setTitleModal("disableproduct");
     setInfoModal(true);
     setItem(id);
   };
   const HandleDeletePrdct = (id: any) => {
-    
     setTitleModal("deleteproduct");
     setInfoModal(true);
     setItem(id);
   };
   const handleAddProduct = () => {
-
     setTitleModal("addproduct");
     setInfoModal(true);
-  }
+  };
 
- 
   useEffect(() => {
     const filteredData = Products?.filter((data: any) => {
       if (statusTab === "all") {
@@ -95,10 +101,7 @@ const index = () => {
       } else {
         return data.available.toString() === statusTab;
       }
-
-
     });
-    // filteredData.sort((a:any, b:any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
     setFilterData(filteredData);
   }, [statusTab, Products]);
 
@@ -118,7 +121,10 @@ const index = () => {
           return data.available.toString() === statusTab;
         }
       });
-    filteredData.sort((a:any, b:any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+      filteredData.sort(
+        (a: any, b: any) =>
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+      );
 
       setFilterData(filteredData);
     }
@@ -162,7 +168,6 @@ const index = () => {
                     color="blue-gray"
                     className="font-normal leading-none opacity-70"
                   >
-
                     {head}
                   </Typography>
                 </th>
@@ -172,7 +177,17 @@ const index = () => {
           <tbody className="">
             {filterData?.map(
               (
-                { category, name, price, imageUrl, ingredients,available, _id }: any,
+                {
+                  category,
+                  name,
+                  price,
+                  imageUrl,
+                  ingredients,
+                  available,
+                  _id,
+                  description,
+                  choices,
+                }: any,
                 index: any
               ) => {
                 const isLast = index === filterData?.length - 1;
@@ -251,74 +266,82 @@ const index = () => {
                       </td>
                       <td className={classes}>
                         <ul className=" flex flex-col gap-2">
-
-                      {ingredients?.map((ing: any) => (
-                        <li>
-
-                        <Chip
-                        
-                          variant="ghost"
-                          
-                          className="w-fit px-4 mx-auto"
-                          value={ing}
-                          color="blue"
-                        />
-                        </li>
-
-                      ))}
-                      </ul>
+                          {ingredients?.map((ing: any) => (
+                            <li>
+                              <Chip
+                                variant="ghost"
+                                className="w-fit px-4 mx-auto"
+                                value={ing}
+                                color="blue"
+                              />
+                            </li>
+                          ))}
+                        </ul>
                       </td>
-                 {!issubadmin  ? 
-                     (
-                      <>
-                      <td className={`${classes} flex gap-2`}>
-                      {!available == true ? 
-                        <Button
-                        placeholder=""
-                        disabled={available == true ? true : false}
-                        
-                        onPointerEnterCapture={() => {}}
-                        onPointerLeaveCapture={() => {}}
-                        size="sm"
-                        color="green"
-                        onClick={() => HandleEnablePrdct(_id)}
-                        
-                        >
-                          Enable
-                        </Button>
-                        :
-                        <Button
-                          placeholder=""
-                          disabled={!available == true ? true : false}
-                          onPointerEnterCapture={() => {}}
-                          onPointerLeaveCapture={() => {}}
-                          size="sm"
-                          color="red"
-                          onClick={() => HandleDisabkePrdct(_id)}
-
-                        >
-                          Disable
-                        </Button>
-                      }
-
+                      <td className={`${classes}`}>
+                        <i
+                          onClick={() =>
+                            productInfoModal({
+                              category,
+                              name,
+                              price,
+                              imageUrl,
+                              ingredients,
+                              available,
+                              _id,
+                              description,
+                              choices,
+                            })
+                          }
+                          className=" cursor-pointer fa-solid fa-circle-info"
+                        ></i>
                       </td>
-                      <td className={classes}>
-                      <Tooltip content="Delete Product">
-                          <IconButton
-                            onClick={() => HandleDeletePrdct(_id)}
-                            placeholder=""
-                            onPointerEnterCapture={() => {}}
-                            onPointerLeaveCapture={() => {}}
-                            variant="text"
-                          >
-                            <DeleteIcon className=" text-red-500" />
-                          </IconButton>
-                        </Tooltip>
-                      </td>
-                      </>
-
-                      )
-                       : ""}
+                      {!issubadmin ? (
+                        <>
+                          <td className={`${classes} flex gap-2`}>
+                            {!available == true ? (
+                              <Button
+                                placeholder=""
+                                disabled={available == true ? true : false}
+                                onPointerEnterCapture={() => {}}
+                                onPointerLeaveCapture={() => {}}
+                                size="sm"
+                                color="green"
+                                onClick={() => HandleEnablePrdct(_id)}
+                              >
+                                Enable
+                              </Button>
+                            ) : (
+                              <Button
+                                placeholder=""
+                                disabled={!available == true ? true : false}
+                                onPointerEnterCapture={() => {}}
+                                onPointerLeaveCapture={() => {}}
+                                size="sm"
+                                color="red"
+                                onClick={() => HandleDisabkePrdct(_id)}
+                              >
+                                Disable
+                              </Button>
+                            )}
+                          </td>
+                          <td className={classes}>
+                            <Tooltip content="Delete Product">
+                              <IconButton
+                                onClick={() => HandleDeletePrdct(_id)}
+                                placeholder=""
+                                onPointerEnterCapture={() => {}}
+                                onPointerLeaveCapture={() => {}}
+                                variant="text"
+                              >
+                                <DeleteIcon className=" text-red-500" />
+                              </IconButton>
+                            </Tooltip>
+                          </td>
+                        </>
+                      ) : (
+                        ""
+                      )}
                     </tr>
                   </>
                 );
@@ -334,6 +357,11 @@ const index = () => {
             item={item}
           />
         )}
+        <ProductInfoModal
+          item={item}
+          Open={isProductDetailOpen}
+          closeModal={CloseproductInfoModal}
+        />
       </CardBody>
       {isLoading && <Loader />}
     </Card>

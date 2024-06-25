@@ -194,7 +194,7 @@ const index = () => {
                             color="blue-gray"
                             className="font-normal"
                           >
-                            {totalAmount}$
+                            {totalAmount?.toFixed(2)}$
                           </Typography>
                         </td>
 

@@ -24,6 +24,9 @@ import DashboardSlicer from "./DashboardSlicer";
 import GetAdminListingSlicer from "./GetAdminListingSlicer";
 import DeleteAdminSlicer from "./DeleteAdminSlicer";
 import AddAdminSlicer from "./AddAdminSlicer";
+import AddProductChoicesSlicer from "./AddProductChoicesSlicer";
+import ResConfSlicer from "./ResConfSlicer";
+import GetResConfSlicer from "./GetResConfSlicer";
 
 export const store = configureStore({
   reducer: {
@@ -51,7 +54,9 @@ export const store = configureStore({
     DashboardSlicer,
     GetAdminListingSlicer,
     DeleteAdminSlicer,
-    AddAdminSlicer
-
+    AddAdminSlicer,
+    AddProductChoicesSlicer,
+    ResConfSlicer,
+    GetResConfSlicer
   },
 });

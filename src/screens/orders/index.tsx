@@ -16,7 +16,7 @@ import {
 } from "@material-tailwind/react";
 import Header from "../../components/CardHeader";
 import InfoModal from "../../components/InfoModal";
-import {  useDispatch, useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Loader from "../../components/Loader";
 import moment from "moment";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -43,75 +43,64 @@ const OrderStatusTABS = [
     label: "All",
     value: "all",
   },
-  
-  
-  
 ];
 
 const TableHeadings = [
-  
   "Customer",
   "Order Time",
   "Amount",
   "Status",
   "Order Detail",
-  'Delivery Status',
-  'Action'
+  "Delivery Status",
+  "Action",
 ];
 
-const filteredHeadings = issubadmin 
-  ? TableHeadings.filter(heading => heading !== "Action" )
+const filteredHeadings = issubadmin
+  ? TableHeadings.filter((heading) => heading !== "Action")
   : TableHeadings;
-
-
 const index = () => {
-  const {isLoading ,Orders} = useSelector((state: any) => state.GetOrderListSlicer);
-  // console.log(Orders)
-  const dispatch = useDispatch()
+  const { isLoading, Orders } = useSelector(
+    (state: any) => state.GetOrderListSlicer
+  );
+  const dispatch = useDispatch();
   const [filterData, setFilterData] = useState<any>([]);
   const [statusTab, setStatusTab] = useState<any>("Pending");
   const [infoModal, setInfoModal] = useState<any>(false);
   const [titleModal, setTitleModal] = useState<any>("");
   const [item, setItem] = useState<any>("");
-
-
-
   const [search, setSearch] = useState<any>("");
 
   const closeModal = () => {
     setInfoModal(false);
   };
 
-  const HandleOrderInfo = (item:any) => {
+  const HandleOrderInfo = (item: any) => {
     setItem(item);
     setInfoModal(true);
     setTitleModal("OrderInfo");
-
-  }
-  const HandleDeletrOrder = (item:any) => {
+  };
+  const HandleDeletrOrder = (item: any) => {
     setItem(item);
     setInfoModal(true);
     setTitleModal("deleteorder");
-
-  }
-  const HandleOrderStatus = (item :any) => {
-   
+  };
+  const HandleOrderStatus = (item: any) => {
     setItem(item);
     setInfoModal(true);
     setTitleModal("OrderStatus");
   };
-  const HandleOrderAsgn = (id:any) => {
-   
+  const HandleOrderAsgn = (id: any) => {
     setItem(id);
     setInfoModal(true);
     setTitleModal("Orderassign");
   };
 
-
   useEffect(() => {
     if (search.length > 0) {
       const filteredData = Orders?.filter((data: any) => {
-        return data?.user?.fullname.toLowerCase().includes(search.toLowerCase());
+        return data?.user?.fullname
+          .toLowerCase()
+          .includes(search.toLowerCase());
       });
       setFilterData(filteredData);
     } else {
@@ -122,15 +111,17 @@ const index = () => {
         } else {
           return data.status == statusTab;
         }
-    
       });
-      filteredData.sort((a:any, b:any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+      filteredData.sort(
+        (a: any, b: any) =>
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+      );
       setFilterData(filteredData);
     }
   }, [search, Orders, statusTab]);
-  useEffect(()=>{
-    dispatch(GetOrderListApi()) 
-  },[])
+  useEffect(() => {
+    dispatch(GetOrderListApi());
+  }, []);
   return (
     <Card
       className=" w-full"
@@ -145,7 +136,6 @@ const index = () => {
         setStatusTab={setStatusTab}
         setSearch={setSearch}
         StatusTabVal="Pending"
-        
       />
 
       <CardBody
@@ -187,7 +177,7 @@ const index = () => {
                   products,
                   status,
                   deliveryMode,
-                  _id
+                  _id,
                 }: any,
                 index: any
               ) => {
@@ -199,7 +189,6 @@ const index = () => {
                 return (
                   <>
                     <tr key={_id}>
-                      
                       <td className={`${classes} clientData`}>
                         {user?.fullname}
                         <div className="fullData bg-gray-50  text-gray-800 rounded-md shadow-md h-fit p-4  w-[300px] overflow-x-scroll ">
@@ -209,7 +198,7 @@ const index = () => {
                           </p>
                           <p>
                             <span className="font-bold">Phone : </span>
-                            {'03103102166'}
+                            {"03103102166"}
                           </p>
                           <p>
                             <span className="font-bold">Email : </span>
@@ -236,7 +225,7 @@ const index = () => {
                         >
                           {/* {moment(createdAt).format('LL')} */}
                           {/* {createdAt.sort((a:any,b:any) => new Date(b.createdAt) - new Date(a.createdAt))} */}
-                          {moment(createdAt).format(' h:mm a, MMMM Do YYYY')}
+                          {moment(createdAt).format(" h:mm a, MMMM Do YYYY")}
                         </Typography>
                       </td>
 
@@ -249,10 +238,10 @@ const index = () => {
                           color="blue-gray"
                           className="font-normal"
                         >
-                          {totalAmount}
+                          {totalAmount?.toFixed(2)}$
                         </Typography>
                       </td>
-                     
+
                       <td className={classes}>
                         <div className="w-max">
                           <Chip
@@ -260,19 +249,32 @@ const index = () => {
                             size="sm"
                             value={status}
                             color={
-                              status === "Delivered" ? "orange" :
-                              status === "Pending" ? "gray" :
-                              status === "Cancelled" ? "red" :
-                              status === "Confirmed" ? "blue" :
-                              status === "Shipped" ? "green" :
-                              undefined
+                              status === "Delivered"
+                                ? "orange"
+                                : status === "Pending"
+                                ? "gray"
+                                : status === "Cancelled"
+                                ? "red"
+                                : status === "Confirmed"
+                                ? "blue"
+                                : status === "Shipped"
+                                ? "green"
+                                : undefined
                             }
                           />
                         </div>
                       </td>
                       <td className={classes}>
                         <IconButton
-                          onClick={() => HandleOrderInfo({ products ,address , user, totalAmount,status})}
+                          onClick={() =>
+                            HandleOrderInfo({
+                              products,
+                              address,
+                              user,
+                              totalAmount,
+                              status,
+                            })
+                          }
                           variant="text"
                           placeholder=""
                           onPointerEnterCapture={() => {}}
@@ -281,65 +283,69 @@ const index = () => {
                           <InfoIcon className="h-4 w-4" />
                         </IconButton>
                       </td>
-                     
-                      <td className={`${classes} flex gap-2`}>
-                        {status !== "Confirmed" ? <Button
-                          placeholder=""
-                          disabled={status === "Delivered" || status === "Shipped" ? true : false}
 
-                          onPointerEnterCapture={() => {}}
-                          onPointerLeaveCapture={() => {}}
-                          size="sm"
-                          color={
-                            (status === "Delivered" && "orange") ||
-                            (status === "Pending" && "gray") ||
-                            (status === "Cancelled" && "red") ||
-                            (status === "Confirmed" && "blue") ||
-                            (status === "Shipped" && "green") ||
-                            undefined
-                          }
-                          onClick={() => HandleOrderStatus({_id,deliveryMode})}
-                         
-                        >
-                         {status}
-                        </Button>
-                        :
-                        <Button
-                          placeholder=""
-                          // disabled={available == true ? true : false}
-                          onPointerEnterCapture={() => {}}
-                          onPointerLeaveCapture={() => {}}
-                          size="sm"
-                          color={
-                            (status === "Delivered" && "orange") ||
-                            (status === "Pending" && "gray") ||
-                            (status === "Cancelled" && "red") ||
-                            (status === "Confirmed" && "blue") ||
-                            (status === "Shipped" && "green") ||
-                            undefined
-                          }
-                          onClick={() => HandleOrderAsgn({_id})}
-                
-                        >
-                         Assign to Rider
-                        </Button>
-                        }
-                        </td>
-                        { issubadmin == true ? null : 
-                        <td className={classes}>
-                      <Tooltip content="Delete Order">
-                          <IconButton
-                            onClick={() => HandleDeletrOrder(_id)}
+                      <td className={`${classes} flex gap-2`}>
+                        {status !== "Confirmed" ? (
+                          <Button
                             placeholder=""
+                            disabled={
+                              status === "Delivered" || status === "Shipped"
+                                ? true
+                                : false
+                            }
                             onPointerEnterCapture={() => {}}
                             onPointerLeaveCapture={() => {}}
-                            variant="text"
+                            size="sm"
+                            color={
+                              (status === "Delivered" && "orange") ||
+                              (status === "Pending" && "gray") ||
+                              (status === "Cancelled" && "red") ||
+                              (status === "Confirmed" && "blue") ||
+                              (status === "Shipped" && "green") ||
+                              undefined
+                            }
+                            onClick={() =>
+                              HandleOrderStatus({ _id, deliveryMode })
+                            }
                           >
-                            <DeleteIcon className=" text-red-500" />
-                          </IconButton>
-                        </Tooltip>
+                            {status}
+                          </Button>
+                        ) : (
+                          <Button
+                            placeholder=""
+                            // disabled={available == true ? true : false}
+                            onPointerEnterCapture={() => {}}
+                            onPointerLeaveCapture={() => {}}
+                            size="sm"
+                            color={
+                              (status === "Delivered" && "orange") ||
+                              (status === "Pending" && "gray") ||
+                              (status === "Cancelled" && "red") ||
+                              (status === "Confirmed" && "blue") ||
+                              (status === "Shipped" && "green") ||
+                              undefined
+                            }
+                            onClick={() => HandleOrderAsgn({ _id })}
+                          >
+                            Assign to Rider
+                          </Button>
+                        )}
                       </td>
-                      }
+                      {issubadmin == true ? null : (
+                        <td className={classes}>
+                          <Tooltip content="Delete Order">
+                            <IconButton
+                              onClick={() => HandleDeletrOrder(_id)}
+                              placeholder=""
+                              onPointerEnterCapture={() => {}}
+                              onPointerLeaveCapture={() => {}}
+                              variant="text"
+                            >
+                              <DeleteIcon className=" text-red-500" />
+                            </IconButton>
+                          </Tooltip>
+                        </td>
+                      )}
                     </tr>
                   </>
                 );
@@ -349,10 +355,10 @@ const index = () => {
         </table>
         {infoModal && (
           <InfoModal
-          title={titleModal}
-          ActionModal={infoModal}
-          closeModal={closeModal}
-          item={item}
+            title={titleModal}
+            ActionModal={infoModal}
+            closeModal={closeModal}
+            item={item}
           />
         )}
       </CardBody>
