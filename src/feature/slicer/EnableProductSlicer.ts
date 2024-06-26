@@ -11,7 +11,7 @@ export const EnableProductApi: any = createAsyncThunk(
     return await axios
       .post(`${baseUrl}products/enable-product`, Obj, config)
       .then((resp) => {
-        console.log(resp);
+        // console.log(resp);
         toast.success(resp?.data?.message);
         dispatch(GetProductListApi());
         return resp.data;
@@ -25,7 +25,7 @@ export const EnableProductApi: any = createAsyncThunk(
             console.log("Error 400: Bad Request", err.response.data);
           } else {
             toast.error(`Error: ${err.response.data.message}`);
-            console.log(err.response.data);
+            // console.log(err.response.data);
           }
         } else if (err.request) {
           // The request was made but no response was received

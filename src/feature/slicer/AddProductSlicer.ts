@@ -17,7 +17,7 @@ export const AddProductApi: any = createAsyncThunk(
   "dcalabash/AddProduct",
   async (Obj: any, {dispatch}) => {
     const {image , name, description, price, available, ingradients, category} = Obj;
-    console.log(ingradients)
+    // console.log(ingradients)
     const formData = new FormData();
     formData.append("image", image);
   formData.append("name", name);
@@ -50,7 +50,7 @@ export const AddProductApi: any = createAsyncThunk(
       } else if (err.request) {
         // The request was made but no response was received
         toast.error("No response received from the server.");
-        console.log(err.request);
+        // console.log(err.request);
       } else {
         // Something happened in setting up the request that triggered an Error
         toast.error("An error occurred while processing your request.");

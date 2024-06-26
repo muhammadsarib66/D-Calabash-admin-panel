@@ -3,21 +3,25 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from "react";
 import {
-  Button,
+  
   Card,
   CardBody,
   Chip,
   IconButton,
   Tooltip,
+  Switch,
   Typography,
 } from "@material-tailwind/react";
 import Header from "../../components/CardHeader";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Loader from "../../components/Loader";
 import InfoModal from "../../components/InfoModal";
 import { baseUrl, issubadmin } from "../../feature/slicer/Slicer";
 import DeleteIcon from "@mui/icons-material/Delete";
 import ProductInfoModal from "../../components/ProductInfoModal";
+import { EnableProductApi } from "../../feature/slicer/EnableProductSlicer";
+import { DisableProductApi } from "../../feature/slicer/DisableProductSlicer";
+// import { Switch } from "@mui/material";
 
 const OrderStatusTABS = [
   {
@@ -42,8 +46,8 @@ const TableHeadings = [
   "Category",
   "Category Status",
   "Ingredients",
-  "Add Choice",
-  "Change Status",
+  `${issubadmin ? "View Choices" : "Add Choice"}`,
+  // "Change Status",
   "Action",
 ];
 const filteredHeadings = issubadmin
@@ -56,6 +60,7 @@ const index = () => {
   const { isLoading, Products } = useSelector(
     (state: any) => state.GetProductListSlicer
   );
+  const dispatch = useDispatch();
   const [filterData, setFilterData] = useState<any>([]);
   const [statusTab, setStatusTab] = useState<any>("all");
   const [search, setSearch] = useState<any>("");
@@ -74,16 +79,26 @@ const index = () => {
   const CloseproductInfoModal = () => {
     setIsProductOpen(false);
   };
-  const HandleEnablePrdct = (id: any) => {
-    setTitleModal("enableproduct");
-    setInfoModal(true);
-    setItem(id);
+  // const HandleEnablePrdct = (id: any) => {
+  //   setTitleModal("enableproduct");
+  //   setInfoModal(true);
+  //   setItem(id);
+  // };
+  const handleItemStatusChanged = (e: any, id: any) => {
+    if (e.target.checked == false) {
+      const Obj = { productId: id };
+      dispatch(DisableProductApi(Obj));
+    } else if (e.target.checked == true) {
+      const Obj = { productId: id };
+      dispatch(EnableProductApi(Obj));
+    }
+    // console.log(e.target.checked, id);
   };
-  const HandleDisabkePrdct = (id: any) => {
-    setTitleModal("disableproduct");
-    setInfoModal(true);
-    setItem(id);
-  };
+  // const HandleDisabkePrdct = (id: any) => {
+  //   setTitleModal("disableproduct");
+  //   setInfoModal(true);
+  //   setItem(id);
+  // };
   const HandleDeletePrdct = (id: any) => {
     setTitleModal("deleteproduct");
     setInfoModal(true);
@@ -174,6 +189,7 @@ const index = () => {
               ))}
             </tr>
           </thead>
+
           <tbody className="">
             {filterData?.map(
               (
@@ -230,16 +246,30 @@ const index = () => {
                         </Typography>
                       </td>
 
-                      <td className={classes}>
-                        <Chip
-                          variant="ghost"
-                          size="sm"
-                          className="w-fit px-4 mx-auto"
-                          value={
-                            available == true ? "Available" : "Not Available"
-                          }
-                          color={available == true ? "green" : "red"}
-                        />
+                      <td className={`${classes}  flex justify-center   `}>
+                        <div className="w-fit  relative  gap-2">
+                          <Switch
+                           crossOrigin={undefined}
+                           placeholder=""
+                           onPointerEnterCapture={() => {}}
+                           onPointerLeaveCapture={() => {}}
+                            onChange={(e) => handleItemStatusChanged(e, _id)}
+                            checked={available == true ? true : false}
+                            className="bg-red-600  absolute left-0"
+                            color="green"
+                            defaultChecked
+                          />
+
+                          <Chip
+                            variant="ghost"
+                            size="sm"
+                            className="w-fit px-4 mx-auto"
+                            value={
+                              available == true ? "Available" : "Not Available"
+                            }
+                            color={available == true ? "green" : "red"}
+                          />
+                        </div>
                       </td>
                       <td className={classes}>
                         <Typography
@@ -298,7 +328,7 @@ const index = () => {
                       </td>
                       {!issubadmin ? (
                         <>
-                          <td className={`${classes} flex gap-2`}>
+                          {/* <td className={`${classes} flex gap-2`}>
                             {!available == true ? (
                               <Button
                                 placeholder=""
@@ -324,7 +354,7 @@ const index = () => {
                                 Disable
                               </Button>
                             )}
-                          </td>
+                          </td> */}
                           <td className={classes}>
                             <Tooltip content="Delete Product">
                               <IconButton

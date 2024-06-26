@@ -11,7 +11,7 @@ export const DelCustomerApi: any = createAsyncThunk(
     return await axios
     .post(`${baseUrl}users/delete-customer`, Obj,config)
     .then((resp) => {
-    console.log(resp);
+    // console.log(resp);
       toast.success(resp?.data?.message);
       dispatch(GetCustomerApi())
       return resp.data;

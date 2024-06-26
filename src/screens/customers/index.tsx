@@ -8,17 +8,20 @@ import {
   CardBody,
   Chip,
   IconButton,
+  Switch,
   Tooltip,
   Typography,
 } from "@material-tailwind/react";
 import Header from "../../components/CardHeader";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Loader from "../../components/Loader";
 import InfoModal from "../../components/InfoModal";
-import NoAccountsIcon from "@mui/icons-material/NoAccounts";
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+// import NoAccountsIcon from "@mui/icons-material/NoAccounts";
+// import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { issubadmin } from "../../feature/slicer/Slicer";
+import { BlockCustomerApi } from "../../feature/slicer/BlockCustomerSlicer";
+import { UnBlockCustomerApi } from "../../feature/slicer/UnBlockCustomerSlicer";
 
 const OrderStatusTABS = [
   {
@@ -51,6 +54,9 @@ const filteredHeadings = issubadmin
 
 const index = () => {
   const {isLoading ,Customers } = useSelector((state: any) => state.GetCustomerList);
+  const {isLoading : isLaoding1 } = useSelector((state: any) => state.BlockCustomerSlicer);
+  const {isLoading : isLaoding2 } = useSelector((state: any) => state.UnBlockCustomerSlicer);
+  const dispatch = useDispatch();
   const [filterData, setFilterData] = useState<any>([]);
   const [statusTab, setStatusTab] = useState<any>("all");
   const [search, setSearch] = useState<any>("");
@@ -63,18 +69,28 @@ const index = () => {
   const closeModal = () => {
     setInfoModal(false);
   };
-  const handleBlockCustomer = (id:any) =>{
-    setTitleModal("blockcustomer")
-    setInfoModal(true)
-    setItem(id)
-  
-  }
-  const handleUnBlockCustomer = (id:any) =>{
-    setTitleModal("unblockcustomer")
-    setInfoModal(true)
-    setItem(id)
 
-  }
+  const handleCustomerStatusChanged = (e: any, id: any) => {
+    if (e.target.checked == false) {
+      const Obj = { customerId: id };
+    dispatch(BlockCustomerApi(Obj));
+    } else if (e.target.checked == true) {
+      const Obj = { customerId: id };
+    dispatch(UnBlockCustomerApi(Obj));
+    }
+  };
+  // const handleBlockCustomer = (id:any) =>{
+  //   setTitleModal("blockcustomer")
+  //   setInfoModal(true)
+  //   setItem(id)
+  
+  // }
+  // const handleUnBlockCustomer = (id:any) =>{
+  //   setTitleModal("unblockcustomer")
+  //   setInfoModal(true)
+  //   setItem(id)
+
+  // }
   const HandleDeletrCustomer = (id:any) =>{
     setTitleModal("delcustomer")
     setInfoModal(true)
@@ -209,7 +225,23 @@ const index = () => {
                           {phone}
                         </Typography>
                       </td>
-                      <td className={classes}>
+                      <td className={`${classes} flex justify-center`} >
+                      <div className="w-fit   relative  gap-2">
+                         {
+                          !issubadmin && 
+                         
+                          <Switch
+                          crossOrigin={undefined}
+                            placeholder=""
+                            onPointerEnterCapture={() => {}}
+                            onPointerLeaveCapture={() => {}}
+                            onChange={(e:any) => handleCustomerStatusChanged(e, _id)}
+                            checked={isActive == true ? true : false}
+                            className="bg-red-600  absolute left-0"
+                            color="green"
+                            defaultChecked
+                          />
+                        }
                           <Chip
                             variant="ghost"
                             size="sm"
@@ -217,12 +249,12 @@ const index = () => {
                             value={isActive == true ? "Active" : "Inactive"}
                             color={isActive == true ? "green" : "red"}
                           />
-                          
+                          </div>
                       </td>
                       { !issubadmin == true ? 
                       <td className={classes}>
                        <div className=" ">
-
+{/* 
                         <Tooltip content="Block User">
                           <IconButton
                           disabled={isActive == false ? true : false}
@@ -248,7 +280,7 @@ const index = () => {
                           >
                             <AccountCircleIcon className=" text-gray-700" />
                           </IconButton>
-                        </Tooltip>
+                        </Tooltip> */}
                        
                         <Tooltip content="Delete User">
                           <IconButton
@@ -282,7 +314,9 @@ const index = () => {
           />
         )}
       </CardBody>
-      {isLoading && <Loader />}
+      {isLoading   && <Loader />}
+      {isLaoding1   && <Loader />}
+      {isLaoding2   && <Loader />}
     </Card>
   );
 };

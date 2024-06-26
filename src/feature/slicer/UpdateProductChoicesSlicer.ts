@@ -8,11 +8,11 @@ import { GetProductListApi } from "./GetProductListSlicer";
 export const UpdateProductChoicesApi: any = createAsyncThunk(
   "dcalabash/updateProChoice",
   async (Obj: any, {dispatch}) => {
-    console.log(Obj)
+    // console.log(Obj)
     return await axios
     .post(`${baseUrl}products/update-choice`, Obj,config)
     .then((resp) => {
-    console.log(resp);
+    // console.log(resp);
       toast.success(resp?.data?.message);
       dispatch(GetProductListApi())
       return resp.data;

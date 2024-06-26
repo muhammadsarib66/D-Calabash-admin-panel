@@ -6,6 +6,7 @@ import {
   Chip,
   Input,
   Option,
+  Radio,
   Select,
   Textarea,
 } from "@material-tailwind/react";
@@ -196,7 +197,7 @@ const InfoModal = ({ ActionModal, closeModal, title, item }: any) => {
       }
   };
   const handleConfirmRecentOrder = () => {
-    console.log(item) 
+    // console.log(item) 
     if(item?.deliveryMode == 'Pickup'){
       const Obj = { id: item?._id, status: "Confirmed"  };
       dispatch(OrderStatusApi(Obj));
@@ -313,23 +314,35 @@ const InfoModal = ({ ActionModal, closeModal, title, item }: any) => {
       toast.error("Please Fill All Fields");
     }
   };
+  const handleChangeAdmin = (e: any) => {
+    setAdmin({ ...admin, [e.target.name]: e.target.value });
+  };
+  const handleOptionChange =(e: any)=>{
+    // console.log(e.target.value)
+    if(e.target.value == "subadmin"){
+      setAdmin({...admin,issubadmin:true})
+    }
+    else if (e.target.value == "superadmin"){
+      setAdmin({...admin,issubadmin:false})
+    }
+  }
   const handleAddAdmin = () => {
-    if (admin.fullname && admin.email && admin.password) {
+    if ( admin?.fullname && admin?.email && admin?.password) {
       dispatch(AddAdminApi(admin));
+      // console.log(admin)
       handleClose();
       setAdmin({
         fullname: "",
         email: "",
         password: "",
-        issubadmin: true,
+        issubadmin: false,
       });
     } else {
       toast.error("Please fill all fields 😣");
     }
   };
-  const handleChangeAdmin = (e: any) => {
-    setAdmin({ ...admin, [e.target.name]: e.target.value });
-  };
+
+  
   return (
     <Modal
       open={ActionModal}
@@ -364,31 +377,9 @@ const InfoModal = ({ ActionModal, closeModal, title, item }: any) => {
                   </span>{" "}
                   {item?.user?.email}
                 </p>
-                {/* <p>
-                  <span className="font-bold text-gray-800">
-                    {" "}
-                    Customer Phone:
-                  </span>{" "}
-                  {item?.Client?.Phone}
-                </p> */}
+                
               </div>
-              {/* <div className="bg-gray-100  border p-2">
-                <p>
-                  <span className="font-bold text-gray-800"> Address :</span>{" "}
-                  {item?.address?.addressLine}
-                </p>
-                <p>
-                  <span className="font-bold text-gray-800">
-                    {" "}
-                    Address Title :
-                  </span>{" "}
-                  {item?.address?.addressTitle}
-                </p>
-                <p>
-                  <span className="font-bold text-gray-800"> City :</span>{" "}
-                  {item?.address?.city}
-                </p>
-              </div> */}
+              
               <div className="flex flex-col gap-3">
                 {item?.products?.map((product: any) => (
                   <div className="bg-blue-50  border p-2">
@@ -409,6 +400,36 @@ const InfoModal = ({ ActionModal, closeModal, title, item }: any) => {
                         />
                       </div>
                     </div>
+                    <div>
+                       <span className="font-bold text-xl">Choices</span> : 
+                       <div className="flex flex-col gap-2">
+                       {product.product.choices?.map((choice: any) => (
+                          <p className="flex gap-2">
+                            {console.log(choice, "=====>")}
+                            <span className="font-semibold">{choice?.name} </span>: {choice?.options?.map((option:any)=>{
+                             return (
+                                <span className="flex gap-2">
+                                  <Chip
+                            variant="ghost"
+                            size="sm"
+                            value={option?.name}
+                            color={'green'}/>
+                                  <Chip
+                            variant="ghost"
+                            size="sm"
+                            value={"$"+option?.price}
+                            color={'red'}/>
+                            
+                             </span>
+                              )
+                            })}
+                            {choice?.isRequired ? " ✅" : "❌"}
+
+                          </p>
+                        ))}
+                        </div>
+
+                        </div>
                   </div>
                 ))}
                 <h2 className="text-center flex gap-2  justify-center font-semibold text-xl">
@@ -1242,7 +1263,22 @@ const InfoModal = ({ ActionModal, closeModal, title, item }: any) => {
                   onPointerLeaveCapture={() => {}}
                   label="Admin Password"
                 />
-
+                 <div className="flex gap-10">
+      <Radio 
+       crossOrigin={undefined}
+       placeholder=""
+       onPointerEnterCapture={() => {}}
+       onPointerLeaveCapture={() => {}}
+       onChange={handleOptionChange}
+      value={'superadmin'} name="type" label="Super Admin" />
+      <Radio 
+       crossOrigin={undefined}
+       placeholder=""
+       onPointerEnterCapture={() => {}}
+       onPointerLeaveCapture={() => {}}
+       onChange={handleOptionChange}
+      value={'subadmin'} name="type" label="Sub Admin " defaultChecked={true}  />
+    </div>
                 <Button
                   placeholder=""
                   onPointerEnterCapture={() => {}}
@@ -1250,7 +1286,7 @@ const InfoModal = ({ ActionModal, closeModal, title, item }: any) => {
                   color="blue-gray"
                   onClick={handleAddAdmin}
                 >
-                  Add Admin
+                 Adding Admin
                 </Button>
               </div>
             </div>

@@ -11,7 +11,7 @@ export const AddAdminApi: any = createAsyncThunk(
     return await axios
     .post(`${baseUrl}admin/register-admin`, Obj,config)
     .then((resp) => {
-    console.log(resp);
+    // console.log(resp);
       toast.success(`${resp?.data?.message}😃`);
       dispatch(GetAdminListApi())
       return resp.data;
@@ -26,7 +26,7 @@ export const AddAdminApi: any = createAsyncThunk(
           console.log("Error 400: Bad Request", err.response.data);
         } else {
           toast.error(`Error: ${err.response.data.message}`);
-          console.log(err.response.data);
+          // console.log(err.response.data);
         }
       } else if (err.request) {
         // The request was made but no response was received

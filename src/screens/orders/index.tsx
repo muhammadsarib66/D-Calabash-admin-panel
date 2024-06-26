@@ -62,6 +62,7 @@ const index = () => {
   const { isLoading, Orders } = useSelector(
     (state: any) => state.GetOrderListSlicer
   );
+  console.log(Orders[0])
   const dispatch = useDispatch();
   const [filterData, setFilterData] = useState<any>([]);
   const [statusTab, setStatusTab] = useState<any>("Pending");
@@ -76,6 +77,7 @@ const index = () => {
 
   const HandleOrderInfo = (item: any) => {
     setItem(item);
+    console.log(item)
     setInfoModal(true);
     setTitleModal("OrderInfo");
   };

@@ -11,7 +11,7 @@ export const UnBlockRiderApi: any = createAsyncThunk(
     return await axios
     .post(`${baseUrl}riders/unblock-rider`, Obj,config)
     .then((resp) => {
-    console.log(resp);
+    // console.log(resp);
       toast.success(resp?.data?.message);
       dispatch(GetRidersListApi())
       return resp.data;

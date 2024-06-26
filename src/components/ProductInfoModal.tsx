@@ -5,7 +5,7 @@ import {
   Card,
   CardHeader,
   CardBody,
-  Typography, 
+  Typography,
   Chip,
 } from "@material-tailwind/react";
 
@@ -14,6 +14,7 @@ import AddChoiceModal from "./AddChoiceModal";
 import UpdateChoiceModal from "./UpdateChoiceModal";
 import { useDispatch } from "react-redux";
 import { DeleteProductChoicesApi } from "../feature/slicer/DeleteProductChoicesSlicer";
+import { issubadmin } from "../feature/slicer/Slicer";
 const style = {
   position: "absolute" as "absolute",
   top: "50%",
@@ -37,11 +38,10 @@ const ProductInfoModal = ({ item, Open, closeModal }: any) => {
     setProduct(item);
     closeModal();
   };
-  const HandleUpdatechoiceModalOpen = (choice:any) => {
-    
+  const HandleUpdatechoiceModalOpen = (choice: any) => {
     setUpdateChoiceModalOpen(true);
 
-    setUpdateChoice({productId:item?._id,choice});
+    setUpdateChoice({ productId: item?._id, choice });
     closeModal();
   };
   const choiceModalClose = () => {
@@ -89,25 +89,24 @@ const ProductInfoModal = ({ item, Open, closeModal }: any) => {
               />
             </CardHeader>
             <CardBody
-            className="w-full"
+              className="w-full"
               placeholder={""}
               onPointerEnterCapture={""}
               onPointerLeaveCapture={""}
             >
               <div className="flex justify-between w-full item-center ">
-
-              <Typography
-                placeholder={""}
-                onPointerEnterCapture={""}
-                onPointerLeaveCapture={""}
-                variant="h4"
-                color="gray"
-                className="mb-4 uppercase"
-              >
-                {item?.name}
-              </Typography>
+                <Typography
+                  placeholder={""}
+                  onPointerEnterCapture={""}
+                  onPointerLeaveCapture={""}
+                  variant="h4"
+                  color="gray"
+                  className="mb-4 uppercase"
+                >
+                  {item?.name}
+                </Typography>
                 <span className="text-md lowercase font-bold text-blue-500 pl-4">
-                 ${item?.price}
+                  ${item?.price}
                 </span>
               </div>
 
@@ -133,57 +132,67 @@ const ProductInfoModal = ({ item, Open, closeModal }: any) => {
               </Typography>
               <div className="flex justify-between">
                 <p className="text-lg font-bold">Choices</p>
-                <span>
-                  {" "}
-                  <i
-                    onClick={HandlechoiceModalOpen}
-                    className="cursor-pointer text-2xl fa-solid fa-plus"
-                  ></i>
-                </span>
+                {!issubadmin && (
+                  <span>
+                    {" "}
+                    <i
+                      onClick={HandlechoiceModalOpen}
+                      className="cursor-pointer text-2xl fa-solid fa-plus"
+                    ></i>
+                  </span>
+                )}
               </div>
               {item?.choices && item?.choices?.length > 0 && (
-                <div className="max-h-[40vh] overflow-y-auto">
+                <div className="max-h-[40vh] flex flex-col gap-4 overflow-y-auto">
                   {item?.choices.map((choice: any, ind: any) => {
                     return (
                       <div key={ind} className="flex flex-col  gap-4">
-                        <Card 
-                        
-                        placeholder={""}
-                        onPointerEnterCapture={""}
-                        onPointerLeaveCapture={""}className=" w-full shadow-md border-2">
-                          <CardBody placeholder={""}
-                onPointerEnterCapture={""}
-                onPointerLeaveCapture={""}>
-                  <div className="flex justify-between">
-
-                            <Typography
+                        <Card
+                          placeholder={""}
+                          onPointerEnterCapture={""}
+                          onPointerLeaveCapture={""}
+                          className=" w-full shadow-md border-2"
+                        >
+                          <CardBody
                             placeholder={""}
                             onPointerEnterCapture={""}
                             onPointerLeaveCapture={""}
-                              variant="h5"
-                              color="blue-gray"
-                              className="mb-2"
-                            >
-                              {choice?.name}
-                            </Typography>
-                            <div className="flex items-center gap-3 justify-center">
-                              <i
-                                onClick={()=>HandleUpdatechoiceModalOpen(choice)}
-                                className="cursor-pointer fa-solid fa-pencil text-blue-500 "
-                              ></i>
-                              <i
-                                onClick={() =>
-                                  handleDeleteChoice(choice?._id)
-                                }
-                                className="cursor-pointer fa-solid fa-trash text-red-500"
-                              ></i>
-                            </div>
+                          >
+                            <div className="flex justify-between">
+                              <Typography
+                                placeholder={""}
+                                onPointerEnterCapture={""}
+                                onPointerLeaveCapture={""}
+                                variant="h5"
+                                color="blue-gray"
+                                className="mb-2"
+                              >
+                                {choice?.name}
+                              </Typography>
+{
+  !issubadmin && 
+
+                              <div className="flex items-center gap-3 justify-center">
+                                <i
+                                  onClick={() =>
+                                    HandleUpdatechoiceModalOpen(choice)
+                                  }
+                                  className="cursor-pointer fa-solid fa-pencil text-blue-500 "
+                                ></i>
+                                <i
+                                  onClick={() =>
+                                    handleDeleteChoice(choice?._id)
+                                  }
+                                  className="cursor-pointer fa-solid fa-trash text-red-500"
+                                ></i>
+                              </div>
+                              }
                             </div>
                             <p>
                               required :
                               <span className="font-bold">
                                 {" "}
-                                {choice?.isRequired ?  "✅" : "❌"}
+                                {choice?.isRequired ? "✅" : "❌"}
                               </span>{" "}
                             </p>
                             <p>
@@ -194,36 +203,32 @@ const ProductInfoModal = ({ item, Open, closeModal }: any) => {
                               </span>{" "}
                             </p>
                             <div className="flex flex-col gap-2">
-
-                            {choice?.options?.map((op: any, ind: any) => (
-                              <div className="flex gap-2">
-                                <Chip
-                                  key={ind}
-                                  variant="ghost"
-                                  className="w-fit px-4 "
-                                  value={op?.name}
-                                  color="blue"
-                                />
-                                <Chip
-                                  key={ind}
-                                  variant="ghost"
-                                  className="w-fit px-4 "
-                                  value={"$" + op?.price}
-                                  color="blue"
-                                />
-                              </div>
-                            ))}
+                              {choice?.options?.map((op: any, ind: any) => (
+                                <div className="flex gap-2">
+                                  <Chip
+                                    key={ind}
+                                    variant="ghost"
+                                    className="w-fit px-4 "
+                                    value={op?.name}
+                                    color="blue"
+                                  />
+                                  <Chip
+                                    key={ind}
+                                    variant="ghost"
+                                    className="w-fit px-4 "
+                                    value={"$" + op?.price}
+                                    color="blue"
+                                  />
+                                </div>
+                              ))}
                             </div>
-
                           </CardBody>
-                   
                         </Card>
                       </div>
                     );
                   })}
                 </div>
               )}
-            
             </CardBody>
           </Card>
         </Box>

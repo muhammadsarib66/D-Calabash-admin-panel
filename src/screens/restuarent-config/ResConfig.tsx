@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { ResConfgApi } from "../../feature/slicer/ResConfSlicer";
 import Loader from "../../components/Loader";
+import { issubadmin } from "../../feature/slicer/Slicer";
 
 const ResConfig = () => {
   const { isLoading } = useSelector((state: any) => state.ResConfSlicer);
@@ -62,7 +63,7 @@ const ResConfig = () => {
               onPointerLeaveCapture={""}
               onChange={handleChecked}
               id="custom-switch-component"
-              ripple={false}
+              ripple={true}
               className="h-full w-full checked:bg-[#2ec946]"
               containerProps={{
                 className: "w-11 h-6",
@@ -75,6 +76,7 @@ const ResConfig = () => {
           </div>
           <div className="grid gric-cols-1  md:grid-cols-2  gap-8 md:gap-5">
             <Input
+            disabled={issubadmin}
               placeholder={""}
               onPointerEnterCapture={""}
               onPointerLeaveCapture={""}
@@ -88,6 +90,7 @@ const ResConfig = () => {
               crossOrigin={undefined}
             />
             <Input
+            disabled={issubadmin}
               placeholder={""}
               onPointerEnterCapture={""}
               onPointerLeaveCapture={""}
@@ -107,6 +110,7 @@ const ResConfig = () => {
               Closure Message
             </p>
             <Textarea
+            disabled={issubadmin}
             value={settings.closureMessage}
               placeholder={""}
               onPointerEnterCapture={""}

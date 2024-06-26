@@ -52,14 +52,12 @@ const DBCard = () => {
     {
       title: "total Categories",
       record:
-        DashboardData?.categoriesCount?.length > 0
-          ? DashboardData?.categoriesCount?.length
-          : 0,
+        DashboardData?.categoriesCount,
       icon: categorary,
     },
     {
       title: "today's total Sales",
-      record: DashboardData?.totalSales?.toFixed(2)+"$",
+      record: "$"+DashboardData?.totalSales?.toFixed(2),
       icon: addressIc,
     },
   ];

@@ -7,17 +7,20 @@ import {
   CardBody,
   Chip,
   IconButton,
+  Switch,
   Tooltip,
   Typography,
 } from "@material-tailwind/react";
 import Header from "../../components/CardHeader";
 import InfoModal from "../../components/InfoModal";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Loader from "../../components/Loader";
 import DeleteIcon from "@mui/icons-material/Delete";
-import NoAccountsIcon from "@mui/icons-material/NoAccounts";
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+// import NoAccountsIcon from "@mui/icons-material/NoAccounts";
+// import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { issubadmin } from "../../feature/slicer/Slicer";
+import { BlockRiderApi } from "../../feature/slicer/BlockRiderSlicer";
+import { UnBlockRiderApi } from "../../feature/slicer/UnBlockRiderSlicer";
 const RiderStatusTABS = [
   {
     label: "All",
@@ -34,17 +37,24 @@ const RiderStatusTABS = [
   },
 ];
 
-const TableHeadings = ["Rider Name", "Email", "Status", "Working Mode", "Action"];
+const TableHeadings = [
+  "Rider Name",
+  "Email",
+  "Status",
+  "Working Mode",
+  "Action",
+];
 
-const filteredHeadings = issubadmin 
-  ? TableHeadings.filter(heading => heading !== "Action")
+const filteredHeadings = issubadmin
+  ? TableHeadings.filter((heading) => heading !== "Action")
   : TableHeadings;
 
 const index = () => {
-  const { isLoading, Riders } = useSelector(
-    (state: any) => state.GetRidersSlicer
-  );
-  console.log(Riders)
+  const { isLoading, Riders } = useSelector((state: any) => state.GetRidersSlicer);
+  const { isLoading : isLoading1  } = useSelector((state: any) => state.BlockRiderSlicer);
+  const { isLoading : isLoading2  } = useSelector((state: any) => state.UnBlockRiderSlicer);
+  const dispatch = useDispatch();
+
   const [filterData, setFilterData] = useState<any>([]);
   const [infoModal, setInfoModal] = useState<any>(false);
   const [statusTab, setStatusTab] = useState<any>("all");
@@ -61,16 +71,25 @@ const index = () => {
     setTitleModal("addRider");
     setInfoModal(true);
   };
-  const handleBlockRider = (id: any) => {
-    setTitleModal("blockRider");
-    setInfoModal(true);
-    setItem(id);
+  const handleRiderStatusChanged = (e: any, id: any) => {
+    if (e.target.checked == false) {
+      const Obj = { riderId: id };
+      dispatch(BlockRiderApi(Obj));
+    } else if (e.target.checked == true) {
+      const Obj = { riderId: id };
+      dispatch(UnBlockRiderApi(Obj));
+    }
   };
-  const handleUnBlockRider = (id: any) => {
-    setTitleModal("unblockRider");
-    setInfoModal(true);
-    setItem(id);
-  };
+  // const handleBlockRider = (id: any) => {
+  //   setTitleModal("blockRider");
+  //   setInfoModal(true);
+  //   setItem(id);
+  // };
+  // const handleUnBlockRider = (id: any) => {
+  //   setTitleModal("unblockRider");
+  //   setInfoModal(true);
+  //   setItem(id);
+  // };
   const HandleDeletrRider = (id: any) => {
     setTitleModal("delRider");
     setInfoModal(true);
@@ -92,7 +111,10 @@ const index = () => {
           return data.isActive == statusTab;
         }
       });
-    filteredData.sort((a:any, b:any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+      filteredData.sort(
+        (a: any, b: any) =>
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+      );
 
       setFilterData(filteredData);
     }
@@ -122,10 +144,8 @@ const index = () => {
       >
         <table className="mt-4 w-full min-w-max table-auto  text-left">
           <thead>
-            <tr className="">
+            <tr className="text-center">
               {filteredHeadings?.map((head) => (
-                                      
-
                 <th
                   key={head}
                   className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4"
@@ -146,7 +166,10 @@ const index = () => {
           </thead>
           <tbody className="">
             {filterData?.map(
-              ({ email, fullname, isActive, isWorking, _id }: any, index: any) => {
+              (
+                { email, fullname, isActive, isWorking, _id }: any,
+                index: any
+              ) => {
                 const isLast = index === filterData?.length - 1;
                 const classes = isLast
                   ? "p-4"
@@ -154,7 +177,7 @@ const index = () => {
 
                 return (
                   <>
-                    <tr key={_id}>
+                    <tr className="text-center" key={_id}>
                       <td className={classes}>
                         <Typography
                           placeholder=""
@@ -165,7 +188,9 @@ const index = () => {
                           className="font-normal"
                         >
                           {/* {fullname} */}
-                          {fullname.length > 10 ? `${fullname.substring(0, 10)}..` : fullname}
+                          {fullname.length > 10
+                            ? `${fullname.substring(0, 10)}..`
+                            : fullname}
                         </Typography>
                       </td>
                       <td className={classes}>
@@ -181,71 +206,92 @@ const index = () => {
                         </Typography>
                       </td>
 
-                      <td className={classes}>
-                        <div className="w-max">
+                      <td className={`${classes} flex justify-center`}>
+                        <div className="w-fit   relative  gap-2">
+                          {!issubadmin && (
+                            <Switch
+                              crossOrigin={undefined}
+                              placeholder=""
+                              onPointerEnterCapture={() => {}}
+                              onPointerLeaveCapture={() => {}}
+                              onChange={(e: any) =>
+                                handleRiderStatusChanged(e, _id)
+                              }
+                              checked={isActive == true ? true : false}
+                              className="bg-red-600  absolute left-0"
+                              color="green"
+                              defaultChecked
+                            />
+                          )}
                           <Chip
                             variant="ghost"
                             size="sm"
-                            value={isActive ? "Active" : "Blocked"}
+                            className="w-fit px-4 mx-auto"
+                            value={isActive == true ? "Active" : "Blocked"}
                             color={isActive == true ? "green" : "red"}
                           />
                         </div>
                       </td>
-                      <td className={classes}>
+                      <td className={`${classes} `}>
                         <Chip
-                          className="w-fit"
+                          className="w-fit mx-auto"
                           variant="ghost"
                           color={isWorking ? "green" : "red"}
                           size="sm"
                           value={isWorking ? "Online" : "Offline"}
                           icon={
-                            <span className={`mx-auto mt-1 block h-2 w-2 rounded-full  ${isWorking ? "bg-green-900" : "bg-red-900"} content-['']`} />
+                            <span
+                              className={`mx-auto mt-1 block h-2 w-2 rounded-full  ${
+                                isWorking ? "bg-green-900" : "bg-red-900"
+                              } content-['']`}
+                            />
                           }
                         />
                       </td>
-                      {
-                        issubadmin == true ? "" : 
-                      <td className={classes}>
-                        <div className=" ">
-                          <Tooltip content="Block Rider">
-                            <IconButton
-                              disabled={isActive == false ? true : false}
-                              onClick={() => handleBlockRider(_id)}
-                              placeholder=""
-                              onPointerEnterCapture={() => {}}
-                              onPointerLeaveCapture={() => {}}
-                              variant="text"
-                            >
-                              <NoAccountsIcon className=" text-gray-700" />
-                            </IconButton>
-                          </Tooltip>
-                          <Tooltip content="Unblock Rider">
-                            <IconButton
-                              disabled={isActive == true ? true : false}
-                              onClick={() => handleUnBlockRider(_id)}
-                              placeholder=""
-                              onPointerEnterCapture={() => {}}
-                              onPointerLeaveCapture={() => {}}
-                              variant="text"
-                            >
-                              <AccountCircleIcon className=" text-gray-700" />
-                            </IconButton>
-                          </Tooltip>
+                      {issubadmin == true ? (
+                        ""
+                      ) : (
+                        <td className={classes}>
+                          <div className=" ">
+                            {/* <Tooltip content="Block Rider">
+                              <IconButton
+                                disabled={isActive == false ? true : false}
+                                onClick={() => handleBlockRider(_id)}
+                                placeholder=""
+                                onPointerEnterCapture={() => {}}
+                                onPointerLeaveCapture={() => {}}
+                                variant="text"
+                              >
+                                <NoAccountsIcon className=" text-gray-700" />
+                              </IconButton>
+                            </Tooltip>
+                            <Tooltip content="Unblock Rider">
+                              <IconButton
+                                disabled={isActive == true ? true : false}
+                                onClick={() => handleUnBlockRider(_id)}
+                                placeholder=""
+                                onPointerEnterCapture={() => {}}
+                                onPointerLeaveCapture={() => {}}
+                                variant="text"
+                              >
+                                <AccountCircleIcon className=" text-gray-700" />
+                              </IconButton>
+                            </Tooltip> */}
 
-                          <Tooltip content="Delete Rider">
-                            <IconButton
-                              onClick={() => HandleDeletrRider(_id)}
-                              placeholder=""
-                              onPointerEnterCapture={() => {}}
-                              onPointerLeaveCapture={() => {}}
-                              variant="text"
-                            >
-                              <DeleteIcon className=" text-red-500" />
-                            </IconButton>
-                          </Tooltip>
-                        </div>
-                      </td>
-                      }
+                            <Tooltip content="Delete Rider">
+                              <IconButton
+                                onClick={() => HandleDeletrRider(_id)}
+                                placeholder=""
+                                onPointerEnterCapture={() => {}}
+                                onPointerLeaveCapture={() => {}}
+                                variant="text"
+                              >
+                                <DeleteIcon className=" text-red-500" />
+                              </IconButton>
+                            </Tooltip>
+                          </div>
+                        </td>
+                      )}
                     </tr>
                   </>
                 );
@@ -263,6 +309,8 @@ const index = () => {
         )}
       </CardBody>
       {isLoading && <Loader />}
+      {isLoading1 && <Loader />}
+      {isLoading2 && <Loader />}
     </Card>
   );
 };

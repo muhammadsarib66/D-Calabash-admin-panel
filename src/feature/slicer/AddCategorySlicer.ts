@@ -8,11 +8,11 @@ import { GetCategoriesListApi } from "./GetCategoriesSlicer";
 export const AddCategoryApi: any = createAsyncThunk(
   "dcalabash/AddCategory",
   async (Obj: any, {dispatch}) => {
-    console.log(Obj)
+    // console.log(Obj)
     return await axios
     .post(`${baseUrl}categories/category`, Obj,config)
     .then((resp) => {
-    console.log(resp);
+    // console.log(resp);
       toast.success("Category added successfully");
       dispatch(GetCategoriesListApi())
       return resp.data;
@@ -27,12 +27,12 @@ export const AddCategoryApi: any = createAsyncThunk(
           console.log("Error 400: Bad Request", err.response.data);
         } else {
           toast.error(`Error: ${err.response.data.message}`);
-          console.log(err.response.data);
+          // console.log(err.response.data);
         }
       } else if (err.request) {
         // The request was made but no response was received
         toast.error("No response received from the server.");
-        console.log(err.request);
+        // console.log(err.request);
       } else {
         // Something happened in setting up the request that triggered an Error
         toast.error("An error occurred while processing your request.");

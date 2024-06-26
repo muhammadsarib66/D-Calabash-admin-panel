@@ -43,27 +43,37 @@ const socket = useMemo(() => io(baseUrl), []);
   
 
   useEffect(()=>{
- socket.emit('join-admin',Userid);
+    if(token){
+
+      socket.emit('join-admin',Userid);
+    }
 
   },[])
 
   useEffect(()=>{
-  socket.on("newOrder", () => {
-    audio.play()
-    toast.success("New Order Recieved 🍔😃"); 
-    dispatch(DashboardApi()) 
-    dispatch(GetOrderListApi());
+    if(token){
 
-  });
-  },[])
+      socket.on("newOrder", () => {
+        audio.play()
+        toast.success("New Order Recieved 🍔😃"); 
+        dispatch(DashboardApi()) 
+        dispatch(GetOrderListApi());
+        
+      });
+    }
+    },[])
   useEffect(()=>{
+    if(token){
+
     socket.on("order-updated", (data) => {
       toast.success(data.message); 
       dispatch(DashboardApi()) 
       dispatch(GetOrderListApi());
   
     });
-    },[])
+  }
+
+  },[])
 
   useEffect(()=>{
     socket.on("rider-updates",(data) => {

@@ -214,7 +214,7 @@ export default function MiniDrawer() {
           
               <div>
                 <h5 className="font-semibold text-gray-800 "> {User?.fullname}</h5>
-                <p className="text-xs"> admin</p>
+                <p className="text-xs"> {issubadmin ? "Sub Admin" : "Super Admin"}</p>
               </div>
               <i 
                 onClick={()=>{

@@ -8,9 +8,12 @@ import {
   CardBody,
   CardHeader,
   Chip,
+  IconButton,
   Typography,
 } from "@material-tailwind/react";
 import { useSelector } from "react-redux";
+import InfoIcon from "@mui/icons-material/Info";
+
 import Loader from "../../components/Loader";
 import moment from "moment";
 import InfoModal from "../../components/InfoModal";
@@ -20,6 +23,7 @@ const TableHeadings = [
   "Order Time",
   "Amount",
   "Status",
+  "Order Info",
   "Order Status",
   "Order Type",
   "Delivery Detail",
@@ -45,6 +49,12 @@ const index = () => {
   };
   const handleActive = () => {
     setOrderStatus("activeOrders");
+  };
+  const HandleOrderInfo = (item: any) => {
+    setItem(item);
+    console.log(item)
+    setInfoModal(true);
+    setTitleModal("OrderInfo");
   };
   const HandleOrderStatus = (item : any) => {
    console.log(item?.deliveryMode)
@@ -154,6 +164,8 @@ const index = () => {
                     status,
                     deliveryMode,
                     _id,
+                    products,
+                              address,
                     payment_type,
                     
                   }: any,
@@ -220,6 +232,25 @@ const index = () => {
                             />
                           </div>
                         </td>
+                        <td className={classes}>
+                        <IconButton
+                          onClick={() =>
+                            HandleOrderInfo({
+                              products,
+                              address,
+                              user,
+                              totalAmount,
+                              status,
+                            })
+                          }
+                          variant="text"
+                          placeholder=""
+                          onPointerEnterCapture={() => {}}
+                          onPointerLeaveCapture={() => {}}
+                        >
+                          <InfoIcon className="h-4 w-4" />
+                        </IconButton>
+                      </td>
                         <td className={`${classes} flex gap-2`}>
                         {status !== "Confirmed" ? <Button
                           placeholder=""

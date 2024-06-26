@@ -11,7 +11,7 @@ export const UnBlockCustomerApi: any = createAsyncThunk(
     return await axios
     .post(`${baseUrl}users/unblock-customer`, Obj,config)
     .then((resp) => {
-    console.log(resp);
+    // console.log(resp);
       toast.success(resp?.data?.message);
       dispatch(GetCustomerApi())
       return resp.data;
