@@ -40,6 +40,7 @@ const RiderStatusTABS = [
 const TableHeadings = [
   "Rider Name",
   "Email",
+  "Phone No",
   "Status",
   "Working Mode",
   "Action",
@@ -167,7 +168,7 @@ const index = () => {
           <tbody className="">
             {filterData?.map(
               (
-                { email, fullname, isActive, isWorking, _id }: any,
+                { phone,email, fullname, isActive, isWorking, _id }: any,
                 index: any
               ) => {
                 const isLast = index === filterData?.length - 1;
@@ -203,6 +204,18 @@ const index = () => {
                           className="font-normal"
                         >
                           {email}
+                        </Typography>
+                      </td>
+                      <td className={classes}>
+                        <Typography
+                          placeholder=""
+                          onPointerEnterCapture={() => {}}
+                          onPointerLeaveCapture={() => {}}
+                          variant="small"
+                          color="blue-gray"
+                          className="font-normal"
+                        >
+                          {phone}
                         </Typography>
                       </td>
 

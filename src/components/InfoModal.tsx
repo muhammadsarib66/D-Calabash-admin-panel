@@ -74,6 +74,7 @@ const InfoModal = ({ ActionModal, closeModal, title, item }: any) => {
     fullname: "",
     email: "",
     password: "",
+    phone : ""
   });
   const [admin, setAdmin] = useState<any>({
     fullname: "",
@@ -302,13 +303,14 @@ const InfoModal = ({ ActionModal, closeModal, title, item }: any) => {
   };
 
   const handleAddRider = () => {
-    if (rider.fullname && rider.email && rider.password) {
+    if (rider.phone && rider.fullname && rider.email && rider.password) {
       dispatch(AddRiderApi(rider));
       handleClose();
       setRider({
         fullname: "",
         email: "",
         password: "",
+        phone : ""
       });
     } else {
       toast.error("Please Fill All Fields");
@@ -1193,6 +1195,17 @@ const InfoModal = ({ ActionModal, closeModal, title, item }: any) => {
                   onPointerEnterCapture={() => {}}
                   onPointerLeaveCapture={() => {}}
                   label="Rider Email"
+                />
+                <Input
+                  type="number"
+                  crossOrigin={""}
+                  placeholder=""
+                  name="phone"
+                  value={rider.phone}
+                  onChange={handleChangeRider}
+                  onPointerEnterCapture={() => {}}
+                  onPointerLeaveCapture={() => {}}
+                  label="Rider Phone Number"
                 />
                 <Input
                   type="text"

@@ -47,6 +47,8 @@ const OrderStatusTABS = [
 
 const TableHeadings = [
   "Customer",
+  "Phone No",
+  "Email",
   "Order Time",
   "Amount",
   "Status",
@@ -62,7 +64,6 @@ const index = () => {
   const { isLoading, Orders } = useSelector(
     (state: any) => state.GetOrderListSlicer
   );
-  console.log(Orders[0])
   const dispatch = useDispatch();
   const [filterData, setFilterData] = useState<any>([]);
   const [statusTab, setStatusTab] = useState<any>("Pending");
@@ -70,14 +71,13 @@ const index = () => {
   const [titleModal, setTitleModal] = useState<any>("");
   const [item, setItem] = useState<any>("");
   const [search, setSearch] = useState<any>("");
-
+console.log(statusTab)
   const closeModal = () => {
     setInfoModal(false);
   };
 
   const HandleOrderInfo = (item: any) => {
     setItem(item);
-    console.log(item)
     setInfoModal(true);
     setTitleModal("OrderInfo");
   };
@@ -109,11 +109,14 @@ const index = () => {
       // If search is cleared, reset filterData based on statusTab
       const filteredData = Orders?.filter((data: any) => {
         if (statusTab == "all") {
+
           return true;
         } else {
+          console.log(statusTab)
           return data.status == statusTab;
         }
-      });
+      }
+    );
       filteredData.sort(
         (a: any, b: any) =>
           new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
@@ -147,7 +150,7 @@ const index = () => {
         className=" h-[70vh]  overflow-scroll px-0"
       >
         <table className="mt-4 w-full min-w-max table-auto  text-left">
-          <thead>
+        <thead>
             <tr className="">
               {filteredHeadings?.map((head) => (
                 <th
@@ -162,12 +165,15 @@ const index = () => {
                     color="blue-gray"
                     className="font-normal leading-none opacity-70"
                   >
+                  
                     {head}
                   </Typography>
                 </th>
               ))}
             </tr>
           </thead>
+          
+        
           <tbody className="">
             {filterData?.map(
               (
@@ -216,6 +222,12 @@ const index = () => {
                           </p>
                         </div>
                       </td>
+                      <td className={`${classes} clientData`}>
+                          {user?.phone}
+                        </td>
+                      <td className={`${classes} clientData`}>
+                          {user?.email}
+                        </td>
                       <td className={classes}>
                         <Typography
                           placeholder=""
@@ -285,7 +297,7 @@ const index = () => {
                           <InfoIcon className="h-4 w-4" />
                         </IconButton>
                       </td>
-
+                          {/* { status == "Pending" && */}
                       <td className={`${classes} flex gap-2`}>
                         {status !== "Confirmed" ? (
                           <Button
@@ -333,6 +345,7 @@ const index = () => {
                           </Button>
                         )}
                       </td>
+                      {/* } */}
                       {issubadmin == true ? null : (
                         <td className={classes}>
                           <Tooltip content="Delete Order">

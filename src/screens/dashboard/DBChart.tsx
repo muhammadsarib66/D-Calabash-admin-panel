@@ -20,6 +20,8 @@ import InfoModal from "../../components/InfoModal";
 
 const TableHeadings = [
   "Customer",
+  "Phone No",
+  "Email",
   "Order Time",
   "Amount",
   "Status",
@@ -52,12 +54,12 @@ const index = () => {
   };
   const HandleOrderInfo = (item: any) => {
     setItem(item);
-    console.log(item)
+    // console.log(item)
     setInfoModal(true);
     setTitleModal("OrderInfo");
   };
   const HandleOrderStatus = (item : any) => {
-   console.log(item?.deliveryMode)
+  //  console.log(item?.deliveryMode)
     setItem(item);
     setInfoModal(true);
     setTitleModal("RecentOrderStatus");
@@ -76,6 +78,7 @@ const index = () => {
       const sortedData = [...filteredData].sort((a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
       setFilterData(sortedData);
     }
+    
   }, [orderStatus, DashboardData]);
   return (
     <Card
@@ -181,6 +184,12 @@ const index = () => {
                       <tr key={_id}>
                         <td className={`${classes} clientData`}>
                           {user?.fullname}
+                        </td>
+                        <td className={`${classes} `}>
+                          {user?.phone}
+                        </td>
+                        <td className={`${classes} `}>
+                          {user?.email}
                         </td>
                         <td className={classes}>
                           <Typography
