@@ -297,7 +297,6 @@ console.log(statusTab)
                           <InfoIcon className="h-4 w-4" />
                         </IconButton>
                       </td>
-                          {/* { status == "Pending" && */}
                       <td className={`${classes} flex gap-2`}>
                         {status !== "Confirmed" ? (
                           <Button
@@ -327,7 +326,6 @@ console.log(statusTab)
                         ) : (
                           <Button
                             placeholder=""
-                            // disabled={available == true ? true : false}
                             onPointerEnterCapture={() => {}}
                             onPointerLeaveCapture={() => {}}
                             size="sm"
@@ -345,7 +343,6 @@ console.log(statusTab)
                           </Button>
                         )}
                       </td>
-                      {/* } */}
                       {issubadmin == true ? null : (
                         <td className={classes}>
                           <Tooltip content="Delete Order">
