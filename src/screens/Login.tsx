@@ -42,15 +42,15 @@ export function Login() {
 
 
   return (
-    <section className="flex text-center h-screen items-center ">
-      <div className="flex-1 flex flex-col items-center justify-center bg-[#023047] h-screen overflow-y-hidden">
+    <section className="flex flex-col md:flex-row text-center h-screen items-center ">
+      <div className="flex-1 hidden md:flex flex-col items-center justify-center bg-[#023047] h-screen overflow-y-hidden">
         <img
           src={logo}
           alt="logo"
           className="w-[80%] h-[400px] object-contain "
         />
       </div>
-      <div className="flex-1">
+      <div className="flex-1 mt-10 md:mt-0 ">
         <Typography
           placeholder=""
           onPointerEnterCapture={() => {}}

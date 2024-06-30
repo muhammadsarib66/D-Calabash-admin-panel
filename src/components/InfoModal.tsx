@@ -629,20 +629,24 @@ const InfoModal = ({ ActionModal, closeModal, title, item }: any) => {
                     label="Select Rider"
                   >
                     {Riders.map((rid: any) => (
+                      
+                        
                        <Option
                        className="flex justify-between items-center"
                        onClick={() => {
-                         if (rid?.isWorking) {
+                         if (rid?.isWorking  ) {
                            handleSelectRider(rid?._id);
                            setSelectedRider(rid?.fullname);
                          }
                        }}
                        value={rid?.fullname}
-                       disabled={!rid?.isWorking}
+                       disabled={!rid?.isWorking || !rid?.isActive}
                      >
+                      
                        {rid.fullname.length > 12
                          ? `${rid.fullname.substring(0, 12)}..`
                          : rid.fullname}
+                       
                        <span>
                          <Chip
                            className="w-fit"
@@ -655,7 +659,9 @@ const InfoModal = ({ ActionModal, closeModal, title, item }: any) => {
                            }
                          />
                        </span>
+                     
                      </Option>
+                    
                     ))}
                   </Select>
                 </div>
