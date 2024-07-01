@@ -20,8 +20,9 @@ import { useDispatch, useSelector } from "react-redux";
 import Loader from "../../components/Loader";
 import moment from "moment";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { issubadmin } from "../../feature/slicer/Slicer";
+import {  issubadmin } from "../../feature/slicer/Slicer";
 import { GetOrderListApi } from "../../feature/slicer/GetOrderListSlicer";
+import DeliverOrderImgModal from "./DeliverOrderImgModal";
 const OrderStatusTABS = [
   {
     label: "Pending",
@@ -71,6 +72,7 @@ const index = () => {
   const [titleModal, setTitleModal] = useState<any>("");
   const [item, setItem] = useState<any>("");
   const [search, setSearch] = useState<any>("");
+  const [imageModal,setImageModal] = useState<any>(false)
 console.log(statusTab)
   const closeModal = () => {
     setInfoModal(false);
@@ -97,6 +99,10 @@ console.log(statusTab)
     setTitleModal("Orderassign");
   };
 
+  const handleShowDeliverImage = (img: any) => {
+    setItem(img);
+    setImageModal(true)
+  }
   useEffect(() => {
     if (search.length > 0) {
       const filteredData = Orders?.filter((data: any) => {
@@ -122,6 +128,7 @@ console.log(statusTab)
           new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
       );
       setFilterData(filteredData);
+      console.log(filteredData)
     }
   }, [search, Orders, statusTab]);
   useEffect(() => {
@@ -185,6 +192,7 @@ console.log(statusTab)
                   products,
                   status,
                   deliveryMode,
+                  deliveryImage,
                   _id,
                 }: any,
                 index: any
@@ -299,6 +307,11 @@ console.log(statusTab)
                       </td>
                       <td className={`${classes} flex gap-2`}>
                         {status !== "Confirmed" ? (
+                          <div className="flex items-center justify-center gap-2">
+                          {/* <img src={baseUrl+deliveryImage} alt="deliveryImage" /> */}
+                          {deliveryImage && 
+                          <i onClick={()=>handleShowDeliverImage(deliveryImage)} className=" cursor-pointer fa-solid fa-image"></i>
+                          }
                           <Button
                             placeholder=""
                             disabled={
@@ -323,7 +336,10 @@ console.log(statusTab)
                           >
                             {status}
                           </Button>
+                          </div>
+
                         ) : (
+                          
                           <Button
                             placeholder=""
                             onPointerEnterCapture={() => {}}
@@ -341,6 +357,8 @@ console.log(statusTab)
                           >
                             Assign to Rider
                           </Button>
+                          
+
                         )}
                       </td>
                       {issubadmin == true ? null : (
@@ -374,6 +392,9 @@ console.log(statusTab)
           />
         )}
       </CardBody>
+      {imageModal && (
+        <DeliverOrderImgModal imageModal={imageModal} item={item} setImageModal={setImageModal} />
+      )}
       {isLoading && <Loader />}
     </Card>
   );
