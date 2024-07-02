@@ -354,7 +354,7 @@ const InfoModal = ({ ActionModal, closeModal, title, item }: any) => {
     >
       <Box sx={style}>
         {(title === "OrderInfo" && (
-          <div className="h-[70vh]  overflow-y-scroll ">
+          <div className="h-[70vh]   overflow-y-scroll ">
             <div className="flex flex-col gap-4 p-5">
               <div className="flex w-full justify-between">
                 <h2 className="text-2xl  font-semibold"> Order Detail</h2>
@@ -382,7 +382,7 @@ const InfoModal = ({ ActionModal, closeModal, title, item }: any) => {
                 
               </div>
               
-              <div className="flex flex-col gap-3">
+              <div className="flex flex-col gap-3  ">
                 {item?.products?.map((product: any) => (
                   <div className="bg-blue-50  border p-2">
                     <p className="text-center text-xl font-semibold uppercase">
@@ -404,10 +404,9 @@ const InfoModal = ({ ActionModal, closeModal, title, item }: any) => {
                     </div>
                     <div>
                        <span className="font-bold text-xl">Choices</span> : 
-                       <div className="flex flex-col gap-2">
-                       {product.product.choices?.map((choice: any) => (
-                          <p className="flex gap-2">
-                            {console.log(choice, "=====>")}
+                       <div className="max-w-[100%] overflow-x-scroll flex flex-col gap-2">
+                       {product?.selectedChoices?.map((choice: any) => (
+                          <p className="flex items-center gap-2">
                             <span className="font-semibold">{choice?.name} </span>: {choice?.options?.map((option:any)=>{
                              return (
                                 <span className="flex gap-2">
@@ -425,8 +424,8 @@ const InfoModal = ({ ActionModal, closeModal, title, item }: any) => {
                              </span>
                               )
                             })}
-                            {choice?.isRequired ? " ✅" : "❌"}
 
+<i className=" text-green-500 fa-solid fa-plus"></i>
                           </p>
                         ))}
                         </div>

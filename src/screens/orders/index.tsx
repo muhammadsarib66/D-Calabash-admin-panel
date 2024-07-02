@@ -307,7 +307,7 @@ console.log(statusTab)
                       </td>
                       <td className={`${classes} flex gap-2`}>
                         {status !== "Confirmed" ? (
-                          <div className="flex items-center justify-center gap-2">
+                          <div className="flex items-center flex-col justify-center gap-2">
                           {/* <img src={baseUrl+deliveryImage} alt="deliveryImage" /> */}
                           {deliveryImage && 
                           <i onClick={()=>handleShowDeliverImage(deliveryImage)} className=" cursor-pointer fa-solid fa-image"></i>
@@ -336,6 +336,19 @@ console.log(statusTab)
                           >
                             {status}
                           </Button>
+                          {status == "Shipped" && (
+            
+                          <Button
+                            placeholder=""
+                            onPointerEnterCapture={() => {}}
+                            onPointerLeaveCapture={() => {}}
+                            size="sm"
+                            color={'blue'}
+                            onClick={() => HandleOrderAsgn({ _id })}
+                          >
+                            Assign to Rider
+                          </Button>
+                          )}
                           </div>
 
                         ) : (

@@ -4,6 +4,7 @@ import axios from "axios";
 import { baseUrl, config } from "./Slicer";
 import { toast } from "react-toastify";
 import { GetProductListApi } from "./GetProductListSlicer";
+import { socketFire } from "../../components/UpdateSocket";
 
 export const DisableProductApi: any = createAsyncThunk(
   "disableproduct",
@@ -12,6 +13,7 @@ export const DisableProductApi: any = createAsyncThunk(
       .post(`${baseUrl}products/disable-product`, Obj, config)
       .then((resp) => {
         // console.log(resp);
+        socketFire();
         toast.success(resp?.data?.message);
         dispatch(GetProductListApi());
         return resp.data;

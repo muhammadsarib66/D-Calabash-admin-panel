@@ -18,7 +18,7 @@ const style = {
 };
 
 const AddChoiceModal = ({ item, choiceModalOpen, choiceModalClose }: any) => {
-  console.log(item,'===>')
+  // console.log(item,'===>')
   const dispatch = useDispatch()
   const [choice, setChoice] = useState<any>({
     productId: item?._id,
@@ -59,7 +59,7 @@ const AddChoiceModal = ({ item, choiceModalOpen, choiceModalClose }: any) => {
   };
   // Handler to update name or price in a choice
   const handleAddChoice = () => {
-    console.log(choicesOption);
+    // console.log(choicesOption);
     if (choicesOption.name === "" || choicesOption.price === "") {
       toast.error("Please add choices");
       setChoicesOption({

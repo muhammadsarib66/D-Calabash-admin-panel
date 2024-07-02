@@ -4,6 +4,7 @@ import axios from "axios";
 import { baseUrl,  token } from "./Slicer";
 import { toast } from "react-toastify";
 import { GetProductListApi } from "./GetProductListSlicer";
+import { socketFire } from "../../components/UpdateSocket";
 
 const config = {
   headers: {
@@ -16,6 +17,7 @@ const config = {
 export const AddProductApi: any = createAsyncThunk(
   "dcalabash/AddProduct",
   async (Obj: any, {dispatch}) => {
+    
     const {image , name, description, price, available, ingradients, category} = Obj;
     // console.log(ingradients)
     const formData = new FormData();
@@ -32,6 +34,8 @@ export const AddProductApi: any = createAsyncThunk(
     .then((resp) => {
  
       toast.success("Product Added Successfully");
+      // socket.emit('product-updates');
+      socketFire();
       dispatch(GetProductListApi())
       return resp.data;
     })

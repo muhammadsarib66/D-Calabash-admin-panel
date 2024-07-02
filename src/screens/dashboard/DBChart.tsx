@@ -43,6 +43,7 @@ const index = () => {
   const [titleModal, setTitleModal] = useState<any>("");
   const [item, setItem] = useState<any>("");
   
+  console.log(filterData)
   const closeModal = () => {
     setInfoModal(false);
   };
@@ -54,18 +55,22 @@ const index = () => {
   };
   const HandleOrderInfo = (item: any) => {
     setItem(item);
+  //  console.log(item)
+
     // console.log(item)
     setInfoModal(true);
     setTitleModal("OrderInfo");
   };
   const HandleOrderStatus = (item : any) => {
   //  console.log(item?.deliveryMode)
+  // console.log(item)
+
     setItem(item);
     setInfoModal(true);
     setTitleModal("RecentOrderStatus");
   };
   const HandleOrderAsgn = (item:any) => {
-   
+   console.log(item)
     setItem(item);
     setInfoModal(true);
     setTitleModal("RecentOrderassign");
@@ -77,7 +82,9 @@ const index = () => {
       // Sort filteredData by createdAt field (assuming it's a date)
       const sortedData = [...filteredData].sort((a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
       setFilterData(sortedData);
+    
     }
+    
     
   }, [orderStatus, DashboardData]);
   return (

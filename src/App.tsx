@@ -15,19 +15,16 @@ import { GetAdminListApi } from "./feature/slicer/GetAdminListingSlicer";
 import { io } from "socket.io-client";
 import { Userid, baseUrl } from "./feature/slicer/Slicer";
 import { toast } from "react-toastify";
-import BeepSOund from './Images/Neworder.mp3'
+import BeepSOund from "./Images/Neworder.mp3";
 import { GetResConfApi } from "./feature/slicer/GetResConfSlicer";
 
-
-
 function App() {
-  const audio = new Audio(BeepSOund)
-const socket = useMemo(() => io(baseUrl), []);
+  const audio = new Audio(BeepSOund);
+  const socket = useMemo(() => io(baseUrl), []);
   const dispatch = useDispatch();
   const token = localStorage.getItem("admintoken");
 
-
-  
+ 
   useEffect(() => {
     if (token) {
       dispatch(GetCustomerApi());
@@ -37,62 +34,59 @@ const socket = useMemo(() => io(baseUrl), []);
       dispatch(GetOrderListApi());
       dispatch(DashboardApi());
       dispatch(GetAdminListApi());
-      dispatch(GetResConfApi())
-    } 
-  }, [token]);
-  
-
-  useEffect(()=>{
-    if(token){
-
-      socket.emit('join-admin',Userid);
+      dispatch(GetResConfApi());
     }
+  }, [token]);
 
-  },[])
+  useEffect(() => {
+    if (token) {
+      socket.emit("join-admin", Userid);
+    }
+  }, []);
 
-  useEffect(()=>{
-    if(token){
-
+  useEffect(() => {
+    if (token) {
       socket.on("newOrder", () => {
-        audio.play()
-        toast.success("New Order Recieved 🍔😃"); 
-        dispatch(DashboardApi()) 
+        audio.play();
+        toast.success("New Order Recieved 🍔😃");
+        dispatch(DashboardApi());
         dispatch(GetOrderListApi());
-        
       });
     }
-    },[])
-  useEffect(()=>{
-    if(token){
+  }, []);
+  useEffect(() => {
+    if (token) {
+      socket.on("order-updated", (data) => {
+        toast.success(data.message);
+        dispatch(DashboardApi());
+        dispatch(GetOrderListApi());
+      });
+    }
+  }, []);
 
-    socket.on("order-updated", (data) => {
-      toast.success(data.message); 
-      dispatch(DashboardApi()) 
-      dispatch(GetOrderListApi());
-  
-    });
-  }
-
-  },[])
-
-  useEffect(()=>{
-    socket.on("rider-updates",(data) => {
-      toast.success(`Rider ${data?.fullname} is now ${data?.isWorking ? 'Online' : 'Offline'}`)
+  useEffect(() => {
+    socket.on("rider-updates", (data) => {
+      toast.success(
+        `Rider ${data?.fullname} is now ${
+          data?.isWorking ? "Online" : "Offline"
+        }`
+      );
       dispatch(GetRidersListApi());
-    })
-  },[])
- 
-  useEffect(()=>{
-    socket.on("message",(data)=>{
-      console.log(data)
-    })
-  },[])
+    });
+  }, []);
+
+  useEffect(() => {
+    socket.on("message", (data) => {
+      console.log(data);
+    });
+  }, []);
   return (
-    <>  
+    <>
       {token && <MiniDrawer />}
       {!token && <Login />}
     </>
   );
 }
+
 
 export default App;

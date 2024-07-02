@@ -4,6 +4,7 @@ import axios from "axios";
 import { baseUrl, config } from "./Slicer";
 import { toast } from "react-toastify";
 import { GetProductListApi } from "./GetProductListSlicer";
+import { socketFire } from "../../components/UpdateSocket";
 
 export const AddProductChoicesApi: any = createAsyncThunk(
   "dcalabash/AddProChoice",
@@ -13,6 +14,7 @@ export const AddProductChoicesApi: any = createAsyncThunk(
     .post(`${baseUrl}products/add-choice`, Obj,config)
     .then((resp) => {
     // console.log(resp);
+    socketFire();
       toast.success(resp?.data?.message);
       dispatch(GetProductListApi())
       return resp.data;
