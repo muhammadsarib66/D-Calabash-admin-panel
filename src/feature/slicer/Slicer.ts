@@ -3,9 +3,8 @@ export const token = localStorage.getItem("admintoken");
 const UserDetail = JSON.parse(localStorage.getItem("AdminUser") as string);
 export const issubadmin = UserDetail ? UserDetail?.issubadmin : false;
 export const Userid = UserDetail ? UserDetail?._id : "empty";
-// export const baseUrl = "https://dcalabash-backend-819bebaeeb98.herokuapp.com/";
-
-export const baseUrl = "http://192.168.100.13:3000/";
+export const baseUrl = "https://dcalabash-backend-819bebaeeb98.herokuapp.com/";
+// export const baseUrl = "http://192.168.100.13:3000/";
 export const config = {
   headers: {
     "Content-Type": "application/json",
