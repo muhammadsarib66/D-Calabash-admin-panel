@@ -379,6 +379,13 @@ const InfoModal = ({ ActionModal, closeModal, title, item }: any) => {
                   </span>{" "}
                   {item?.user?.email}
                 </p>
+                <p>
+                  <span className="font-bold text-gray-800">
+                    {" "}
+                    Customer Phone No: :
+                  </span>{" "}
+                  {item?.user?.phone}
+                </p>
                 
               </div>
               
