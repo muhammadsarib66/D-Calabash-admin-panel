@@ -455,10 +455,10 @@ const InfoModal = ({ ActionModal, closeModal, title, item }: any) => {
             <div className="p-6 flex flex-col gap-4 justify-between  h-fit">
               <h1 className="font-semibold text-xl">
                 {" "}
-                Confirm the order and Change the Delivery Status?
+               {item?.deliveryMode == "Pickup"? "Confirm the Pickup Order & change the status to Ready": " Confirm the order and Change the Delivery Status?"}
               </h1>
               <div>
-             
+             {item?.deliveryMode == "online" &&
               <Textarea
                   name="message"
                   value={orderMessage}
@@ -468,6 +468,7 @@ const InfoModal = ({ ActionModal, closeModal, title, item }: any) => {
                   label="This message will only shows in notification"
 
                 />
+              }
 
                 <Divider />
                 <div className="pt-6 flex gap-4 justify-end">
@@ -497,7 +498,7 @@ const InfoModal = ({ ActionModal, closeModal, title, item }: any) => {
             <div className="p-6 flex flex-col gap-4 justify-between h-fit">
               <h1 className="font-semibold text-xl">
                 {" "}
-               {item?.deliveryMode == "Pickup"? "Confirm the Order & change the status to Ready": " Confirm the order and Change the Delivery Status?"}
+               {item?.deliveryMode == "Pickup"? "Confirm the Pickup Order & change the status to Ready": " Confirm the order and Change the Delivery Status?"}
               </h1>
               <div>
              {item?.deliveryMode == "online" &&
