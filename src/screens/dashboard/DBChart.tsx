@@ -45,7 +45,7 @@ const index = () => {
   const [titleModal, setTitleModal] = useState<any>("");
   const [item, setItem] = useState<any>("");
   
-  console.log(filterData)
+  // console.log(filterData)
   const closeModal = () => {
     setInfoModal(false);
   };
@@ -72,7 +72,7 @@ const index = () => {
     setTitleModal("RecentOrderStatus");
   };
   const HandleOrderAsgn = (item:any) => {
-   console.log(item)
+  //  console.log(item)
     setItem(item);
     setInfoModal(true);
     setTitleModal("RecentOrderassign");

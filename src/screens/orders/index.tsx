@@ -84,7 +84,7 @@ const index = () => {
   };
 
   const HandleOrderInfo = (item: any) => {
-    console.log(item)
+    // console.log(item)
     setItem(item);
     setInfoModal(true);
     setTitleModal("OrderInfo");

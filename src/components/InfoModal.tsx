@@ -199,7 +199,7 @@ const InfoModal = ({ ActionModal, closeModal, title, item }: any) => {
   };
 
   const handleConfirmRecentOrder = () => {
-    console.log(item)
+    // console.log(item)
     // console.log(item) 
     if(item?.deliveryMode == 'Pickup'){
       const Obj = { id: item?._id, status: "Confirmed"  };
