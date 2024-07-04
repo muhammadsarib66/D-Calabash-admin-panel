@@ -77,7 +77,7 @@ function App() {
   }, []);
 
   useEffect(() => {
-    socket.on("message", (data) => {
+    socket.on("message", () => {
       // console.log(data);
     });
   }, []);
