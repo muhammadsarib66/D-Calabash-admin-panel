@@ -458,7 +458,7 @@ const InfoModal = ({ ActionModal, closeModal, title, item }: any) => {
                {item?.deliveryMode == "Pickup"? "Confirm the Pickup Order & change the status to Ready": " Confirm the order and Change the Delivery Status?"}
               </h1>
               <div>
-             {item?.deliveryMode == "online" &&
+             {item?.deliveryMode == "Home Delivery" &&
               <Textarea
                   name="message"
                   value={orderMessage}
@@ -501,7 +501,7 @@ const InfoModal = ({ ActionModal, closeModal, title, item }: any) => {
                {item?.deliveryMode == "Pickup"? "Confirm the Pickup Order & change the status to Ready": " Confirm the order and Change the Delivery Status?"}
               </h1>
               <div>
-             {item?.deliveryMode == "online" &&
+             {item?.deliveryMode == "Home Delivery" &&
               <Textarea
                   name="message"
                   value={orderMessage}
