@@ -11,12 +11,13 @@ import {
   IconButton,
   Typography,
 } from "@material-tailwind/react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import InfoIcon from "@mui/icons-material/Info";
 
 import Loader from "../../components/Loader";
 import moment from "moment";
 import InfoModal from "../../components/InfoModal";
+import { OrderStatusApi } from "../../feature/slicer/OrderStatusSlicer";
 
 const TableHeadings = [
   "Customer",
@@ -35,6 +36,7 @@ const index = () => {
   const { isLoading, DashboardData } = useSelector(
     (state: any) => state.DashboardSlicer
   );
+  const dispatch = useDispatch()
   const [filterData, setFilterData] = useState<any>([]);
 
   const [orderStatus, setOrderStatus] = useState<any>("pendingOrders");
@@ -75,7 +77,11 @@ const index = () => {
     setInfoModal(true);
     setTitleModal("RecentOrderassign");
   };
-
+  const HandleReadyAction = (item:any) => {
+    const Obj = { id: item, status: "Ready"  };
+    
+    dispatch(OrderStatusApi(Obj));
+  }
   useEffect(() => {
     if (orderStatus === "pendingOrders" || orderStatus === "activeOrders") {
       const filteredData = DashboardData?.[orderStatus] || [];
@@ -267,49 +273,53 @@ const index = () => {
                           <InfoIcon className="h-4 w-4" />
                         </IconButton>
                       </td>
-                        <td className={`${classes} flex gap-2`}>
-                        {status !== "Confirmed" ? <Button
-                          placeholder=""
-                          disabled={status === "Delivered" || status === "Shipped" ? true : false}
+                      <td className={`${classes} flex gap-2`}>
+  {status !== "Confirmed" ? (
+    <Button
+      placeholder=""
+      disabled={status === "Delivered" || status === "Shipped"}
+      onPointerEnterCapture={() => {}}
+      onPointerLeaveCapture={() => {}}
+      size="sm"
+      color={
+        (status === "Delivered" && "orange") ||
+        (status === "Pending" && "gray") ||
+        (status === "Cancelled" && "red") ||
+        (status === "Confirmed" && "blue") ||
+        (status === "Shipped" && "green") ||
+        undefined
+      }
+      onClick={() => HandleOrderStatus({_id, deliveryMode})}
+    >
+      {status}
+    </Button>
+  ) : (
+    <Button
+      placeholder=""
+      onPointerEnterCapture={() => {}}
+      onPointerLeaveCapture={() => {}}
+      size="sm"
+      color={
+        (status === "Delivered" && "orange") ||
+        (status === "Pending" && "gray") ||
+        (status === "Cancelled" && "red") ||
+        (status === "Confirmed" && "blue") ||
+        (status === "Shipped" && "green") ||
+        undefined
+      }
+      onClick={() => {
+        if (deliveryMode === 'Pickup') {
+          HandleReadyAction(_id); // Replace with your function for handling "Ready" action
+        } else {
+          HandleOrderAsgn({_id, deliveryMode}); // Function for assigning order to rider
+        }
+      }}
+    >
+      {deliveryMode === 'Pickup' ? "Ready" : "Assign to Rider"}
+    </Button>
+  )}
+</td>
 
-                          onPointerEnterCapture={() => {}}
-                          onPointerLeaveCapture={() => {}}
-                          size="sm"
-                          color={
-                            (status === "Delivered" && "orange") ||
-                            (status === "Pending" && "gray") ||
-                            (status === "Cancelled" && "red") ||
-                            (status === "Confirmed" && "blue") ||
-                            (status === "Shipped" && "green") ||
-                            undefined
-                          }
-                          onClick={() => HandleOrderStatus({_id,deliveryMode})}
-                         
-                        >
-                         {status}
-                        </Button>
-                        :
-                        <Button
-                          placeholder=""
-                          // disabled={available == true ? true : false}
-                          onPointerEnterCapture={() => {}}
-                          onPointerLeaveCapture={() => {}}
-                          size="sm"
-                          color={
-                            (status === "Delivered" && "orange") ||
-                            (status === "Pending" && "gray") ||
-                            (status === "Cancelled" && "red") ||
-                            (status === "Confirmed" && "blue") ||
-                            (status === "Shipped" && "green") ||
-                            undefined
-                          }
-                          onClick={() => HandleOrderAsgn({_id,deliveryMode})}
-                
-                        >
-                         { deliveryMode == 'Pickup' ? " Deliver Order": "Assign to Rider"}
-                        </Button>
-                        }
-                        </td>
                         <td className={classes}>
                           <Typography
                             placeholder=""

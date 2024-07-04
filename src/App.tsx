@@ -45,6 +45,7 @@ function App() {
   }, []);
 
   useEffect(() => {
+    // audio.play();
     if (token) {
       socket.on("newOrder", () => {
         audio.play();

@@ -30,3 +30,5 @@ const DeliverOrderImgModal = ({imageModal ,item,setImageModal}:any) => {
   );
 }
 export default DeliverOrderImgModal;
+
+

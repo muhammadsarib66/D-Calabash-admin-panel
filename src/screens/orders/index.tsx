@@ -23,6 +23,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import {  issubadmin } from "../../feature/slicer/Slicer";
 import { GetOrderListApi } from "../../feature/slicer/GetOrderListSlicer";
 import DeliverOrderImgModal from "./DeliverOrderImgModal";
+import { OrderStatusApi } from "../../feature/slicer/OrderStatusSlicer";
 const OrderStatusTABS = [
   {
     label: "Pending",
@@ -33,13 +34,18 @@ const OrderStatusTABS = [
     value: "Confirmed",
   },
   {
-    label: "Shipped",
-    value: "Shipped",
+    label: "Ready",
+    value: "Ready",
   },
   {
     label: "Delivered",
     value: "Delivered",
   },
+  {
+    label: "Shipped",
+    value: "Shipped",
+  },
+  
   {
     label: "All",
     value: "all",
@@ -73,12 +79,12 @@ const index = () => {
   const [item, setItem] = useState<any>("");
   const [search, setSearch] = useState<any>("");
   const [imageModal,setImageModal] = useState<any>(false)
-console.log(statusTab)
   const closeModal = () => {
     setInfoModal(false);
   };
 
   const HandleOrderInfo = (item: any) => {
+    console.log(item)
     setItem(item);
     setInfoModal(true);
     setTitleModal("OrderInfo");
@@ -93,11 +99,23 @@ console.log(statusTab)
     setInfoModal(true);
     setTitleModal("OrderStatus");
   };
+  const HandleReadyAction = (item: any) => {
+    const Obj = { id: item, status: "Ready"  };
+    
+    dispatch(OrderStatusApi(Obj));
+  
+}
+  const HandleDeliverAction = (item: any) => {
+    const Obj = { id: item, status: "Delivered"  };
+    dispatch(OrderStatusApi(Obj));
+  
+}
   const HandleOrderAsgn = (id: any) => {
     setItem(id);
     setInfoModal(true);
     setTitleModal("Orderassign");
   };
+  
 
   const handleShowDeliverImage = (img: any) => {
     setItem(img);
@@ -118,7 +136,7 @@ console.log(statusTab)
 
           return true;
         } else {
-          console.log(statusTab)
+          // console.log(statusTab)
           return data.status == statusTab;
         }
       }
@@ -128,7 +146,6 @@ console.log(statusTab)
           new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
       );
       setFilterData(filteredData);
-      console.log(filteredData)
     }
   }, [search, Orders, statusTab]);
   useEffect(() => {
@@ -295,6 +312,7 @@ console.log(statusTab)
                               user,
                               totalAmount,
                               status,
+                              deliveryMode
                             })
                           }
                           variant="text"
@@ -306,74 +324,87 @@ console.log(statusTab)
                         </IconButton>
                       </td>
                       <td className={`${classes} flex gap-2`}>
-                        {status !== "Confirmed" ? (
-                          <div className="flex items-center flex-col justify-center gap-2">
-                          {/* <img src={baseUrl+deliveryImage} alt="deliveryImage" /> */}
-                          {deliveryImage && 
-                          <i onClick={()=>handleShowDeliverImage(deliveryImage)} className=" cursor-pointer fa-solid fa-image"></i>
-                          }
-                          <Button
-                            placeholder=""
-                            disabled={
-                              status === "Delivered" || status === "Shipped"
-                                ? true
-                                : false
-                            }
-                            onPointerEnterCapture={() => {}}
-                            onPointerLeaveCapture={() => {}}
-                            size="sm"
-                            color={
-                              (status === "Delivered" && "orange") ||
-                              (status === "Pending" && "gray") ||
-                              (status === "Cancelled" && "red") ||
-                              (status === "Confirmed" && "blue") ||
-                              (status === "Shipped" && "green") ||
-                              undefined
-                            }
-                            onClick={() =>
-                              HandleOrderStatus({ _id, deliveryMode })
-                            }
-                          >
-                            {status}
-                          </Button>
-                          {status == "Shipped" && (
-            
-                          <Button
-                            placeholder=""
-                            onPointerEnterCapture={() => {}}
-                            onPointerLeaveCapture={() => {}}
-                            size="sm"
-                            color={'blue'}
-                            onClick={() => HandleOrderAsgn({ _id })}
-                          >
-                            Assign to Rider
-                          </Button>
-                          )}
-                          </div>
+  {status !== "Confirmed" && status !== "Ready" ? (
+    <div className="flex items-center flex-col justify-center gap-2">
+      {deliveryImage && (
+        <i onClick={() => handleShowDeliverImage(deliveryImage)} className="cursor-pointer fa-solid fa-image"></i>
+      )}
 
-                        ) : (
-                          
-                          <Button
-                            placeholder=""
-                            onPointerEnterCapture={() => {}}
-                            onPointerLeaveCapture={() => {}}
-                            size="sm"
-                            color={
-                              (status === "Delivered" && "orange") ||
-                              (status === "Pending" && "gray") ||
-                              (status === "Cancelled" && "red") ||
-                              (status === "Confirmed" && "blue") ||
-                              (status === "Shipped" && "green") ||
-                              undefined
-                            }
-                            onClick={() => HandleOrderAsgn({ _id })}
-                          >
-                            Assign to Rider
-                          </Button>
-                          
+      <Button
+       placeholder=""
+       onPointerEnterCapture={() => {}}
+       onPointerLeaveCapture={() => {}}
+        size="sm"
+        disabled={status === "Delivered" || status === "Shipped"}
+        color={
+          (status === "Pending" && "gray") ||
+          (status === "Cancelled" && "red") ||
+          undefined // Assuming undefined for default
+        }
+        onClick={() => HandleOrderStatus({ _id, deliveryMode })}
+      >
+        {status}
+      </Button>
 
-                        )}
-                      </td>
+      {status === "Shipped" && (
+        <Button
+        placeholder=""
+        onPointerEnterCapture={() => {}}
+        onPointerLeaveCapture={() => {}}
+          size="sm"
+          color="blue"
+          onClick={() => HandleOrderAsgn({ _id })}
+        >
+          Assign to Rider
+        </Button>
+      )}
+    </div>
+  ) : (
+    <>
+      {deliveryMode === "Pickup" ? (
+        <Button
+        placeholder=""
+        onPointerEnterCapture={() => {}}
+        onPointerLeaveCapture={() => {}}
+          size="sm"
+          color={status === "Ready" ? "green" : "blue"} 
+          onClick={() => {
+            if (status === "Ready") {
+              // Handle deliver action
+              HandleDeliverAction(_id);
+            } else {
+              // Handle ready action
+              HandleReadyAction(_id);
+            }
+          }}
+        >
+          {status === "Ready" ? "Deliver" : "Ready"}
+        </Button>
+      ) : (
+        <Button
+        placeholder=""
+        onPointerEnterCapture={() => {}}
+        onPointerLeaveCapture={() => {}}
+          size="sm"
+          color={
+            (status === "Delivered" && "orange") ||
+            (status === "Pending" && "gray") ||
+            (status === "Cancelled" && "red") ||
+            (status === "Confirmed" && "blue") ||
+            (status === "Ready" && "red") ||
+            (status === "Shipped" && "green") ||
+            undefined
+          }
+          onClick={() => HandleOrderAsgn({ _id })}
+        >
+          Assign to Rider
+        </Button>
+      )}
+    </>
+  )}
+</td>
+
+
                       {issubadmin == true ? null : (
                         <td className={classes}>
                           <Tooltip content="Delete Order">

@@ -189,7 +189,7 @@ const InfoModal = ({ ActionModal, closeModal, title, item }: any) => {
       const Obj = { id: item?._id, status: "Confirmed"  };
       dispatch(OrderStatusApi(Obj));
       closeModal();
-     }
+    }
       else{
 
         const Obj = { id: item?._id, status: "Confirmed" , msg:orderMessage };
@@ -197,6 +197,7 @@ const InfoModal = ({ ActionModal, closeModal, title, item }: any) => {
         closeModal();
       }
   };
+
   const handleConfirmRecentOrder = () => {
     // console.log(item) 
     if(item?.deliveryMode == 'Pickup'){
