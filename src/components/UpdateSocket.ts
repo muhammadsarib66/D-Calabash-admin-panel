@@ -2,7 +2,7 @@ import { io } from "socket.io-client";
 import { baseUrl } from "../feature/slicer/Slicer";
 
 
-const socket = io(baseUrl);
+export const socket = io(baseUrl);
 
 
 export const socketFire = () => {

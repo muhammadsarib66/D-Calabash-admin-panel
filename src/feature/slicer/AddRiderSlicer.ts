@@ -5,14 +5,16 @@ import { baseUrl, config } from "./Slicer";
 import { toast } from "react-toastify";
 import { GetRidersListApi } from "./GetRidersSlicer";
 
+
 export const AddRiderApi: any = createAsyncThunk(
   "dcalabash/AddRider",
   async (Obj: any, {dispatch}) => {
     return await axios
     .post(`${baseUrl}riders/register-rider`, Obj,config)
     .then((resp) => {
-    // console.log(resp);
+    console.log(resp);
       toast.success(resp?.data?.message);
+      // socket.emit("rider-updated",Obj?.riderId)
       dispatch(GetRidersListApi())
       return resp.data;
     })

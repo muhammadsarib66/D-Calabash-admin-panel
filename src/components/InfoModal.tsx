@@ -631,15 +631,13 @@ const InfoModal = ({ ActionModal, closeModal, title, item }: any) => {
                 <div className="relative z-50">
                   <Select
                     className="absolute top-0 z-40"
-                    placeholder={""}
                     value={selectedRider}
+                    placeholder={""}
                     onPointerEnterCapture={() => {}}
                     onPointerLeaveCapture={() => {}}
                     label="Select Rider"
                   >
                     {Riders.map((rid: any) => (
-                      
-                        
                        <Option
                        className="flex justify-between items-center"
                        onClick={() => {
