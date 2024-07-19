@@ -21,7 +21,6 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { issubadmin } from "../../feature/slicer/Slicer";
 import { BlockRiderApi } from "../../feature/slicer/BlockRiderSlicer";
 import { UnBlockRiderApi } from "../../feature/slicer/UnBlockRiderSlicer";
-import { socket } from "../../components/UpdateSocket";
 const RiderStatusTABS = [
   {
     label: "All",
