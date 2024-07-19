@@ -4,7 +4,7 @@ import axios from "axios";
 import { baseUrl, config } from "./Slicer";
 import { toast } from "react-toastify";
 import { GetCustomerApi } from "./GetCustomerListSlicer"; 
-// import { socket } from "../../components/UpdateSocket";
+import { socketUserUpdate } from "../../components/UpdateSocket";
 // import { socket } from "../../socketfire";
 
 export const BlockCustomerApi: any = createAsyncThunk(
@@ -14,7 +14,7 @@ export const BlockCustomerApi: any = createAsyncThunk(
     .post(`${baseUrl}users/block-customer`, Obj,config)
     .then((resp) => {
     // console.log(resp);
-    // socket.emit("user-customer", Obj?.customerId);
+    socketUserUpdate(Obj?.customerId);
       toast.success(resp?.data?.message);
       dispatch(GetCustomerApi())
       return resp.data;

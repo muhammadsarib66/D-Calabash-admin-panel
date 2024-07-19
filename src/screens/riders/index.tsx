@@ -21,6 +21,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { issubadmin } from "../../feature/slicer/Slicer";
 import { BlockRiderApi } from "../../feature/slicer/BlockRiderSlicer";
 import { UnBlockRiderApi } from "../../feature/slicer/UnBlockRiderSlicer";
+import { socket } from "../../components/UpdateSocket";
 const RiderStatusTABS = [
   {
     label: "All",
@@ -81,16 +82,7 @@ const index = () => {
       dispatch(UnBlockRiderApi(Obj));
     }
   };
-  // const handleBlockRider = (id: any) => {
-  //   setTitleModal("blockRider");
-  //   setInfoModal(true);
-  //   setItem(id);
-  // };
-  // const handleUnBlockRider = (id: any) => {
-  //   setTitleModal("unblockRider");
-  //   setInfoModal(true);
-  //   setItem(id);
-  // };
+
   const HandleDeletrRider = (id: any) => {
     setTitleModal("delRider");
     setInfoModal(true);
@@ -120,6 +112,9 @@ const index = () => {
       setFilterData(filteredData);
     }
   }, [search, Riders, statusTab]);
+
+
+ 
   return (
     <Card
       className=" w-full"

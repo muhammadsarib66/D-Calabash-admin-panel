@@ -4,6 +4,7 @@ import axios from "axios";
 import { baseUrl, config } from "./Slicer";
 import { toast } from "react-toastify";
 import { GetRidersListApi } from "./GetRidersSlicer";
+import {  socketRiderUpdate } from "../../components/UpdateSocket";
 
 export const BlockRiderApi: any = createAsyncThunk(
   "dcalabash/BlockRider",
@@ -12,8 +13,10 @@ export const BlockRiderApi: any = createAsyncThunk(
     .post(`${baseUrl}riders/block-rider`, Obj,config)
     .then((resp) => {
     // console.log(resp);
+    socketRiderUpdate(Obj?.riderId);
       toast.success(resp?.data?.message);
       dispatch(GetRidersListApi())
+      
       return resp.data;
     })
     .catch((err) => {

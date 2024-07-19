@@ -4,6 +4,7 @@ import axios from "axios";
 import { baseUrl, config } from "./Slicer";
 import { toast } from "react-toastify";
 import { GetRidersListApi } from "./GetRidersSlicer";
+import { socketRiderUpdate } from "../../components/UpdateSocket";
 
 
 export const AddRiderApi: any = createAsyncThunk(
@@ -12,7 +13,8 @@ export const AddRiderApi: any = createAsyncThunk(
     return await axios
     .post(`${baseUrl}riders/register-rider`, Obj,config)
     .then((resp) => {
-    console.log(resp);
+    // console.log(resp?.data );
+    socketRiderUpdate(resp?.data?.data?._id)
       toast.success(resp?.data?.message);
       // socket.emit("rider-updated",Obj?.riderId)
       dispatch(GetRidersListApi())

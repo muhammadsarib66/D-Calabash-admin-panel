@@ -4,6 +4,7 @@ import axios from "axios";
 import { baseUrl, config } from "./Slicer";
 import { toast } from "react-toastify";
 import { GetCustomerApi } from "./GetCustomerListSlicer"; 
+import { socketUserUpdate } from "../../components/UpdateSocket";
 // import { socket } from "../../socketfire";
 
 export const UnBlockCustomerApi: any = createAsyncThunk(
@@ -12,9 +13,7 @@ export const UnBlockCustomerApi: any = createAsyncThunk(
     return await axios
     .post(`${baseUrl}users/unblock-customer`, Obj,config)
     .then((resp) => {
-    // console.log(resp);
-    // socket.emit("user-customer", Obj?.customerId);
-
+    socketUserUpdate(Obj?.customerId);
       toast.success(resp?.data?.message);
       dispatch(GetCustomerApi())
       return resp.data;
