@@ -82,6 +82,11 @@ function App() {
       // console.log(data);
     });
   }, []);
+  useEffect(()=>{
+    socket.on('user-update',async(data)=>{
+console.log('DATA DELETE' ,data)
+    })
+  },[])
   return (
     <>
       {token && <MiniDrawer />}

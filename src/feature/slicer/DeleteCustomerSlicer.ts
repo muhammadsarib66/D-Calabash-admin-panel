@@ -5,7 +5,9 @@ import { baseUrl, config } from "./Slicer";
 import { toast } from "react-toastify";
 import { GetCustomerApi } from "./GetCustomerListSlicer"; 
 import { socketUserUpdate } from "../../components/UpdateSocket";
-// import { socket } from "../../socketfire";
+// import { io } from "socket.io-client";
+// const socket = io(baseUrl) 
+
 
 export const DelCustomerApi: any = createAsyncThunk(
   "dcalabash/DeleteCustomer",
@@ -13,10 +15,14 @@ export const DelCustomerApi: any = createAsyncThunk(
     return await axios
     .post(`${baseUrl}users/delete-customer`, Obj,config)
     .then((resp) => {
-    // console.log(resp);
-    socketUserUpdate(Obj?.customerId);
-      toast.success(resp?.data?.message);
-      dispatch(GetCustomerApi())
+      const id =Obj?.customerId
+      socketUserUpdate(id);
+    console.log(id);
+     // default user socket fire // 
+    // socket.emit('user-updated',id);
+      
+    toast.success(resp?.data?.message);
+      dispatch(GetCustomerApi())     
       return resp.data;
     })
     .catch((err) => {

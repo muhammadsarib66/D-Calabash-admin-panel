@@ -13,9 +13,11 @@ export const socketFire = () => {
 export const socketUserUpdate = (id:any)=>{
     socket.emit('user-updated',id);
     console.log('hello iam updated user ===>', id)
+
 }
 export const socketRiderUpdate = (id:any)=>{
     socket.emit('rider-updated',id);
+    console.log('hello iam rider user ===>', id)
 
 }
   

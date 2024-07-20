@@ -19,10 +19,11 @@ import InfoModal from "../../components/InfoModal";
 // import NoAccountsIcon from "@mui/icons-material/NoAccounts";
 // import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { issubadmin } from "../../feature/slicer/Slicer";
+import {  issubadmin } from "../../feature/slicer/Slicer";
 import { BlockCustomerApi } from "../../feature/slicer/BlockCustomerSlicer";
 import { UnBlockCustomerApi } from "../../feature/slicer/UnBlockCustomerSlicer";
-
+import { socket } from "../../components/UpdateSocket";
+// import { io } from "socket.io-client";
 const OrderStatusTABS = [
   {
     label: "All",
@@ -53,6 +54,8 @@ const filteredHeadings = issubadmin
 
 
 const index = () => {
+  // const socket = useMemo(() => io(baseUrl), []);
+
   const {isLoading ,Customers } = useSelector((state: any) => state.GetCustomerList);
   const {isLoading : isLaoding1 } = useSelector((state: any) => state.BlockCustomerSlicer);
   const {isLoading : isLaoding2 } = useSelector((state: any) => state.UnBlockCustomerSlicer);
@@ -131,6 +134,13 @@ const index = () => {
       setFilterData(filteredData);
     }
   }, [search, Customers, statusTab]);
+
+
+  useEffect(()=>{
+    socket.on('user-update',async(data)=>{
+console.log('DATA DELETE' ,data)
+    })
+  },[Customers])
   return (
     <Card
       className=" w-full"

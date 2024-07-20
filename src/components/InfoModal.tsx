@@ -34,6 +34,7 @@ import { DeleteOrderApi } from "../feature/slicer/DeleteOrderSlicer";
 import { DeleteProductApi } from "../feature/slicer/DeleteProductSlicer";
 import { AssingOrderApi } from "../feature/slicer/AssingOrderRiderSlicer";
 import { AddAdminApi } from "../feature/slicer/AddAdminSlicer";
+// import { socket } from "./UpdateSocket";
 // //////// admin ...........
 const KeyCodes = {
   comma: 188,
@@ -147,6 +148,7 @@ const InfoModal = ({ ActionModal, closeModal, title, item }: any) => {
   const handleDeleteUser = () => {
     const Obj = { customerId: item };
     dispatch(DelCustomerApi(Obj));
+    // socket.emit('user-updated',item)
     closeModal();
   };
   // DELETE Category //////////
