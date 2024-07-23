@@ -485,7 +485,7 @@ const handleCancelRecentOrder = () => {
                   onChange={(e)=>{setOrderMessage(e.target.value)}}
                   onPointerEnterCapture={() => {}}
                   onPointerLeaveCapture={() => {}}
-                  label="This message will only shows in notification"
+                  label="Thank you for placing order, your order has been confirmed"
 
                 />
               }
@@ -536,7 +536,7 @@ const handleCancelRecentOrder = () => {
                   onChange={(e)=>{setOrderMessage(e.target.value)}}
                   onPointerEnterCapture={() => {}}
                   onPointerLeaveCapture={() => {}}
-                  label="This message will only shows in notification"
+                  label="Thank you for placing order, your order has been confirmed"
 
                 />
               }
