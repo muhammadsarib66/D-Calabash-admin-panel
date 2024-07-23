@@ -35,7 +35,6 @@ import Product from "../screens/products";
 import SubAdmin from "../screens/admins"
 import { Link } from "react-router-dom";
 import { LoginOutlined } from "@mui/icons-material";
-import { ToastContainer } from "react-toastify";
 import ProductCategory from "../screens/products/ProductCategory";
 import SupervisorAccountIcon from '@mui/icons-material/SupervisorAccount';
 import SettingsIcon from '@mui/icons-material/Settings';
@@ -358,7 +357,7 @@ export default function MiniDrawer() {
           {/* <Route path="/subadmin" element={<SubAdmin />} /> */}
           </Routes>
 
-        <ToastContainer />
+        {/* <ToastContainer /> */}
       </Box>
     </Box>
   );

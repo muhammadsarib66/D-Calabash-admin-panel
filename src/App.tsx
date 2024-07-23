@@ -14,7 +14,7 @@ import { DashboardApi } from "./feature/slicer/DashboardSlicer";
 import { GetAdminListApi } from "./feature/slicer/GetAdminListingSlicer";
 import { io } from "socket.io-client";
 import { Userid, baseUrl } from "./feature/slicer/Slicer";
-import { toast } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
 import BeepSOund from "./Images/Neworder.mp3";
 import { GetResConfApi } from "./feature/slicer/GetResConfSlicer";
 
@@ -50,7 +50,15 @@ function App() {
     if (token) {
       socket.on("newOrder", () => {
         audio.play();
-        toast.success("New Order Recieved 🍔😃");
+        toast.success("New Order Recieved 🍔😃",
+        {position: "top-center",
+          autoClose: false,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light"});
         dispatch(DashboardApi());
         dispatch(GetOrderListApi());
       });
@@ -80,17 +88,28 @@ function App() {
   useEffect(() => {
     socket.on("message", () => {
       // console.log(data);
+      toast.success("Updated 🍔😃",
+          {position: "top-center",
+            autoClose: 5000,
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light"});
     });
   }, []);
   useEffect(()=>{
     socket.on('user-update',async(data)=>{
 console.log('DATA DELETE' ,data)
     })
+    
   },[])
   return (
     <>
       {token && <MiniDrawer />}
       {!token && <Login />}
+      <ToastContainer />
     </>
   );
 }

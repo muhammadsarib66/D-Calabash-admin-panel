@@ -195,23 +195,21 @@ const InfoModal = ({ ActionModal, closeModal, title, item }: any) => {
     }
       else{
 
-        const Obj = { id: item?._id, status: "Confirmed" , msg:orderMessage };
+        const Obj = { id: item?._id, status: "Confirmed" , msg: orderMessage ? orderMessage : 'Thank you for placing order, your order has been confirmed'  };
+       
         dispatch(OrderStatusApi(Obj));
         closeModal();
       }
   };
 
   const handleConfirmRecentOrder = () => {
-    // console.log(item)
-    // console.log(item) 
     if(item?.deliveryMode == 'Pickup'){
       const Obj = { id: item?._id, status: "Confirmed"  };
       dispatch(OrderStatusApi(Obj));
       closeModal();
      }
       else{
-
-        const Obj = { id: item?._id, status: "Confirmed" , msg:orderMessage };
+        const Obj = { id: item?._id, status: "Confirmed" , msg: orderMessage ? orderMessage : 'Thank you for placing order, your order has been confirmed'  };
         dispatch(OrderStatusApi(Obj));
         closeModal();
       }
@@ -469,10 +467,16 @@ const handleCancelRecentOrder = () => {
         )) ||
           (title === "OrderStatus" && (
             <div className="p-6 flex flex-col gap-4 justify-between  h-fit">
+              <div className="flex items-start justify-between">
+
               <h1 className="font-semibold text-xl">
                 {" "}
                {item?.deliveryMode == "Pickup"? "Confirm the Pickup Order & change the status to Ready": " Confirm the order and Change the Delivery Status?"}
               </h1>
+              <span>
+                <i onClick={()=>closeModal()} className="fa-solid fa-xmark text-xl cursor-pointer"></i> 
+              </span>
+              </div>
               <div>
              {item?.deliveryMode == "Home Delivery" &&
               <Textarea
@@ -488,15 +492,7 @@ const handleCancelRecentOrder = () => {
 
                 <Divider />
                 <div className="pt-6 flex gap-4 justify-end">
-                  <Button
-                    placeholder=""
-                    onPointerEnterCapture={() => {}}
-                    onPointerLeaveCapture={() => {}}
-                    color="black"
-                    onClick={()=>closeModal()}
-                  >
-                    close 
-                  </Button>
+               
                   <Button
                     placeholder=""
                     onPointerEnterCapture={() => {}}
@@ -504,16 +500,16 @@ const handleCancelRecentOrder = () => {
                     color="red"
                     onClick={handleCancelOrder}
                   >
-                    Cancel 
+                    Cancel Order
                   </Button>
                   <Button
                     placeholder=""
                     onPointerEnterCapture={() => {}}
                     onPointerLeaveCapture={() => {}}
-                    color="blue"
+                    color="green"
                     onClick={handleConfirmOrder}
                   >
-                    yes
+                    Accept Order
                   </Button>
                 </div>
               </div>
@@ -521,10 +517,17 @@ const handleCancelRecentOrder = () => {
           )) ||
           (title === "RecentOrderStatus" && (
             <div className="p-6 flex flex-col gap-4 justify-between h-fit">
+              <div className="flex items-start justify-between">
+
               <h1 className="font-semibold text-xl">
                 {" "}
                {item?.deliveryMode == "Pickup"? "Confirm the Pickup Order & change the status to Ready": " Confirm the order and Change the Delivery Status?"}
               </h1>
+              <span>
+              <i onClick={()=>closeModal()} className="fa-solid fa-xmark text-xl cursor-pointer"></i> 
+
+              </span>
+              </div>
               <div>
              {item?.deliveryMode == "Home Delivery" &&
               <Textarea
@@ -539,7 +542,7 @@ const handleCancelRecentOrder = () => {
               }
                 <Divider />
                 <div className="pt-6 flex gap-4 justify-end">
-                <Button
+                {/* <Button
                     placeholder=""
                     onPointerEnterCapture={() => {}}
                     onPointerLeaveCapture={() => {}}
@@ -547,7 +550,7 @@ const handleCancelRecentOrder = () => {
                     onClick={()=>closeModal()}
                   >
                     close 
-                  </Button>
+                  </Button> */}
                   <Button
                     placeholder=""
                     onPointerEnterCapture={() => {}}
@@ -555,16 +558,16 @@ const handleCancelRecentOrder = () => {
                     color="red"
                     onClick={handleCancelRecentOrder}
                   >
-                    Cancel
+                    Cancel Order
                   </Button>
                   <Button
                     placeholder=""
                     onPointerEnterCapture={() => {}}
                     onPointerLeaveCapture={() => {}}
-                    color="blue"
+                    color="green"
                     onClick={handleConfirmRecentOrder}
                   >
-                    Yes
+                    Accept Order 
                   </Button>
                 </div>
               </div>
@@ -576,6 +579,7 @@ const handleCancelRecentOrder = () => {
                 <h1 className="text-gray-800 capitalize pb-6 text-xl font-semibold">
                   Assign Order to Active Riders
                 </h1>
+                
                 <i
                   className="fas fa-times text-2xl cursor-pointer"
                   onClick={handleClose}

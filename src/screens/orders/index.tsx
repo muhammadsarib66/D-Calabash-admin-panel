@@ -339,7 +339,7 @@ const index = () => {
        onPointerEnterCapture={() => {}}
        onPointerLeaveCapture={() => {}}
         size="sm"
-        disabled={status === "Delivered" || status === "Shipped"}
+        disabled={status === "Delivered" || status === "Shipped" || status === "Cancelled"}
         color={
           (status === "Pending" && "gray") ||
           (status === "Cancelled" && "red") ||
