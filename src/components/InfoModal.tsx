@@ -34,6 +34,7 @@ import { DeleteOrderApi } from "../feature/slicer/DeleteOrderSlicer";
 import { DeleteProductApi } from "../feature/slicer/DeleteProductSlicer";
 import { AssingOrderApi } from "../feature/slicer/AssingOrderRiderSlicer";
 import { AddAdminApi } from "../feature/slicer/AddAdminSlicer";
+import { CancelOrderApi } from "../feature/slicer/CancelOrderSlicer";
 // import { socket } from "./UpdateSocket";
 // //////// admin ...........
 const KeyCodes = {
@@ -241,6 +242,19 @@ const InfoModal = ({ ActionModal, closeModal, title, item }: any) => {
       toast.error("Please Select Rider");
     }
   };
+
+const handleCancelOrder = () => {
+  const Obj = {orderId : item}
+  dispatch(CancelOrderApi(Obj));
+  closeModal()
+}
+const handleCancelRecentOrder = () => {
+  const Obj = {orderId : item}
+  dispatch(CancelOrderApi(Obj));
+  closeModal()
+}
+
+
   const HandleRecentAsignOrder = () => {
     const Obj = {
       orderId: item,
@@ -478,10 +492,19 @@ const InfoModal = ({ ActionModal, closeModal, title, item }: any) => {
                     placeholder=""
                     onPointerEnterCapture={() => {}}
                     onPointerLeaveCapture={() => {}}
-                    color="red"
-                    onClick={() => closeModal()}
+                    color="black"
+                    onClick={()=>closeModal()}
                   >
-                    No
+                    close 
+                  </Button>
+                  <Button
+                    placeholder=""
+                    onPointerEnterCapture={() => {}}
+                    onPointerLeaveCapture={() => {}}
+                    color="red"
+                    onClick={handleCancelOrder}
+                  >
+                    Cancel 
                   </Button>
                   <Button
                     placeholder=""
@@ -516,14 +539,23 @@ const InfoModal = ({ ActionModal, closeModal, title, item }: any) => {
               }
                 <Divider />
                 <div className="pt-6 flex gap-4 justify-end">
+                <Button
+                    placeholder=""
+                    onPointerEnterCapture={() => {}}
+                    onPointerLeaveCapture={() => {}}
+                    color="black"
+                    onClick={()=>closeModal()}
+                  >
+                    close 
+                  </Button>
                   <Button
                     placeholder=""
                     onPointerEnterCapture={() => {}}
                     onPointerLeaveCapture={() => {}}
                     color="red"
-                    onClick={() => handleClose()}
+                    onClick={handleCancelRecentOrder}
                   >
-                    No
+                    Cancel
                   </Button>
                   <Button
                     placeholder=""
@@ -845,6 +877,7 @@ const InfoModal = ({ ActionModal, closeModal, title, item }: any) => {
               </div>
             </div>
           )) ||
+      
           (title === "deleteproduct" && (
             <div className="p-6 flex flex-col gap-4 justify-between h-[30vh]">
               <h1 className="font-semibold text-xl">

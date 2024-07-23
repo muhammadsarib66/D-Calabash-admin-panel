@@ -94,6 +94,8 @@ const index = () => {
     setInfoModal(true);
     setTitleModal("deleteorder");
   };
+  
+
   const HandleOrderStatus = (item: any) => {
     setItem(item);
     setInfoModal(true);
@@ -151,6 +153,8 @@ const index = () => {
   useEffect(() => {
     dispatch(GetOrderListApi());
   }, []);
+
+  console.log(filterData)
   return (
     <Card
       className=" w-full"
@@ -396,10 +400,12 @@ const index = () => {
             undefined
           }
           onClick={() => HandleOrderAsgn({ _id })}
+          
         >
           Assign to Rider
         </Button>
       )}
+       
     </>
   )}
 </td>
