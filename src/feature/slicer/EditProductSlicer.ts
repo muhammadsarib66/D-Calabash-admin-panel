@@ -1,22 +1,31 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
-import { baseUrl, config } from "./Slicer";
+import { baseUrl,  token } from "./Slicer";
 import { toast } from "react-toastify";
-import { GetOrderListApi } from "./GetOrderListSlicer";
-import { DashboardApi } from "./DashboardSlicer";
+import { GetProductListApi } from "./GetProductListSlicer";
+import { socketFire } from "../../components/UpdateSocket";
 
-export const CancelOrderApi: any = createAsyncThunk(
-  "dcalabash/CancelOrder",
+const config = {
+  headers: {
+    "Content-Type": "multipart/form-data",
+    Accept: "application/json",
+
+    Authorization: `Bearer ${token}`,
+  },
+};
+export const EditProductApi: any = createAsyncThunk(
+  "editProduct",
   async (Obj: any, {dispatch}) => {
-    console.log(Obj , "====>Cancel")
+ 
     return await axios
-    .post(`${baseUrl}cancel-order`, Obj,config)
+    .put(`${baseUrl}products/product/${Obj?.id}`, Obj?.item ,config)
     .then((resp) => {
-    console.log(resp);
-      toast.success("Order Cancel Successfully.");
-      dispatch(GetOrderListApi())
-      dispatch(DashboardApi())
+ console.log(resp)
+      toast.success("Product Edit Successfully");
+      // socket.emit('product-updates');
+      socketFire();
+      dispatch(GetProductListApi())
       return resp.data;
     })
     .catch((err) => {
@@ -25,7 +34,7 @@ export const CancelOrderApi: any = createAsyncThunk(
         // that falls out of the range of 2xx
         if (err.response.status === 400) {
         //   toast.error("Bad Request: User with the same details already exists.");
-          toast.error(err.response.data.message);
+          toast.error(err.response.data);
           console.log("Error 400: Bad Request", err.response.data);
         } else {
           toast.error(`Error: ${err.response.data.message}`);
@@ -34,7 +43,7 @@ export const CancelOrderApi: any = createAsyncThunk(
       } else if (err.request) {
         // The request was made but no response was received
         toast.error("No response received from the server.");
-        console.log(err.request);
+        // console.log(err.request);
       } else {
         // Something happened in setting up the request that triggered an Error
         toast.error("An error occurred while processing your request.");
@@ -49,21 +58,21 @@ const initialState = {
   isLoading: false,
   isError: false,
 };
-const CancelOrderSlicer = createSlice({
-  name :"cancelOrder",
+const EditProductSlicer = createSlice({
+  name :"editproduct",
   initialState,
   reducers: {
   },
 
   extraReducers: (builder) => {
-    builder.addCase(CancelOrderApi.pending, (state) => {
+    builder.addCase(EditProductApi.pending, (state) => {
       state.isLoading = true;
     });
-    builder.addCase(CancelOrderApi.fulfilled, (state) => {
+    builder.addCase(EditProductApi.fulfilled, (state) => {
       state.isLoading = false;
       // console.log(localStorage.getItem("token"));
     });
-    builder.addCase(CancelOrderApi.rejected, (state) => {
+    builder.addCase(EditProductApi.rejected, (state) => {
       state.isLoading = false;
       state.isError = true;
     });
@@ -71,4 +80,4 @@ const CancelOrderSlicer = createSlice({
 });
 
 // export const {} = AddPortfolioSlicer.actions;
-export default CancelOrderSlicer.reducer;
+export default EditProductSlicer.reducer;

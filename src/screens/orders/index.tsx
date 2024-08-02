@@ -38,12 +38,12 @@ const OrderStatusTABS = [
     value: "Ready",
   },
   {
-    label: "Delivered",
-    value: "Delivered",
-  },
-  {
     label: "Shipped",
     value: "Shipped",
+  },
+  {
+    label: "Delivered",
+    value: "Delivered",
   },
   
   {
@@ -117,6 +117,12 @@ const index = () => {
     setInfoModal(true);
     setTitleModal("Orderassign");
   };
+  const HandleCancelOrder = (id:any) =>{
+    
+    setItem(id)
+    setInfoModal(true)
+    setTitleModal("cancelorderModal")
+  }
   
 
   const handleShowDeliverImage = (img: any) => {
@@ -154,7 +160,6 @@ const index = () => {
     dispatch(GetOrderListApi());
   }, []);
 
-  console.log(filterData)
   return (
     <Card
       className=" w-full"
@@ -351,6 +356,8 @@ const index = () => {
       </Button>
 
       {status === "Shipped" && (
+        <div className="flex flex-col gap-2">
+
         <Button
         placeholder=""
         onPointerEnterCapture={() => {}}
@@ -361,10 +368,20 @@ const index = () => {
         >
           Assign to Rider
         </Button>
+         <Button
+         placeholder=""
+         onPointerEnterCapture={() => {}}
+         onPointerLeaveCapture={() => {}}
+           size="sm" color="red" onClick={()=>HandleCancelOrder(_id)}>
+         Cancel Order
+       </Button>
+       </div>
       )}
     </div>
   ) : (
     <>
+        <div className="flex flex-col gap-2">
+
       {deliveryMode === "Pickup" ? (
         <Button
         placeholder=""
@@ -385,6 +402,7 @@ const index = () => {
           {status === "Ready" ? "Deliver" : "Ready"}
         </Button>
       ) : (
+
         <Button
         placeholder=""
         onPointerEnterCapture={() => {}}
@@ -405,6 +423,15 @@ const index = () => {
           Assign to Rider
         </Button>
       )}
+      <Button
+        placeholder=""
+        onPointerEnterCapture={() => {}}
+        onPointerLeaveCapture={() => {}}
+          size="sm" color="red" onClick={()=>HandleCancelOrder(_id)}>
+        Cancel Order
+      </Button>
+      </div>
+
        
     </>
   )}

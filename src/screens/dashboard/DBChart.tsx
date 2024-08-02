@@ -71,6 +71,12 @@ const index = () => {
     setInfoModal(true);
     setTitleModal("RecentOrderStatus");
   };
+  const HandleCancelOrder = (id:any) =>{
+    
+    setItem(id)
+    setInfoModal(true)
+    setTitleModal("cancelorderModal")
+  }
   const HandleOrderAsgn = (item:any) => {
   //  console.log(item)
     setItem(item);
@@ -294,6 +300,7 @@ const index = () => {
       {status}
     </Button>
   ) : (
+    <div className="flex flex-col gap-2">
     <Button
       placeholder=""
       onPointerEnterCapture={() => {}}
@@ -317,6 +324,15 @@ const index = () => {
     >
       {deliveryMode === 'Pickup' ? "Ready" : "Assign to Rider"}
     </Button>
+    <Button
+        placeholder=""
+        onPointerEnterCapture={() => {}}
+        onPointerLeaveCapture={() => {}}
+          size="sm" color="red" onClick={()=>HandleCancelOrder(_id)}>
+        Cancel Order
+      </Button>
+    </div>
+
   )}
 </td>
 

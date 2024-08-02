@@ -19,7 +19,7 @@ import { DisableProductApi } from "../feature/slicer/DisableProductSlicer";
 import { EnableProductApi } from "../feature/slicer/EnableProductSlicer";
 import { baseUrl } from "../feature/slicer/Slicer";
 import { OrderStatusApi } from "../feature/slicer/OrderStatusSlicer";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
 import { AddCategoryApi } from "../feature/slicer/AddCategorySlicer";
 import uploadImg from "../Images/uploaImg.png";
@@ -35,6 +35,7 @@ import { DeleteProductApi } from "../feature/slicer/DeleteProductSlicer";
 import { AssingOrderApi } from "../feature/slicer/AssingOrderRiderSlicer";
 import { AddAdminApi } from "../feature/slicer/AddAdminSlicer";
 import { CancelOrderApi } from "../feature/slicer/CancelOrderSlicer";
+import { EditProductApi } from "../feature/slicer/EditProductSlicer";
 // import { socket } from "./UpdateSocket";
 // //////// admin ...........
 const KeyCodes = {
@@ -65,6 +66,8 @@ const InfoModal = ({ ActionModal, closeModal, title, item }: any) => {
     available: "true",
     image: "",
   });
+  // console.log(item)
+  const [editProduct , setEditProduct] = useState<any>(item?.item)
   const [orderMessage,setOrderMessage] = useState<any>("")
   const [selectedCategory, setSelectedCategory] = useState<any>("");
   const [productCat, setProductCat] = useState<any>("");
@@ -112,6 +115,11 @@ const InfoModal = ({ ActionModal, closeModal, title, item }: any) => {
     setSelectedCategory(e);
     setProductCat(title)
   };
+  const handleSelectEditCategory = (e: any, title :any) => {
+    setEditProduct({ ...editProduct, category: e });
+    // setEditproductCat(e);
+    setProductCat(title)
+  }
   const handleAddProduct = () => {
     const ingradients = tags.map((tag: any) => tag.text);
     const Obj = {
@@ -144,6 +152,17 @@ const InfoModal = ({ ActionModal, closeModal, title, item }: any) => {
       toast.error("Please Fill All Fields");
     }
   };
+
+  const handleChangeEditProduct = (e: any) => {
+    setEditProduct({ ...editProduct, [e.target.name]: e.target.value });
+  }
+
+  const handleEditProduct = () => {
+//  console.log(productCat)
+    // console.log({id: item?.id, item: editProduct}, "hogyaUdapte😎");
+    dispatch(EditProductApi({id: item?.id, item: editProduct}));
+    closeModal()
+  }
 
   // DELETE USSR //////////
   const handleDeleteUser = () => {
@@ -360,6 +379,12 @@ const handleCancelRecentOrder = () => {
     }
   };
 
+  useEffect(()=>{
+
+    if(title === "EditProduct"){
+    }
+  })
+
   
   return (
     <Modal
@@ -542,15 +567,7 @@ const handleCancelRecentOrder = () => {
               }
                 <Divider />
                 <div className="pt-6 flex gap-4 justify-end">
-                {/* <Button
-                    placeholder=""
-                    onPointerEnterCapture={() => {}}
-                    onPointerLeaveCapture={() => {}}
-                    color="black"
-                    onClick={()=>closeModal()}
-                  >
-                    close 
-                  </Button> */}
+               
                   <Button
                     placeholder=""
                     onPointerEnterCapture={() => {}}
@@ -850,6 +867,41 @@ const handleCancelRecentOrder = () => {
               </div>
             </div>
           )) ||
+          (title === "cancelorderModal" && (
+            <div className="p-6 flex flex-col gap-4 justify-between h-[20vh]">
+              <h1 className="font-semibold text-xl">
+                {" "}
+                Do you Want to Cancel the Order?
+              </h1>
+              <div>
+                <Divider />
+                <div className="pt-6 flex gap-4 justify-end">
+                  <Button
+                    placeholder=""
+                    onPointerEnterCapture={() => {}}
+                    onPointerLeaveCapture={() => {}}
+                    color="red"
+                    onClick={handleClose}
+                  >
+                    No
+                  </Button>
+                  <Button
+                    placeholder=""
+                    onPointerEnterCapture={() => {}}
+                    onPointerLeaveCapture={() => {}}
+                    color="green"
+                    onClick={()=>{
+                      const Obj = {orderId : item}
+                      dispatch(CancelOrderApi(Obj));
+                      closeModal()
+                    }}
+                  >
+                    Yes
+                  </Button>
+                </div>
+              </div>
+            </div>
+          )) ||
           (title === "deleteorder" && (
             <div className="p-6 flex flex-col gap-4 justify-between h-[30vh]">
               <h1 className="font-semibold text-xl">
@@ -1118,6 +1170,91 @@ const handleCancelRecentOrder = () => {
                   onClick={handleAddProduct}
                 >
                   Add Products
+                </Button>
+              </div>
+            </div>
+          )) ||
+          (title === "editProduct" && (
+            <div className=" h-[90vh] overflow-y-scroll p-6">
+              <div className="flex justify-between  w-full ">
+                <h1 className="text-gray-800 capitalize pb-6 text-2xl font-semibold">
+                  Edit Product
+                </h1>
+                <i
+                  className="fas fa-times text-2xl cursor-pointer"
+                  onClick={handleClose}
+                ></i>
+              </div>
+              <div className=" flex flex-col gap-4 w-full">
+                <div
+                  onClick={handleProfile}
+                  className="w-[150px] h-[150px] cursor-pointer  bg-gray-400 rounded-full mx-auto"
+                >
+                 <img
+                      src={baseUrl + item?.image}
+                      className=" w-[150px] h-[150px] rounded-full object-cover     "
+                    />
+                </div>
+                <p className="text-center font-semibold text-gray-800">
+                  {" "}
+                   Product Image
+                </p>
+                <Input
+                  crossOrigin={""}
+                  placeholder=""
+                  name="name"
+                  value={editProduct.name}
+                  onChange={handleChangeEditProduct}
+                  onPointerEnterCapture={() => {}}
+                  onPointerLeaveCapture={() => {}}
+                  label="Product Name"
+                />
+                <Input
+                  type="number"
+                  crossOrigin={""}
+                  placeholder=""
+                  name="price"
+                  value={editProduct?.price}
+                  onChange={handleChangeEditProduct}
+                  onPointerEnterCapture={() => {}}
+                  onPointerLeaveCapture={() => {}}
+                  label="Product Price"
+                />
+                <Textarea
+                  name="description"
+                  value={editProduct?.description}
+                  onChange={handleChangeEditProduct}
+                  onPointerEnterCapture={() => {}}
+                  onPointerLeaveCapture={() => {}}
+                  label="Product Description"
+                />
+               
+                {Categories && (
+                  <Select
+                    placeholder={""}
+                    value={productCat}
+                    onPointerEnterCapture={() => {}}
+                    onPointerLeaveCapture={() => {}}
+                    label="Edit Category"
+                  >
+                    {Categories.map((cat: any) => (
+                      <Option
+                        onClick={() => handleSelectEditCategory(cat?._id,cat.title)}
+                        value={cat._id}
+                      >
+                        {cat.title}
+                      </Option>
+                    ))}
+                  </Select>
+                )}
+                <Button
+                  placeholder=""
+                  onPointerEnterCapture={() => {}}
+                  onPointerLeaveCapture={() => {}}
+                  color="blue-gray"
+                  onClick={handleEditProduct}
+                >
+                  Update Product
                 </Button>
               </div>
             </div>

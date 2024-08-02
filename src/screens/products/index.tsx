@@ -18,10 +18,10 @@ import Loader from "../../components/Loader";
 import InfoModal from "../../components/InfoModal";
 import { baseUrl, issubadmin } from "../../feature/slicer/Slicer";
 import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from '@mui/icons-material/Edit';
 import ProductInfoModal from "../../components/ProductInfoModal";
 import { EnableProductApi } from "../../feature/slicer/EnableProductSlicer";
 import { DisableProductApi } from "../../feature/slicer/DisableProductSlicer";
-// import { Switch } from "@mui/material";
 
 const OrderStatusTABS = [
   {
@@ -47,7 +47,6 @@ const TableHeadings = [
   "Category Status",
   "Ingredients",
   `${issubadmin ? "View Choices" : "Add Choice"}`,
-  // "Change Status",
   "Action",
 ];
 const filteredHeadings = issubadmin
@@ -68,7 +67,6 @@ const index = () => {
   const [titleModal, setTitleModal] = useState<any>("");
   const [item, setItem] = useState<any>("");
   const [isProductDetailOpen, setIsProductOpen] = useState<any>(false);
-
   const closeModal = () => {
     setInfoModal(false);
   };
@@ -79,11 +77,7 @@ const index = () => {
   const CloseproductInfoModal = () => {
     setIsProductOpen(false);
   };
-  // const HandleEnablePrdct = (id: any) => {
-  //   setTitleModal("enableproduct");
-  //   setInfoModal(true);
-  //   setItem(id);
-  // };
+  
   const handleItemStatusChanged = (e: any, id: any) => {
     if (e.target.checked == false) {
       const Obj = { productId: id };
@@ -92,13 +86,8 @@ const index = () => {
       const Obj = { productId: id };
       dispatch(EnableProductApi(Obj));
     }
-    // console.log(e.target.checked, id);
   };
-  // const HandleDisabkePrdct = (id: any) => {
-  //   setTitleModal("disableproduct");
-  //   setInfoModal(true);
-  //   setItem(id);
-  // };
+  
   const HandleDeletePrdct = (id: any) => {
     setTitleModal("deleteproduct");
     setInfoModal(true);
@@ -108,6 +97,14 @@ const index = () => {
     setTitleModal("addproduct");
     setInfoModal(true);
   };
+  const handleEditProduct = (item:any,image:any,id:any) =>{
+    // console.log(filterData[0],'==>product')
+    // console.log(item)
+
+    setTitleModal("editProduct");
+    setItem({item,image,id});
+    setInfoModal(true);
+  }
 
   useEffect(() => {
     const filteredData = Products?.filter((data: any) => {
@@ -328,34 +325,22 @@ const index = () => {
                       </td>
                       {!issubadmin ? (
                         <>
-                          {/* <td className={`${classes} flex gap-2`}>
-                            {!available == true ? (
-                              <Button
-                                placeholder=""
-                                disabled={available == true ? true : false}
-                                onPointerEnterCapture={() => {}}
-                                onPointerLeaveCapture={() => {}}
-                                size="sm"
-                                color="green"
-                                onClick={() => HandleEnablePrdct(_id)}
-                              >
-                                Enable
-                              </Button>
-                            ) : (
-                              <Button
-                                placeholder=""
-                                disabled={!available == true ? true : false}
-                                onPointerEnterCapture={() => {}}
-                                onPointerLeaveCapture={() => {}}
-                                size="sm"
-                                color="red"
-                                onClick={() => HandleDisabkePrdct(_id)}
-                              >
-                                Disable
-                              </Button>
-                            )}
-                          </td> */}
                           <td className={classes}>
+                            <Tooltip  content="Edit Product">
+                              <IconButton
+                                onClick={() => handleEditProduct({
+                                  name,
+                                  price,
+                                  description,
+                                category:category?._id  },imageUrl, _id)}
+                                placeholder=""
+                                onPointerEnterCapture={() => {}}
+                                onPointerLeaveCapture={() => {}}
+                                variant="text"
+                              >
+                                <EditIcon className=" text-blue-500" />
+                              </IconButton>
+                            </Tooltip>
                             <Tooltip content="Delete Product">
                               <IconButton
                                 onClick={() => HandleDeletePrdct(_id)}
