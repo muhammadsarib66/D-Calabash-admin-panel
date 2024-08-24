@@ -17,6 +17,8 @@ import { Userid, baseUrl } from "./feature/slicer/Slicer";
 import { ToastContainer, toast } from "react-toastify";
 import BeepSOund from "./Images/Neworder.mp3";
 import { GetResConfApi } from "./feature/slicer/GetResConfSlicer";
+import { Route, Routes } from "react-router";
+import PrivacyPolicy from "./screens/PrivacyPolicy";
 
 function App() {
   const audio = new Audio(BeepSOund);
@@ -106,11 +108,32 @@ console.log('DATA DELETE' ,data)
     
   },[])
   return (
+    // <>
+    //   {token && <MiniDrawer />}
+    //   {!token && <Login />}
+
+    //   <Routes>
+    //   <Route path="/privacypolicy" element={<PrivacyPolicy />} />
+    //   </Routes>
+    //   <ToastContainer />
+
+
+    // </>
     <>
-      {token && <MiniDrawer />}
-      {!token && <Login />}
-      <ToastContainer />
-    </>
+    {token ? (
+      <MiniDrawer />
+    ) : (
+      <Routes>
+        <Route path="/" element={<Login />} />
+        <Route path="/privacypolicy" element={<PrivacyPolicy />} />
+        <Route path="*" element={<Login />} /> 
+      </Routes>
+    )}
+
+    
+
+    <ToastContainer />
+  </>
   );
 }
 

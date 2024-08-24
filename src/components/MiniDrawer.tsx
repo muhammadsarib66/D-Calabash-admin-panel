@@ -37,10 +37,12 @@ import { Link } from "react-router-dom";
 import { LoginOutlined } from "@mui/icons-material";
 import ProductCategory from "../screens/products/ProductCategory";
 import SupervisorAccountIcon from '@mui/icons-material/SupervisorAccount';
+// import PrivacyTipIcon from '@mui/icons-material/PrivacyTip';
 import SettingsIcon from '@mui/icons-material/Settings';
 
 import { issubadmin } from "../feature/slicer/Slicer";
 import ResConfig from "../screens/restuarent-config/ResConfig";
+// import PrivacyPolicy from "../screens/PrivacyPolicy";
 
 const drawerWidth = 240;
 const tabs = [
@@ -81,6 +83,12 @@ const tabs = [
     icon: <SupervisorAccountIcon />,
 
   },
+  // {
+  //   title: "Privacy Policy",
+  //   link: "/privacypolicy",
+  //   icon: <PrivacyTipIcon />,
+
+  // },
   {
     title: "Restuarent Config",
     link: "/config",
@@ -354,10 +362,8 @@ export default function MiniDrawer() {
           {
             issubadmin == true ? null : <Route path="/subadmin" element={<SubAdmin />} />
           }
-          {/* <Route path="/subadmin" element={<SubAdmin />} /> */}
           </Routes>
 
-        {/* <ToastContainer /> */}
       </Box>
     </Box>
   );
