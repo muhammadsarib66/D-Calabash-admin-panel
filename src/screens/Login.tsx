@@ -8,6 +8,7 @@ import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import { ToastContainer, toast } from "react-toastify";
 import { useDispatch } from "react-redux";
 import { LoginApi } from "../feature/slicer/LoginSlicer";
+import { Link } from "react-router-dom";
 
 export function Login() {
   const dispatch = useDispatch()
@@ -51,6 +52,7 @@ export function Login() {
         />
       </div>
       <div className="flex-1 mt-10 md:mt-0 ">
+
         <Typography
           placeholder=""
           onPointerEnterCapture={() => {}}
@@ -153,6 +155,9 @@ export function Login() {
          
           
         </form>
+        <Link to="privacypolicy" className="mt-8 pt-8 text-center text-sm text-blue-500">
+          Privacy Policy
+        </Link>
       </div>
       <ToastContainer />
     </section>
